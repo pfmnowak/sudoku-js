@@ -3,9 +3,9 @@ body {
     color: white;
 }
 
-body.dark {
-    background-color: #222222;
-    color: white;
+body.light {
+    background-color: #eeeeee;
+    color: black;
 }
 
 .hidden {
