@@ -1,9 +1,21 @@
+*,
+*::after,
+*::before {
+	margin: 0;
+	padding: 0;
+	box-sizing: inherit;
+}
+
+html {
+	// This defines what 1rem is
+	font-size: 62.5%;
+}
+
 body {
-	background-color: #222222;
-	color: white;
+	box-sizing: border-box;
+	background-color: $color-gray-dark;
 }
 
 body.light {
-	background-color: #eeeeee;
-	color: black;
+	background-color: $color-gray-light;
 }

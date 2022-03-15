@@ -1,0 +1,76 @@
+.board {
+	padding-top: 1rem;
+	margin-top: 1rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: flex-start;
+	width: 60rem;
+	height: 60rem;
+
+	&__table {
+		border-collapse: collapse;
+	}
+
+	&__column-group {
+	}
+
+	&__column {
+	}
+
+	&__row-group {
+	}
+
+	&__row {
+	}
+
+	&__cell {
+		border: 1px solid $color-black;
+		width: 6rem;
+		height: 6rem;
+		margin: 0;
+		vertical-align: middle;
+		text-align: center;
+	}
+}
+
+.tile {
+	display: inline-block;
+	vertical-align: middle;
+	border: 1px solid $color-black;
+	border-radius: 50%;
+	width: 5rem;
+	height: 5rem;
+	font-size: 3rem;
+	text-align: center;
+
+	margin-block-start: 0;
+	margin-block-end: 0;
+
+	&--big {
+		display: block;
+		width: 6rem;
+		height: 6rem;
+		font-size: 4rem;
+
+		margin-left: 5rem;
+		margin-top: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+}
+
+p.selected {
+	background-color: lightblue;
+}
+
+p.incorrect {
+	color: red;
+}
+
+.rightBorder {
+	border-right: 4px solid $color-black;
+}
+
+.bottomBorder {
+	border-bottom: 4px solid $color-black;
+}

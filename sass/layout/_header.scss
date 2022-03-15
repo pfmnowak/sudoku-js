@@ -1,5 +1,16 @@
 .header {
 	text-align: center;
-	padding-bottom: 10px;
+	padding-bottom: 1rem;
 	border-bottom: 1px solid red;
+}
+
+.setup-game {
+	display: flex;
+	justify-content: center;
+}
+
+.setup-game > div {
+	margin-bottom: 2rem;
+	padding-left: 5rem;
+	padding-right: 5rem;
 }

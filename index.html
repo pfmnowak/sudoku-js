@@ -9,10 +9,10 @@
 	</head>
 	<body>
 		<header class="header">
-			<h1>Sudoku!</h1>
-			<div id="setup-game">
+			<h1 class="heading-primary">Sudoku</h1>
+			<div class="setup-game" id="setup-game">
 				<div id="diff">
-					<h3>Choose Difficulty:</h3>
+					<h3 class="heading-tertiary">Choose Difficulty:</h3>
 					<input id="easy" type="radio" name="diff" value="easy" checked />
 					<label for="easy">Easy</label>
 					<input id="medium" type="radio" name="diff" value="medium" />
@@ -21,7 +21,7 @@
 					<label for="hard">Hard</label>
 				</div>
 				<div id="theme">
-					<h3>Choose Theme:</h3>
+					<h3 class="heading-tertiary">Choose Theme:</h3>
 					<input
 						id="dark-theme"
 						type="radio"
@@ -34,24 +34,147 @@
 					<label for="light-theme">Light</label>
 				</div>
 			</div>
-			<button id="start-btn">Start New Game</button>
+			<button class="btn" id="start-btn">Start New Game</button>
 		</header>
 		<main>
-			<section id="game" class="game">
-				<div id="board"></div>
-				<div id="number-container" class="hidden">
-					<p id="one">1</p>
-					<p id="two">2</p>
-					<p id="three">3</p>
-					<p id="four">4</p>
-					<p id="five">5</p>
-					<p id="six">6</p>
-					<p id="seven">7</p>
-					<p id="eight">8</p>
-					<p id="nine">9</p>
+			<section id="game" class="game-section">
+				<div class="board" id="board">
+					<table class="board__table">
+						<colgroup class="board__column-group">
+							<col class="board__column" />
+							<col class="board__column" />
+							<col class="board__column" />
+						</colgroup>
+						<colgroup class="board__column-group">
+							<col class="board__column" />
+							<col class="board__column" />
+							<col class="board__column" />
+						</colgroup>
+						<colgroup class="board__column-group">
+							<col class="board__column" />
+							<col class="board__column" />
+							<col class="board__column" />
+						</colgroup>
+						<tbody class="board__row-group">
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+						</tbody>
+						<tbody class="board__row-group">
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+						</tbody>
+						<tbody class="board__row-group">
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+							<tr class="board__row">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+								<td class="board__cell"><p class="tile"></p></td class="board__cell">
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="number-container" id="number-container" class="hidden">
+					<p class="tile tile--big" id="one">1</p>
+					<p class="tile tile--big" id="two">2</p>
+					<p class="tile tile--big" id="three">3</p>
+					<p class="tile tile--big" id="four">4</p>
+					<p class="tile tile--big" id="five">5</p>
+					<p class="tile tile--big" id="six">6</p>
+					<p class="tile tile--big" id="seven">7</p>
+					<p class="tile tile--big" id="eight">8</p>
+					<p class="tile tile--big" id="nine">9</p>
 				</div>
 			</section>
 		</main>
-		<footer class="footer">Yeah</footer>
+		<footer class="footer">Built by Mikołaj Nowak</footer>
 	</body>
 </html>
