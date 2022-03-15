@@ -1,0 +1,31 @@
+{
+	"name": "sudoku-js",
+	"version": "1.0.0",
+	"description": "Sudoku game made in JS and styled with SASS",
+	"main": "index.js",
+	"scripts": {
+		"watch:sass": "node-sass sass/main.scss css/style.css -w",
+		"devserver": "live-server",
+		"start": "npm-run-all --parallel devserver watch:sass",
+		"compile:sass": "node-sass sass/main.scss css/style.comp.css",
+		"prefix:css": "postcss --use autoprefixer -b 'last 10 versions' css/style.comp.css -o css/style.prefix.css",
+		"compress:css": "node-sass css/style.prefix.css css/style.css --output-style compressed",
+		"build:css": "npm-run-all compile:sass prefix:css compress:css"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pfmnowak/sudoku-js.git"
+	},
+	"author": "Mikołaj Nowak",
+	"license": "ISC",
+	"devDependencies": {
+		"autoprefixer": "^10.4.2",
+		"node-sass": "^6.0.1",
+		"npm-run-all": "^4.1.5",
+		"postcss-cli": "^9.1.0"
+	},
+	"bugs": {
+		"url": "https://github.com/pfmnowak/sudoku-js/issues"
+	},
+	"homepage": "https://github.com/pfmnowak/sudoku-js#readme"
+}
