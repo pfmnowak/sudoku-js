@@ -41,52 +41,76 @@ function startGame() {
 function generateBoard(board) {
 	// Clear previous board
 	clearPrevious();
-	// Let used to increment tile ids
-	let idCount = 0;
-	// Create 81 tiles
-	for (let i = 0; i < 81; i++) {
-		// Create a new paragraph element
-		let tile = document.createElement('p');
+
+	// Select all tiles
+	let tiles = qsa('.tile--small');
+
+	for (let i = 0; i < tiles.length; i++) {
 		if (board.charAt(i) != '-') {
 			// Set tile text to correct number
-			tile.textContent = board.charAt(i);
+			tiles[i].textContent = board.charAt(i);
 		} else {
-			// Leave the tile blank and add Click Event Listener
-			//
+			// Set a listener
+			// clear tile
+			tiles[i].textContent = '';
 		}
-		// Assign tile id
-		tile.id = idCount;
-		idCount++;
-
-		// WTF, we can use the "i" let you dummy
-		// but whatever
-
-		// Add tile class to tile
-		tile.classList.add('tile');
-
-		// Add t h i c c borders
-		// (I can remove them in the SuperHard mode)
-
-		if ((tile.id > 17 && tile.id < 27) || (tile.id > 44 && tile.id < 54)) {
-			tile.classList.add('bottomBorder');
-		}
-		if ((tile.id + 1) % 9 == 3 || (tile.id + 1) % 9 == 6) {
-			tile.classList.add('rightBorder');
-		}
-		// Add tiles  to board
-		id('board').appendChild(tile);
 	}
+
+	// old solution
+	/* 
+    
+        // Let used to increment tile ids
+        let idCount = 0;
+        // Create 81 tiles
+        for (let i = 0; i < 81; i++) {
+            // Create a new paragraph element
+            let tile = document.createElement('p');
+            if (board.charAt(i) != '-') {
+                // Set tile text to correct number
+                tile.textContent = board.charAt(i);
+            } else {
+                // Leave the tile blank and add Click Event Listener
+                //
+            }
+            // Assign tile id
+            tile.id = idCount;
+            idCount++;
+
+            // WTF, we can use the "i" let you dummy
+            // but whatever
+
+            // Add tile class to tile
+            tile.classList.add('tile');
+
+            // Add t h i c c borders
+            // (I can remove them in the SuperHard mode)
+
+
+            if ((tile.id > 17 && tile.id < 27) || (tile.id > 44 && tile.id < 54)) {
+                tile.classList.add('bottomBorder');
+            }
+            if ((tile.id + 1) % 9 == 3 || (tile.id + 1) % 9 == 6) {
+                tile.classList.add('rightBorder');
+            }
+
+            // Add tiles to board
+            id('board').appendChild(tile);
+        }
+
+    */
 }
 
 function clearPrevious() {
 	// Access all of the tiles
-	let tiles = qsa('.tile');
+	// let tiles = qsa('.tile--small');
 	// Remove each tile
-	for (let i = 0; i < tiles.length; i++) {
-		tiles[i].remove();
-	}
+	// for (let i = 0; i < tiles.length; i++) {
+	// 	tiles[i].remove();
+	// }
+
 	// If there is a Timer clear it
 	//
+
 	// Deselect any numbers
 	for (let i = 0; i < id('number-container').children.length; i++) {
 		id('number-container').children[i].classList.remove('selected');
