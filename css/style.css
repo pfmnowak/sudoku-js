@@ -12,9 +12,6 @@ body {
   box-sizing: border-box;
   background-color: #333; }
 
-body.light {
-  background-color: #eee; }
-
 body {
   font-weight: 400;
   line-height: 1.7;
