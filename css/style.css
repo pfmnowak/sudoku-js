@@ -32,18 +32,24 @@ body.light {
   display: none; }
 
 .board {
-  padding-top: 1rem;
   margin-top: 1rem;
+  padding: 5rem 5rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-content: flex-start;
-  width: 60rem;
-  height: 60rem; }
+  background-color: rgba(0, 0, 0, 0.8); }
   .board__table {
     border-collapse: collapse; }
+  .board__column-group:not(:first-child) {
+    border-left: 2px solid #eee; }
+  .board__column:not(:last-child) {
+    border-right: 1px solid #333; }
+  .board__row-group:not(:last-child) {
+    border-bottom: 2px solid #eee; }
+  .board__row:not(:last-child) {
+    border-bottom: 1px solid #333; }
   .board__cell {
-    border: 1px solid #000;
     width: 6rem;
     height: 6rem;
     margin: 0;
@@ -53,16 +59,17 @@ body.light {
 .tile {
   display: inline-block;
   vertical-align: middle;
-  border: 1px solid #000;
   border-radius: 50%;
   width: 5rem;
   height: 5rem;
   font-size: 3rem;
   text-align: center;
+  background-color: #333;
   margin-block-start: 0;
   margin-block-end: 0; }
   .tile--big {
     display: block;
+    border: 2px solid #006400;
     width: 6rem;
     height: 6rem;
     font-size: 4rem;

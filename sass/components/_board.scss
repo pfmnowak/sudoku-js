@@ -1,31 +1,34 @@
 .board {
-	padding-top: 1rem;
 	margin-top: 1rem;
+	padding: 5rem 5rem;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: flex-start;
-	width: 60rem;
-	height: 60rem;
+	background-color: rgba($color-black, 0.8);
 
 	&__table {
 		border-collapse: collapse;
 	}
 
-	&__column-group {
+	&__column-group:not(:first-child) {
+		border-left: 2px solid $color-gray-light;
 	}
 
-	&__column {
+	&__column:not(:last-child) {
+		border-right: 1px solid $color-gray-dark;
 	}
 
-	&__row-group {
+	&__row-group:not(:last-child) {
+		border-bottom: 2px solid $color-gray-light;
 	}
 
-	&__row {
+	&__row:not(:last-child) {
+		border-bottom: 1px solid $color-gray-dark;
 	}
 
 	&__cell {
-		border: 1px solid $color-black;
+		// border: 1px solid $color-gray-light;
 		width: 6rem;
 		height: 6rem;
 		margin: 0;
@@ -37,18 +40,19 @@
 .tile {
 	display: inline-block;
 	vertical-align: middle;
-	border: 1px solid $color-black;
 	border-radius: 50%;
 	width: 5rem;
 	height: 5rem;
 	font-size: 3rem;
 	text-align: center;
+	background-color: $color-gray-dark;
 
 	margin-block-start: 0;
 	margin-block-end: 0;
 
 	&--big {
 		display: block;
+		border: 2px solid $color-green-dark;
 		width: 6rem;
 		height: 6rem;
 		font-size: 4rem;
