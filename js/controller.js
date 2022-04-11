@@ -1,27 +1,21 @@
 import * as model from './model.js';
-// import boardView from './views/boardView.js';
-// import controlView from './views/controlView.js';
-// import digitsView from './views/digitsView.js';
-
-// Create variables
-var selectedNum;
-var selectedTile;
-var disableSelect;
+import boardView from './views/boardView.js';
+import controlView from './views/controlView.js';
+import digitsView from './views/digitsView.js';
 
 function startGame() {
 	// Choose board difficulty
 	let board;
-	if (document.getElementById('easy').checked) board = model.easy[0];
-	else if (document.getElementById('medium').checked) board = model.medium[0];
+	if (document.querySelector('.easy').checked) board = model.easy[0];
+	else if (document.querySelector('.medium').checked) board = model.medium[0];
 	else board = model.hard[0];
-	disableSelect = false;
 	// Create board based on difficulty
 	generateBoard(board);
 	// Start the timer
 	// ToDo
 
 	// Show number container
-	document.getElementById('number-container').classList.remove('hidden');
+	document.querySelector('.number-container').classList.remove('u-hidden');
 }
 
 function generateBoard(board) {
@@ -32,58 +26,82 @@ function generateBoard(board) {
 	let tiles = document.querySelectorAll('.tile--small');
 
 	for (let i = 0; i < tiles.length; i++) {
+		let tile = tiles[i];
 		if (board.charAt(i) != '-') {
 			// Set tile text to correct number
-			tiles[i].textContent = board.charAt(i);
+			tile.textContent = board.charAt(i);
+			tile.classList.add(`tile--${board.charAt(i)}`);
 		} else {
-			// Set a listener
 			// clear tile
-			tiles[i].textContent = '';
+			tile.textContent = '';
+
+			// Set a listener
+			tile.addEventListener('click', function () {
+				// If selecting is disabled
+				if (model.state.disableSelect) return;
+				// If there is no selected digit
+				if (!model.state.selectedNum) return;
+
+				// If the tile is already selected
+				if (tile.classList.contains('selected')) {
+					// Then remove selection
+					tile.classList.remove('selected');
+					model.state.selectedTile = null;
+				} else {
+					// Deselect all other tiles
+					document
+						.querySelectorAll('.tile--small')
+						.forEach(t => t.classList.remove('selected'));
+
+					// Select it and update selectedTile variable
+					tile.classList.add('selected');
+					model.state.selectedTile = this;
+					updateMove();
+				}
+
+				console.log(`TILE ${model.state.selectedTile?.classList}`);
+			});
 		}
 	}
+}
 
-	// old solution
-	/* 
-    
-        // Let used to increment tile ids
-        let idCount = 0;
-        // Create 81 tiles
-        for (let i = 0; i < 81; i++) {
-            // Create a new paragraph element
-            let tile = document.createElement('p');
-            if (board.charAt(i) != '-') {
-                // Set tile text to correct number
-                tile.textContent = board.charAt(i);
-            } else {
-                // Leave the tile blank and add Click Event Listener
-                //
-            }
-            // Assign tile id
-            tile.id = idCount;
-            idCount++;
+const controlDigits = function (tile) {
+	// If selecting is not disabled
+	if (model.state.disableSelect) return;
 
-            // WTF, we can use the "i" let you dummy
-            // but whatever
+	// If the tile is already selected
+	if (tile.classList.contains('selected')) {
+		// Then remove selection
+		tile.classList.remove('selected');
+		model.state.selectedNum = null;
+	} else {
+		// Deselect all other tiles
+		document
+			.querySelectorAll('.tile--big')
+			.forEach(t => t.classList.remove('selected'));
 
-            // Add tile class to tile
-            tile.classList.add('tile');
+		// Select it and update selectedNum variable
+		tile.classList.add('selected');
+		model.state.selectedNum = tile;
+	}
+	console.log(`DIGIT ${model.state.selectedNum?.classList}`);
+};
 
-            // Add t h i c c borders
-            // (I can remove them in the SuperHard mode)
+function updateMove() {
+	// If a tile and number is selected
+	if (!model.state.selectedTile || !model.state.selectedNum) return;
+	// Set the tile to the correct number
+	if (model.state.selectedNum.textContent === 'X') {
+		model.state.selectedTile.textContent = '';
+	} else {
+		model.state.selectedTile.textContent = model.state.selectedNum.textContent;
+	}
 
+	// Deselect the tiles
+	model.state.selectedTile.classList.remove('selected');
 
-            if ((tile.id > 17 && tile.id < 27) || (tile.id > 44 && tile.id < 54)) {
-                tile.classList.add('bottomBorder');
-            }
-            if ((tile.id + 1) % 9 == 3 || (tile.id + 1) % 9 == 6) {
-                tile.classList.add('rightBorder');
-            }
-
-            // Add tiles to board
-            id('board').appendChild(tile);
-        }
-
-    */
+	// Clear the selected tile
+	model.state.selectedTile = null;
 }
 
 function clearPrevious() {
@@ -100,23 +118,22 @@ function clearPrevious() {
 	// Deselect any numbers
 	for (
 		let i = 0;
-		i < document.getElementById('number-container').children.length;
+		i < document.querySelector('.number-container').children.length;
 		i++
 	) {
 		document
-			.getElementById('number-container')
+			.querySelector('.number-container')
 			.children[i].classList.remove('selected');
 	}
 	// Clear selected variables
-	selectedNum = null;
-	selectedTile = null;
+	model.state.selectedNum = null;
+	model.state.selectedTile = null;
 }
 
 const init = function () {
-	window.onload = function () {
-		// Run startgame function when button is clicked
-		document.getElementById('start-btn').addEventListener('click', startGame);
-	};
+	boardView.addHandlerRender();
+	controlView.addHandlerStart(startGame);
+	digitsView.addHandlerClick(controlDigits);
 };
 
 init();

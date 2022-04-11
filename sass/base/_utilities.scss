@@ -1,4 +1,11 @@
-// Change to u-hidden later
-.hidden {
+.u-hidden {
 	display: none;
+}
+
+p.selected {
+	background-color: $color-green-light;
+}
+
+p.incorrect {
+	color: red;
 }

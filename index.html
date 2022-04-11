@@ -13,11 +13,24 @@
 			<div class="setup-game" id="setup-game">
 				<div id="diff">
 					<h3 class="heading-tertiary">Choose Difficulty:</h3>
-					<input id="easy" type="radio" name="diff" value="easy" checked />
+					<input
+						id="easy"
+						class="easy"
+						type="radio"
+						name="diff"
+						value="easy"
+						checked
+					/>
 					<label for="easy">Easy</label>
-					<input id="medium" type="radio" name="diff" value="medium" />
+					<input
+						id="medium"
+						class="medium"
+						type="radio"
+						name="diff"
+						value="medium"
+					/>
 					<label for="medium">Medium</label>
-					<input id="hard" type="radio" name="diff" value="hard" />
+					<input id="hard" class="hard" type="radio" name="diff" value="hard" />
 					<label for="hard">Hard</label>
 				</div>
 			</div>
@@ -149,16 +162,17 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="number-container" id="number-container" class="hidden">
-					<p class="tile tile--big" id="one">1</p>
-					<p class="tile tile--big" id="two">2</p>
-					<p class="tile tile--big" id="three">3</p>
-					<p class="tile tile--big" id="four">4</p>
-					<p class="tile tile--big" id="five">5</p>
-					<p class="tile tile--big" id="six">6</p>
-					<p class="tile tile--big" id="seven">7</p>
-					<p class="tile tile--big" id="eight">8</p>
-					<p class="tile tile--big" id="nine">9</p>
+				<div class="number-container u-hidden" id="number-container">
+					<p class="tile tile--big tile--1" id="one">1</p>
+					<p class="tile tile--big tile--2" id="two">2</p>
+					<p class="tile tile--big tile--3" id="three">3</p>
+					<p class="tile tile--big tile--4" id="four">4</p>
+					<p class="tile tile--big tile--5" id="five">5</p>
+					<p class="tile tile--big tile--6" id="six">6</p>
+					<p class="tile tile--big tile--7" id="seven">7</p>
+					<p class="tile tile--big tile--8" id="eight">8</p>
+					<p class="tile tile--big tile--9" id="nine">9</p>
+					<p class="tile tile--big tile--x">X</p>
 				</div>
 			</section>
 		</main>
