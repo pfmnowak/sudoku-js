@@ -26,28 +26,45 @@ function startGame() {
 const controlTiles = function (tile) {
 	// If selecting is disabled
 	if (model.state.disableSelect) return;
-	// If there is no selected digit
-	if (!model.state.selectedNum) return;
-
-	// If the tile is disabled
-	if (tile.classList.contains('disabled')) return;
 
 	// If the tile is already selected
 	if (tile.classList.contains('selected')) {
 		// Then remove selection
 		tile.classList.remove('selected');
 		model.state.selectedTile = null;
-	} else {
-		// Deselect all other tiles
-		document
-			.querySelectorAll('.tile--small')
-			.forEach(t => t.classList.remove('selected'));
-
-		// Select it and update selectedTile variable
-		tile.classList.add('selected');
-		model.state.selectedTile = tile;
-		updateMove();
+		return;
 	}
+
+	// If there is no selected digit
+	if (!model.state.selectedNum) {
+		// If the tile is already highlighted
+		const highlighted = tile.classList.contains('highlighted');
+
+		// Remove highlight from all the tiles
+		document
+			.querySelectorAll('.tile')
+			.forEach(t => t.classList.remove('highlighted'));
+
+		if (highlighted) return;
+		// Highlight all tiles with the given value
+		document
+			.querySelectorAll(`.tile--${tile.textContent}`)
+			.forEach(t => t.classList.add('highlighted'));
+		return;
+	}
+
+	// If the tile is disabled
+	if (tile.classList.contains('disabled')) return;
+
+	// Deselect all other tiles
+	document
+		.querySelectorAll('.tile--small')
+		.forEach(t => t.classList.remove('selected'));
+
+	// Select it and update selectedTile variable
+	tile.classList.add('selected');
+	model.state.selectedTile = tile;
+	updateMove();
 };
 
 const controlDigits = function (tile) {
