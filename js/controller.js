@@ -9,8 +9,13 @@ function startGame() {
 	if (document.querySelector('.easy').checked) board = model.easy[0];
 	else if (document.querySelector('.medium').checked) board = model.medium[0];
 	else board = model.hard[0];
-	// Create board based on difficulty
-	generateBoard(board);
+
+	// Clear previous board
+	clearPrevious();
+
+	// Update the board
+	boardView.generateBoard(board);
+
 	// Start the timer
 	// ToDo
 
@@ -18,51 +23,32 @@ function startGame() {
 	document.querySelector('.number-container').classList.remove('u-hidden');
 }
 
-function generateBoard(board) {
-	// Clear previous board
-	clearPrevious();
+const controlTiles = function (tile) {
+	// If selecting is disabled
+	if (model.state.disableSelect) return;
+	// If there is no selected digit
+	if (!model.state.selectedNum) return;
 
-	// Select all tiles
-	let tiles = document.querySelectorAll('.tile--small');
+	// If the tile is disabled
+	if (tile.classList.contains('disabled')) return;
 
-	tiles.forEach((tile, i) => {
-		if (board.charAt(i) != '-') {
-			// Set tile text to correct number
-			tile.textContent = board.charAt(i);
-			tile.classList.add('disabled', `tile--${board.charAt(i)}`);
-		} else {
-			// clear tile
-			tile.textContent = '';
+	// If the tile is already selected
+	if (tile.classList.contains('selected')) {
+		// Then remove selection
+		tile.classList.remove('selected');
+		model.state.selectedTile = null;
+	} else {
+		// Deselect all other tiles
+		document
+			.querySelectorAll('.tile--small')
+			.forEach(t => t.classList.remove('selected'));
 
-			// Set a listener
-			tile.addEventListener('click', function () {
-				// If selecting is disabled
-				if (model.state.disableSelect) return;
-				// If there is no selected digit
-				if (!model.state.selectedNum) return;
-
-				// If the tile is already selected
-				if (tile.classList.contains('selected')) {
-					// Then remove selection
-					tile.classList.remove('selected');
-					model.state.selectedTile = null;
-				} else {
-					// Deselect all other tiles
-					document
-						.querySelectorAll('.tile--small')
-						.forEach(t => t.classList.remove('selected'));
-
-					// Select it and update selectedTile variable
-					tile.classList.add('selected');
-					model.state.selectedTile = this;
-					updateMove();
-				}
-
-				console.log(`TILE ${model.state.selectedTile?.classList}`);
-			});
-		}
-	});
-}
+		// Select it and update selectedTile variable
+		tile.classList.add('selected');
+		model.state.selectedTile = tile;
+		updateMove();
+	}
+};
 
 const controlDigits = function (tile) {
 	// If selecting is not disabled
@@ -93,7 +79,6 @@ const controlDigits = function (tile) {
 			.querySelectorAll(`.tile--${tile.textContent}`)
 			.forEach(t => t.classList.add('highlighted'));
 	}
-	console.log(`DIGIT ${model.state.selectedNum?.classList}`);
 };
 
 function updateMove() {
@@ -125,32 +110,30 @@ function updateMove() {
 
 function clearPrevious() {
 	// Access all of the tiles
-	// let tiles = document.querySelectorAll('.tile--small');
-	// Remove each tile
-	// for (let i = 0; i < tiles.length; i++) {
-	// 	tiles[i].remove();
-	// }
+	document.querySelectorAll('.tile--small').forEach(tile => {
+		tile.className = '';
+		tile.textContent = '';
+		tile.classList.add('tile', 'tile--small');
+		// Remove a listener
+		tile.removeEventListener('click', controlTiles);
+	});
 
-	// If there is a Timer clear it
-	//
+	// Access all of the digits
+	document.querySelectorAll('.tile--big').forEach(tile => {
+		tile.classList.remove('selected', 'highlighted');
+	});
 
-	// Deselect any numbers
-	for (
-		let i = 0;
-		i < document.querySelector('.number-container').children.length;
-		i++
-	) {
-		document
-			.querySelector('.number-container')
-			.children[i].classList.remove('selected');
-	}
 	// Clear selected variables
 	model.state.selectedNum = null;
 	model.state.selectedTile = null;
+
+	// If there is a Timer clear it
+	//
 }
 
 const init = function () {
-	boardView.addHandlerRender();
+	// Set the listeners
+	boardView.addHandlerClick(controlTiles);
 	controlView.addHandlerStart(startGame);
 	digitsView.addHandlerClick(controlDigits);
 };
