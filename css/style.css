@@ -93,6 +93,10 @@ body.light {
 .bottomBorder {
   border-bottom: 4px solid #000; }
 
+.timer {
+  display: inline-block;
+  font-size: 10rem; }
+
 .header {
   text-align: center;
   padding-bottom: 1rem;

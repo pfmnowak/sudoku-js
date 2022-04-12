@@ -3,6 +3,8 @@ import boardView from './views/boardView.js';
 import controlView from './views/controlView.js';
 import digitsView from './views/digitsView.js';
 
+let timer;
+
 function startGame() {
 	// Choose board difficulty
 	let board;
@@ -17,11 +19,27 @@ function startGame() {
 	boardView.generateBoard(board);
 
 	// Start the timer
-	// ToDo
+	startTimer();
 
 	// Show number container
 	document.querySelector('.number-container').classList.remove('u-hidden');
 }
+
+const startTimer = function () {
+	let i = 0;
+	document.querySelector('.timer').textContent = convertTime(i);
+	timer = setInterval(function () {
+		document.querySelector('.timer').textContent = convertTime(++i);
+	}, 1000);
+};
+
+const convertTime = function (time) {
+	let minutes = Math.floor(time / 60);
+	let seconds = time % 60;
+	return `${(minutes = minutes < 10 ? `0${minutes}` : minutes)}:${
+		seconds < 10 ? `0${seconds}` : seconds
+	}`;
+};
 
 const controlTiles = function (tile) {
 	// If selecting is disabled
@@ -145,7 +163,7 @@ function clearPrevious() {
 	model.state.selectedTile = null;
 
 	// If there is a Timer clear it
-	//
+	if (timer) clearTimeout(timer);
 }
 
 const init = function () {
