@@ -25,12 +25,11 @@ function generateBoard(board) {
 	// Select all tiles
 	let tiles = document.querySelectorAll('.tile--small');
 
-	for (let i = 0; i < tiles.length; i++) {
-		let tile = tiles[i];
+	tiles.forEach((tile, i) => {
 		if (board.charAt(i) != '-') {
 			// Set tile text to correct number
 			tile.textContent = board.charAt(i);
-			tile.classList.add(`tile--${board.charAt(i)}`);
+			tile.classList.add('disabled', `tile--${board.charAt(i)}`);
 		} else {
 			// clear tile
 			tile.textContent = '';
@@ -62,12 +61,17 @@ function generateBoard(board) {
 				console.log(`TILE ${model.state.selectedTile?.classList}`);
 			});
 		}
-	}
+	});
 }
 
 const controlDigits = function (tile) {
 	// If selecting is not disabled
 	if (model.state.disableSelect) return;
+
+	// Remove highlight from all the tiles
+	document
+		.querySelectorAll('.tile')
+		.forEach(t => t.classList.remove('highlighted'));
 
 	// If the tile is already selected
 	if (tile.classList.contains('selected')) {
@@ -83,6 +87,11 @@ const controlDigits = function (tile) {
 		// Select it and update selectedNum variable
 		tile.classList.add('selected');
 		model.state.selectedNum = tile;
+
+		// Highlight all tiles with the given value
+		document
+			.querySelectorAll(`.tile--${tile.textContent}`)
+			.forEach(t => t.classList.add('highlighted'));
 	}
 	console.log(`DIGIT ${model.state.selectedNum?.classList}`);
 };
@@ -90,11 +99,21 @@ const controlDigits = function (tile) {
 function updateMove() {
 	// If a tile and number is selected
 	if (!model.state.selectedTile || !model.state.selectedNum) return;
+
+	model.state.selectedTile.className = '';
+
 	// Set the tile to the correct number
 	if (model.state.selectedNum.textContent === 'X') {
 		model.state.selectedTile.textContent = '';
+		model.state.selectedTile.classList.add('tile', 'tile--small');
 	} else {
 		model.state.selectedTile.textContent = model.state.selectedNum.textContent;
+		model.state.selectedTile.classList.add(
+			'tile',
+			'tile--small',
+			`tile--${model.state.selectedNum.textContent}`,
+			'highlighted'
+		);
 	}
 
 	// Deselect the tiles

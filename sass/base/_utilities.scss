@@ -2,10 +2,18 @@
 	display: none;
 }
 
-p.selected {
-	background-color: $color-green-light;
+.disabled {
+	background-color: rgba($color-gray-dark, 0.6);
+	color: $color-gray-light;
 }
 
-p.incorrect {
-	color: red;
+.highlighted {
+	color: $color-green-light;
+	// background-color: rgba($color-green-light, 0.6);
+}
+
+.selected {
+	// background-color: $color-green-light;
+	background-color: rgba($color-green-light, 0.6);
+	color: $color-white;
 }

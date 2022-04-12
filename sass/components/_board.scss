@@ -45,14 +45,13 @@
 	height: 5rem;
 	font-size: 3rem;
 	text-align: center;
-	background-color: $color-gray-dark;
 
 	margin-block-start: 0;
 	margin-block-end: 0;
 
 	&--big {
 		display: block;
-		border: 2px solid $color-green-dark;
+		border: 3px solid $color-green-dark;
 		width: 6rem;
 		height: 6rem;
 		font-size: 4rem;
