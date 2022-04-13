@@ -7,6 +7,7 @@ let timer;
 
 function startGame() {
 	// Choose board difficulty
+	// ToDo: Randomly get one of the sudoku data sets
 	let board;
 	let solution;
 	if (document.querySelector('.easy').checked) [board, solution] = model.easy;
@@ -15,21 +16,20 @@ function startGame() {
 	else [board, solution] = model.hard;
 
 	model.state.solution = solution;
-
-	// Clear previous board
-	clearPrevious();
-
-	// Store current board
-	model.state.currentBoard = [...board];
-
-	// Update the board
-	boardView.generateBoard(board);
-
-	// Start the timer
-	startTimer();
+	model.state.board = board;
 
 	// Show number container
-	document.querySelector('.number-container').classList.remove('u-hidden');
+	document.querySelector('.number-container').classList.remove('hidden');
+
+	// ToDo: Reset will do these too
+	// Clear previous board
+	clearState();
+	// Store current board
+	model.state.currentBoard = [...model.state.board];
+	// Update the board
+	boardView.generateBoard(model.state.board);
+	// Start the timer
+	startTimer();
 }
 
 const startTimer = function () {
@@ -166,25 +166,20 @@ const checkDone = () =>
 	model.state.currentBoard.join('') === model.state.solution;
 
 const endGame = () => {
-	console.log('end');
-	// End game
 	model.state.disableSelect = true;
-	// Stop the timer
-	clearTimeout(timer);
 
-	// Deselect and dehighlight and
-	// Display some message
-	alert('Nice job 👌');
+	clearState(false);
+
+	// Open modal
+	toggleModal();
 };
 
-const clearPrevious = function () {
+const clearState = (clearTiles = true) => {
 	// Access all of the tiles
 	document.querySelectorAll('.tile--small').forEach(tile => {
+		clearTiles && (tile.textContent = '');
 		tile.className = '';
-		tile.textContent = '';
 		tile.classList.add('tile', 'tile--small');
-		// Remove a listener
-		tile.removeEventListener('click', controlTiles);
 	});
 
 	// Access all of the digits
@@ -200,11 +195,20 @@ const clearPrevious = function () {
 	if (timer) clearTimeout(timer);
 };
 
+const toggleModal = () => {
+	document.querySelector('.overlay').classList.toggle('hidden');
+	document.querySelector('.modal').classList.toggle('hidden');
+};
+
 const init = function () {
 	// Set the listeners
 	boardView.addHandlerClick(controlTiles);
 	controlView.addHandlerStart(startGame);
 	digitsView.addHandlerClick(controlDigits);
+	// ToDo: Create seperate view for modal later
+	document
+		.querySelector('.btn--close-modal')
+		.addEventListener('click', toggleModal);
 };
 
 init();
