@@ -1,6 +1,7 @@
 class BoardView {
 	generateBoard(board) {
 		document.querySelectorAll('.tile--small').forEach((tile, i) => {
+			tile.id = i;
 			if (board.charAt(i) === '-') return;
 			// Set tile text to correct number
 			tile.textContent = board.charAt(i);

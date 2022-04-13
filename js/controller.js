@@ -8,12 +8,19 @@ let timer;
 function startGame() {
 	// Choose board difficulty
 	let board;
-	if (document.querySelector('.easy').checked) board = model.easy[0];
-	else if (document.querySelector('.medium').checked) board = model.medium[0];
-	else board = model.hard[0];
+	let solution;
+	if (document.querySelector('.easy').checked) [board, solution] = model.easy;
+	else if (document.querySelector('.medium').checked)
+		[board, solution] = model.medium;
+	else [board, solution] = model.hard;
+
+	model.state.solution = solution;
 
 	// Clear previous board
 	clearPrevious();
+
+	// Store current board
+	model.state.currentBoard = [...board];
 
 	// Update the board
 	boardView.generateBoard(board);
@@ -116,34 +123,61 @@ const controlDigits = function (tile) {
 	}
 };
 
-function updateMove() {
-	// If a tile and number is selected
-	if (!model.state.selectedTile || !model.state.selectedNum) return;
+const updateMove = function () {
+	let tile = model.state.selectedTile;
+	let digit = model.state.selectedNum;
 
-	model.state.selectedTile.className = '';
+	// If a tile and number is selected
+	if (!tile || !digit) return;
+
+	// Update current board in a model
+	model.state.currentBoard[tile.id] = digit.textContent;
+
+	// Clear the tile
+	tile.className = '';
+	tile.textContent = '';
+	tile.classList.add('tile', 'tile--small');
+
+	if (digit.textContent === 'X') return;
 
 	// Set the tile to the correct number
-	if (model.state.selectedNum.textContent === 'X') {
-		model.state.selectedTile.textContent = '';
-		model.state.selectedTile.classList.add('tile', 'tile--small');
-	} else {
-		model.state.selectedTile.textContent = model.state.selectedNum.textContent;
-		model.state.selectedTile.classList.add(
-			'tile',
-			'tile--small',
-			`tile--${model.state.selectedNum.textContent}`,
-			'highlighted'
-		);
-	}
+	tile.textContent = digit.textContent;
+	tile.classList.add(
+		'tile',
+		'tile--small',
+		`tile--${digit.textContent}`,
+		'highlighted'
+	);
+
+	// Check if correct & if done
+	checkCorrect(tile) && checkDone() && endGame();
 
 	// Deselect the tiles
-	model.state.selectedTile.classList.remove('selected');
+	tile.classList.remove('selected');
 
 	// Clear the selected tile
-	model.state.selectedTile = null;
-}
+	tile = null;
+};
 
-function clearPrevious() {
+const checkCorrect = tile =>
+	model.state.solution.charAt(tile.id) === tile.textContent;
+
+const checkDone = () =>
+	model.state.currentBoard.join('') === model.state.solution;
+
+const endGame = () => {
+	console.log('end');
+	// End game
+	model.state.disableSelect = true;
+	// Stop the timer
+	clearTimeout(timer);
+
+	// Deselect and dehighlight and
+	// Display some message
+	alert('Nice job 👌');
+};
+
+const clearPrevious = function () {
 	// Access all of the tiles
 	document.querySelectorAll('.tile--small').forEach(tile => {
 		tile.className = '';
@@ -164,7 +198,7 @@ function clearPrevious() {
 
 	// If there is a Timer clear it
 	if (timer) clearTimeout(timer);
-}
+};
 
 const init = function () {
 	// Set the listeners
