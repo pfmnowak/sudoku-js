@@ -5,21 +5,40 @@ import digitsView from './views/digitsView.js';
 
 let timer;
 
-function startGame() {
+const startGame = function () {
+	getData();
+	loadData();
+};
+
+const restartGame = function () {
+	loadData();
+};
+
+const getData = function () {
 	// Choose board difficulty
-	// ToDo: Randomly get one of the sudoku data sets
 	let board;
 	let solution;
-	if (document.querySelector('.easy').checked) [board, solution] = model.easy;
+
+	if (document.querySelector('.easy').checked)
+		[board, solution] =
+			model.data.easy[Math.floor(Math.random() * model.data.easy.length)];
 	else if (document.querySelector('.medium').checked)
-		[board, solution] = model.medium;
-	else [board, solution] = model.hard;
+		[board, solution] =
+			model.data.medium[Math.floor(Math.random() * model.data.medium.length)];
+	else
+		[board, solution] =
+			model.data.hard[Math.floor(Math.random() * model.data.hard.length)];
 
 	model.state.solution = solution;
 	model.state.board = board;
+};
 
+const loadData = function () {
 	// Show number container
 	document.querySelector('.number-container').classList.remove('hidden');
+
+	// Activate the board
+	model.state.disableSelect = false;
 
 	// ToDo: Reset will do these too
 	// Clear previous board
@@ -30,7 +49,7 @@ function startGame() {
 	boardView.generateBoard(model.state.board);
 	// Start the timer
 	startTimer();
-}
+};
 
 const startTimer = function () {
 	let i = 0;
@@ -204,6 +223,7 @@ const init = function () {
 	// Set the listeners
 	boardView.addHandlerClick(controlTiles);
 	controlView.addHandlerStart(startGame);
+	controlView.addHandlerReset(restartGame);
 	digitsView.addHandlerClick(controlDigits);
 	// ToDo: Create seperate view for modal later
 	document
