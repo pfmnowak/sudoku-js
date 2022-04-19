@@ -8,182 +8,362 @@
 		<script type="module" defer src="js/controller.js"></script>
 	</head>
 	<body>
-		<header class="header">
-			<h1 class="heading-primary">Sudoku</h1>
-			<div class="setup-game" id="setup-game">
-				<div id="diff">
-					<h3 class="heading-tertiary">Choose Difficulty:</h3>
-					<input
-						id="easy"
-						class="easy"
-						type="radio"
-						name="diff"
-						value="easy"
-						checked
-					/>
-					<label for="easy">Easy</label>
-					<input
-						id="medium"
-						class="medium"
-						type="radio"
-						name="diff"
-						value="medium"
-					/>
-					<label for="medium">Medium</label>
-					<input id="hard" class="hard" type="radio" name="diff" value="hard" />
-					<label for="hard">Hard</label>
+		<div class="container">
+			<header class="header">
+				<h1 class="heading-primary">Sudoku</h1>
+				<div class="setup-game" id="setup-game">
+					<div id="diff">
+						<h3 class="heading-tertiary">Choose Difficulty:</h3>
+						<input
+							id="easy"
+							class="easy"
+							type="radio"
+							name="diff"
+							value="easy"
+							checked
+						/>
+						<label for="easy">Easy</label>
+						<input
+							id="medium"
+							class="medium"
+							type="radio"
+							name="diff"
+							value="medium"
+						/>
+						<label for="medium">Medium</label>
+						<input
+							id="hard"
+							class="hard"
+							type="radio"
+							name="diff"
+							value="hard"
+						/>
+						<label for="hard">Hard</label>
+					</div>
 				</div>
+				<button class="btn" id="start-btn">Start New Game</button>
+				<button class="btn" id="reset-btn">Reset Game</button>
+			</header>
+
+			<main>
+				<section id="game" class="game-section">
+					<div class="timer"></div>
+					<div class="board" id="board">
+						<table class="board__table">
+							<tbody class="board__row-group">
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+							</tbody>
+							<tbody class="board__row-group">
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+							</tbody>
+							<tbody class="board__row-group">
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+								<tr class="board__row">
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+									<td class="board__cell">
+										<div class="tile tile--small"></div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="number-container hidden">
+						<div class="tile tile--big tile--1">1</div>
+						<div class="tile tile--big tile--2">2</div>
+						<div class="tile tile--big tile--3">3</div>
+						<div class="tile tile--big tile--4">4</div>
+						<div class="tile tile--big tile--5">5</div>
+						<div class="tile tile--big tile--6">6</div>
+						<div class="tile tile--big tile--7">7</div>
+						<div class="tile tile--big tile--8">8</div>
+						<div class="tile tile--big tile--9">9</div>
+						<div class="tile tile--big tile--x">X</div>
+					</div>
+				</section>
+			</main>
+			<footer class="footer">
+				<div class="social">
+					<a
+						href="https://github.com/pfmnowak/sudoku-js/"
+						href="https://pfmnowak.github.io/"
+						class="social__link"
+						title="GitHub Repo with the code"
+					>
+						<svg class="social__icon">
+							<use xlink:href="img/sprite.svg#icon-github"></use>
+						</svg>
+					</a>
+				</div>
+				<div class="footer__info">
+					<div>
+						&copy; 2022 | By
+						<a
+							href="https://pfmnowak.github.io/"
+							class="inline-link"
+							title="Author's page"
+							>Mikołaj Nowak</a
+						>
+					</div>
+				</div>
+			</footer>
+			<div class="overlay hidden"></div>
+			<div class="modal hidden">
+				<button class="btn--close-modal">&times;</button>
+				<div class="modal__header">Victory!</div>
+				<div class="modal__text">You won! Congratulations!🎉🏆</div>
 			</div>
-			<button class="btn" id="start-btn">Start New Game</button>
-			<button class="btn" id="reset-btn">Reset Game</button>
-		</header>
-		<main>
-			<section id="game" class="game-section">
-				<div class="timer"></div>
-				<div class="board" id="board">
-					<table class="board__table">
-						<colgroup class="board__column-group">
-							<col class="board__column" />
-							<col class="board__column" />
-							<col class="board__column" />
-						</colgroup>
-						<colgroup class="board__column-group">
-							<col class="board__column" />
-							<col class="board__column" />
-							<col class="board__column" />
-						</colgroup>
-						<colgroup class="board__column-group">
-							<col class="board__column" />
-							<col class="board__column" />
-							<col class="board__column" />
-						</colgroup>
-						<tbody class="board__row-group">
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-						</tbody>
-						<tbody class="board__row-group">
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-						</tbody>
-						<tbody class="board__row-group">
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-							<tr class="board__row">
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-								<td class="board__cell"><p class="tile tile--small"></p></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="number-container hidden">
-					<p class="tile tile--big tile--1">1</p>
-					<p class="tile tile--big tile--2">2</p>
-					<p class="tile tile--big tile--3">3</p>
-					<p class="tile tile--big tile--4">4</p>
-					<p class="tile tile--big tile--5">5</p>
-					<p class="tile tile--big tile--6">6</p>
-					<p class="tile tile--big tile--7">7</p>
-					<p class="tile tile--big tile--8">8</p>
-					<p class="tile tile--big tile--9">9</p>
-					<p class="tile tile--big tile--x">X</p>
-				</div>
-			</section>
-		</main>
-		<footer class="footer">Built by Mikołaj Nowak</footer>
-		<div class="overlay hidden"></div>
-		<div class="modal hidden">
-			<button class="btn--close-modal">&times;</button>
-			<div class="modal__header">Victory!</div>
-			<div class="modal__text">You won! Congratulations!🎉🏆</div>
 		</div>
 	</body>
 </html>

@@ -1,71 +1,64 @@
 .board {
 	margin-top: 1rem;
 	padding: 5rem 5rem;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-content: flex-start;
-	background-color: rgba($color-black, 0.8);
 
 	&__table {
 		border-collapse: collapse;
+		display: flex;
+		flex-direction: column;
 	}
 
-	&__column-group:not(:first-child) {
-		border-left: 2px solid $color-gray-light;
-	}
-
-	&__column:not(:last-child) {
-		border-right: 1px solid $color-gray-dark;
+	&__row-group {
+		display: flex;
+		flex-direction: column;
 	}
 
 	&__row-group:not(:last-child) {
 		border-bottom: 2px solid $color-gray-light;
 	}
 
-	&__row:not(:last-child) {
-		border-bottom: 1px solid $color-gray-dark;
+	&__row {
+		display: flex;
+
+		&:not(:last-child) {
+			border-bottom: 1px solid $color-gray-dark;
+		}
 	}
 
 	&__cell {
-		// border: 1px solid $color-gray-light;
 		width: 6rem;
 		height: 6rem;
-		margin: 0;
-		vertical-align: middle;
-		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:not(:last-child) {
+			border-right: 1px solid $color-gray-dark;
+		}
+
+		&:nth-child(3),
+		&:nth-child(6) {
+			border-right: 2px solid $color-gray-light !important;
+		}
 	}
 }
 
 .tile {
-	display: inline-block;
-	vertical-align: middle;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	border-radius: 50%;
-	width: 5rem;
-	height: 5rem;
+	width: 80%;
+	height: 80%;
 	font-size: 3rem;
-	text-align: center;
-
-	margin-block-start: 0;
-	margin-block-end: 0;
 
 	&--big {
-		display: block;
-		border: 3px solid $color-green-dark;
 		width: 6rem;
 		height: 6rem;
+		border: 3px solid $color-green-dark;
 		font-size: 4rem;
 
 		margin-left: 5rem;
 		margin-top: 0.5rem;
-		margin-bottom: 0.5rem;
 	}
-}
-
-.rightBorder {
-	border-right: 4px solid $color-black;
-}
-
-.bottomBorder {
-	border-bottom: 4px solid $color-black;
 }
