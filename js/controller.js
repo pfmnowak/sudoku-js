@@ -60,12 +60,15 @@ const startTimer = function () {
 };
 
 const convertTime = function (time) {
-	let minutes = Math.floor(time / 60);
+	let hours = Math.floor(time / 3600);
+	let minutes = Math.floor(time / 60 - hours * 60);
 	let seconds = time % 60;
-	return `${(minutes = minutes < 10 ? `0${minutes}` : minutes)}:${
-		seconds < 10 ? `0${seconds}` : seconds
-	}`;
+	return `${(hours = hours === 0 ? '' : `${checkZero(hours)}:`)}${checkZero(
+		minutes
+	)}:${checkZero(seconds)}`;
 };
+
+const checkZero = i => (i < 10 ? `0${i}` : i);
 
 const controlTiles = function (tile) {
 	// If selecting is disabled
