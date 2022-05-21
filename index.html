@@ -15,12 +15,20 @@
 					<div id="diff">
 						<h3 class="heading-tertiary">Choose Difficulty:</h3>
 						<input
+							id="beginner"
+							class="beginner"
+							type="radio"
+							name="diff"
+							value="beginner"
+							checked
+						/>
+						<label for="beginner">Beginner</label>
+						<input
 							id="easy"
 							class="easy"
 							type="radio"
 							name="diff"
 							value="easy"
-							checked
 						/>
 						<label for="easy">Easy</label>
 						<input
@@ -39,6 +47,14 @@
 							value="hard"
 						/>
 						<label for="hard">Hard</label>
+						<input
+							id="master"
+							class="master"
+							type="radio"
+							name="diff"
+							value="master"
+						/>
+						<label for="master">Master</label>
 					</div>
 				</div>
 				<button class="btn" id="start-btn">Start New Game</button>

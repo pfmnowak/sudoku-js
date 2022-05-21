@@ -19,15 +19,23 @@ const getData = function () {
 	let board;
 	let solution;
 
-	if (document.querySelector('.easy').checked)
+	if (document.querySelector('.beginner').checked)
+		[board, solution] =
+			model.data.beginner[
+				Math.floor(Math.random() * model.data.beginner.length)
+			];
+	else if (document.querySelector('.easy').checked)
 		[board, solution] =
 			model.data.easy[Math.floor(Math.random() * model.data.easy.length)];
 	else if (document.querySelector('.medium').checked)
 		[board, solution] =
 			model.data.medium[Math.floor(Math.random() * model.data.medium.length)];
-	else
+	else if (document.querySelector('.hard').checked)
 		[board, solution] =
 			model.data.hard[Math.floor(Math.random() * model.data.hard.length)];
+	else
+		[board, solution] =
+			model.data.master[Math.floor(Math.random() * model.data.master.length)];
 
 	model.state.solution = solution;
 	model.state.board = board;
