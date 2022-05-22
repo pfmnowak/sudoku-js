@@ -9,9 +9,18 @@ body.light {
 }
 
 .heading-primary {
-	font-size: 6rem;
+	font-size: 8rem;
 	text-transform: uppercase;
 	font-weight: 700;
+
+	background-image: linear-gradient(
+		to left bottom,
+		$color-green-light,
+		$color-green-dark
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
 }
 
 .heading-tertiary {

@@ -29,5 +29,11 @@ html {
 
 body {
 	box-sizing: border-box;
-	background-color: $color-gray-dark;
+	background-image: url('../img/leaves.jpg');
+	background-position: center;
+}
+
+::selection {
+	background-color: $color-green-dark;
+	color: $color-black;
 }
