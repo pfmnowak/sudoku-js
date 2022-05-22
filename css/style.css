@@ -118,7 +118,8 @@ body.light {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100rem;
+  max-width: 100rem;
+  width: 75vw;
   background-color: #fff;
   border-radius: 1rem;
   padding: 5rem 6rem;
