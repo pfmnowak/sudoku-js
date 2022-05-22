@@ -1,5 +1,27 @@
 .game-section {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	user-select: none;
+
+	// For portrait mode
+	// flex-direction: column;
+}
+
+.number-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	flex: 0 0 auto;
+
+	flex-direction: column;
+	height: 35rem;
+
+	// For portrait mode
+	/* 
+		flex-direction: row;
+		width: 35rem;
+		height: auto;
+	*/
 }
