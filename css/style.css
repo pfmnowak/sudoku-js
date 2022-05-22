@@ -7,6 +7,18 @@
 
 html {
   font-size: 62.5%; }
+  @media only screen and (min-width: 112.5em) {
+    html {
+      font-size: 75%; } }
+  @media only screen and (max-width: 75em) {
+    html {
+      font-size: 56.25%; } }
+  @media only screen and (max-width: 56.25em) {
+    html {
+      font-size: 50%; } }
+  @media only screen and (max-width: 37.5em) {
+    html {
+      font-size: 40%; } }
 
 body {
   box-sizing: border-box;
@@ -46,6 +58,9 @@ body.light {
 
 .board {
   padding: 2rem 5rem; }
+  @media only screen and (max-width: 56.25em) {
+    .board {
+      padding: 2rem 0rem; } }
   .board__table {
     border-collapse: collapse;
     display: flex;
@@ -154,7 +169,13 @@ body.light {
   background-color: #000;
   box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.3);
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  justify-content: space-between; }
+  @media only screen and (max-width: 75em) {
+    .container {
+      margin: 0;
+      min-height: 100vh;
+      max-width: 100%; } }
 
 .header {
   text-align: center;
@@ -183,6 +204,9 @@ body.light {
   justify-content: center;
   align-items: center;
   user-select: none; }
+  @media only screen and (max-width: 56.25em) {
+    .game-section {
+      flex-direction: column; } }
 
 .number-container {
   display: flex;
@@ -191,9 +215,9 @@ body.light {
   align-items: center;
   flex: 0 0 auto;
   flex-direction: column;
-  height: 35rem;
-  /* 
-		flex-direction: row;
-		width: 35rem;
-		height: auto;
-	*/ }
+  height: 35rem; }
+  @media only screen and (max-width: 56.25em) {
+    .number-container {
+      flex-direction: row;
+      width: 35rem;
+      height: auto; } }

@@ -4,8 +4,9 @@
 	align-items: center;
 	user-select: none;
 
-	// For portrait mode
-	// flex-direction: column;
+	@include respond(tab-port) {
+		flex-direction: column;
+	}
 }
 
 .number-container {
@@ -18,10 +19,9 @@
 	flex-direction: column;
 	height: 35rem;
 
-	// For portrait mode
-	/* 
+	@include respond(tab-port) {
 		flex-direction: row;
 		width: 35rem;
 		height: auto;
-	*/
+	}
 }

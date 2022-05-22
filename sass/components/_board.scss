@@ -1,6 +1,10 @@
 .board {
 	padding: 2rem 5rem;
 
+	@include respond(tab-port) {
+		padding: 2rem 0rem;
+	}
+
 	&__table {
 		border-collapse: collapse;
 		display: flex;
