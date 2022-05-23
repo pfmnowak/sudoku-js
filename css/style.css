@@ -111,6 +111,36 @@ body.light {
     margin-left: 1rem;
     margin-top: 1rem; }
 
+.button, .button:link, .button:visited {
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1.5rem 3rem;
+  display: inline-block;
+  transition: all 0.2s;
+  position: relative;
+  font-size: 1.6rem;
+  border: none;
+  cursor: pointer; }
+
+.button:hover {
+  box-shadow: 0 1rem 2rem rgba(255, 255, 255, 0.2); }
+
+.button:focus, .button:active {
+  outline: none;
+  box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.2); }
+
+.button--cta {
+  border-radius: 1rem; }
+  .button--cta:hover {
+    background-color: #fff; }
+
+.button--round {
+  width: 5rem;
+  height: 5rem;
+  padding: 1rem;
+  background-color: #ddd;
+  border-radius: 50%; }
+
 .inline-link {
   text-decoration: none;
   color: inherit;
@@ -208,26 +238,29 @@ body.light {
       max-width: 100%; } }
 
 .header {
-  text-align: center;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid red; }
-
-.setup-game {
-  display: flex;
-  justify-content: center; }
-
-.setup-game > div {
-  margin-bottom: 2rem;
-  padding-left: 5rem;
-  padding-right: 5rem; }
+  text-align: center; }
 
 .footer {
   color: #ddd;
   text-align: center;
   padding: 3rem 0;
-  margin-top: 10rem;
-  font-size: 1.6rem;
-  border-top: 1px solid red; }
+  margin-top: 5rem;
+  font-size: 1.6rem; }
+
+.setup-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; }
+  .setup-section .difficulty-form {
+    text-align: center;
+    padding-bottom: 2rem; }
+
+.toolbar-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 5rem 10rem; }
 
 .game-section {
   display: flex;

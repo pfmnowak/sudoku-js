@@ -11,8 +11,11 @@
 		<div class="container">
 			<header class="header">
 				<h1 class="heading-primary">Sudoku</h1>
-				<div class="setup-game" id="setup-game">
-					<div id="diff">
+			</header>
+
+			<main>
+				<section class="setup-section">
+					<div class="difficulty-form" id="diff">
 						<h3 class="heading-tertiary">Choose Difficulty:</h3>
 						<input
 							id="beginner"
@@ -56,13 +59,23 @@
 						/>
 						<label for="master">Master</label>
 					</div>
-				</div>
-				<button class="btn" id="start-btn">Start New Game</button>
-				<button class="btn" id="reset-btn">Reset Game</button>
-			</header>
-
-			<main>
-				<div class="timer"></div>
+					<button class="button button--cta" id="start-btn">
+						Start New Game
+					</button>
+				</section>
+				<section class="toolbar-section">
+					<button class="button button--round">
+						<svg class="social__icon">
+							<use xlink:href="icons/sprite.svg#icon-chevron-left"></use>
+						</svg>
+					</button>
+					<div class="timer"></div>
+					<button class="button button--round" id="reset-btn">
+						<svg class="social__icon">
+							<use xlink:href="icons/sprite.svg#icon-rotate-left"></use>
+						</svg>
+					</button>
+				</section>
 				<section id="game" class="game-section">
 					<div class="board" id="board">
 						<table class="board__table">
@@ -358,7 +371,7 @@
 						title="GitHub Repo with the code"
 					>
 						<svg class="social__icon">
-							<use xlink:href="img/sprite.svg#icon-github"></use>
+							<use xlink:href="icons/sprite.svg#icon-github"></use>
 						</svg>
 					</a>
 				</div>

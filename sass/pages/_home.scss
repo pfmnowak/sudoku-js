@@ -1,3 +1,22 @@
+.setup-section {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	.difficulty-form {
+		text-align: center;
+		padding-bottom: 2rem;
+	}
+}
+
+.toolbar-section {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	padding: 5rem 10rem;
+}
+
 .game-section {
 	display: flex;
 	justify-content: center;
