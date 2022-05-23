@@ -111,6 +111,26 @@ body.light {
     margin-left: 1rem;
     margin-top: 1rem; }
 
+.inline-link {
+  text-decoration: none;
+  color: inherit;
+  color: #fb000d;
+  position: relative;
+  padding-bottom: 1rem; }
+  .inline-link:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0%;
+    height: 100%;
+    border-bottom: 2px solid #fb000d;
+    transition: width 0.3s ease; }
+  .inline-link:hover:after {
+    left: 0;
+    width: 100%;
+    transition: width 0.3s ease; }
+
 .overlay {
   position: fixed;
   top: 0;
