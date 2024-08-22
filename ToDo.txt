@@ -1,0 +1,32 @@
+Pages/components:
+
+-Home Page
+    -Login button
+    -Start a new game button
+    -Resume a (paused) game button
+    -Links to other pages
+-Choose difficulty slider / Page
+-Game Page
+    -Board
+    -Digits
+    -timer
+    -return home button
+    -restart button
+-Leaderboard Page
+-Scores/stats Page
+    -top 5/10 results
+    -charts?
+-Profile/settings Page
+-Login Page
+
+
+features:
+-game
+-choosing difficulty
+-timer
+-storing data in a local storage
+-Auth/login with tokens and logout
+-storing data in a DB
+-dark/light mode
+-PWA
+
