@@ -28,5 +28,6 @@ features:
 -Auth/login with tokens and logout
 -storing data in a DB
 -dark/light mode
+-i18n
 -PWA
 
