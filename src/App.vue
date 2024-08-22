@@ -1,19 +1,17 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import TheFooter from './components/layout/TheFooter.vue'
-</script>
-
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld msg="Sudoku" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
+        <router-link to="/">Home</router-link>
+        <router-link to="/about">About</router-link>
+        <router-link to="/new-game">Start a New Game</router-link>
+        <router-link v-if="gameStarted" to="/game">Resume a Game</router-link>
+        <router-link to="/leaderboard">Leaderboard</router-link>
+        <router-link to="/scores">Scores</router-link>
       </nav>
     </div>
   </header>
@@ -22,6 +20,14 @@ import TheFooter from './components/layout/TheFooter.vue'
 
   <TheFooter />
 </template>
+
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router'
+import HelloWorld from './components/HelloWorld.vue'
+import TheFooter from './components/layout/TheFooter.vue'
+
+const gameStarted = true
+</script>
 
 <style scoped>
 header {

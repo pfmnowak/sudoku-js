@@ -1,11 +1,12 @@
 Pages/components:
 
 -Home Page
-    -Login button
     -Start a new game button
     -Resume a (paused) game button
     -Links to other pages
--Choose difficulty slider / Page
+    -Login button
+-Navbar
+-Choose difficulty slider / New Game Page
 -Game Page
     -Board
     -Digits
@@ -24,7 +25,10 @@ features:
 -game
 -choosing difficulty
 -timer
--storing data in a local storage
+-router
+-navigation
+-store
+-storing data in a local storage (results)
 -Auth/login with tokens and logout
 -storing data in a DB
 -dark/light mode
