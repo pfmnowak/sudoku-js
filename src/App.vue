@@ -4,14 +4,13 @@
 
     <div class="wrapper">
       <HelloWorld msg="Sudoku" />
-
       <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
-        <router-link to="/new-game">Start a New Game</router-link>
-        <router-link v-if="gameStarted" to="/game">Resume a Game</router-link>
-        <router-link to="/leaderboard">Leaderboard</router-link>
-        <router-link to="/scores">Scores</router-link>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+        <RouterLink to="/new-game">Start a New Game</RouterLink>
+        <RouterLink v-if="gameStarted" to="/game">Resume a Game</RouterLink>
+        <RouterLink to="/leaderboard">Leaderboard</RouterLink>
+        <RouterLink to="/scores">Scores</RouterLink>
       </nav>
     </div>
   </header>

@@ -2,12 +2,10 @@
   <button class="button" type="button">{{ title }}</button>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    title: String
-  }
-};
+<script setup lang="ts">
+defineProps<{
+  title: string;
+}>();
 </script>
 
 <style lang="scss" scoped>

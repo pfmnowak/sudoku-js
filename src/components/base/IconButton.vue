@@ -6,12 +6,10 @@
   </button>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    icon: String
-  }
-};
+<script setup lang="ts">
+defineProps<{
+  icon: string;
+}>();
 </script>
 
 <style lang="scss" scoped>

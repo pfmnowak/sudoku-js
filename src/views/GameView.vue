@@ -1,8 +1,8 @@
 <template>
   <section class="toolbar-section">
-    <icon-button icon="icon-chevron-left" @click="$router.push({ path: '/', replace: true })" />
+    <IconButton icon="icon-chevron-left" @click="$router.push({ path: '/', replace: true })" />
     <div class="timer"></div>
-    <icon-button icon="icon-rotate-left" @click="() => {}" />
+    <IconButton icon="icon-rotate-left" @click="() => {}" />
   </section>
   <section id="game" class="game-section">
     <div class="board" id="board">
@@ -69,68 +69,59 @@
   </section>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import IconButton from '@/components/base/IconButton.vue';
 import { useGameStateStore } from '@/store';
 import { onMounted } from 'vue';
 
-export default {
-  components: { IconButton },
-  setup() {
-    const store = useGameStateStore();
+const store = useGameStateStore();
 
-    const currentBoard = store.currentBoard;
+// const currentBoard = store.currentBoard;
 
-    const startGame = () => {
-      getData();
-      loadData();
-    };
-
-    const getData = () => {
-      // Choose board difficulty
-      let board;
-      let solution;
-
-      // if (document.querySelector('.beginner').checked)
-      [board, solution] =
-        store.data.beginner[Math.floor(Math.random() * store.data.beginner.length)];
-      // Tutaj computed() property z funkcją
-
-      store.solution = solution;
-      store.board = board;
-    };
-
-    const loadData = function () {
-      // Show number container
-      // document.querySelector('.number-container').classList.remove('hidden');
-      // setNumberContainerVisible
-
-      // Activate the board
-      store.disableSelect = false;
-
-      // ToDo: Reset will do these too
-      // Clear previous board
-      // clearState();
-      // Store current board
-      store.currentBoard = [...store.board];
-      // Update the board
-      // boardView.generateBoard(store.board);
-      // Start the timer
-      // startTimer();
-
-      console.log('store.currentBoard', store.currentBoard);
-    };
-
-    onMounted(() => {
-      startGame();
-    });
-
-    return {
-      currentBoard,
-      startGame
-    };
-  }
+const startGame = () => {
+  getData();
+  loadData();
 };
+
+const getData = () => {
+  // Choose board difficulty
+  let board;
+  let solution;
+
+  // if (document.querySelector('.beginner').checked)
+  [board, solution] = store.data.beginner[Math.floor(Math.random() * store.data.beginner.length)];
+  // Tutaj computed() property z funkcją
+
+  store.solution = solution;
+  store.board = board;
+};
+
+const loadData = function () {
+  // Show number container
+  // document.querySelector('.number-container').classList.remove('hidden');
+  // setNumberContainerVisible
+
+  // Activate the board
+  store.disableSelect = false;
+
+  // ToDo: Reset will do these too
+  // Clear previous board
+  // clearState();
+  // Store current board
+  store.currentBoard = [...store.board];
+  // Update the board
+  // boardView.generateBoard(store.board);
+  // Start the timer
+  // startTimer();
+
+  console.log('store.currentBoard', store.currentBoard);
+};
+
+onMounted(() => {
+  startGame();
+  // depending on the button pressed / previous path
+  // resumeGame();
+});
 </script>
 
 <style lang="scss" scoped>

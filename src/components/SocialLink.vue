@@ -8,16 +8,11 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    link: {
-      required: true,
-      type: String
-    },
-    title: String
-  }
-};
+<script setup lang="ts">
+defineProps<{
+  link: string;
+  title: string;
+}>();
 </script>
 
 <style lang="scss" scoped>

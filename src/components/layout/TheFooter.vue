@@ -1,9 +1,6 @@
 <template>
   <footer>
-    <social-link
-      link="https://github.com/pfmnowak/sudoku-js/"
-      title="GitHub Repo with the code"
-    ></social-link>
+    <SocialLink link="https://github.com/pfmnowak/sudoku-js/" title="GitHub Repo with the code" />
     <div class="footer__info">
       <div>
         &copy; 2022 | By
@@ -15,12 +12,8 @@
   </footer>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import SocialLink from '../SocialLink.vue';
-
-export default {
-  components: { SocialLink }
-};
 </script>
 
 <style lang="scss" scoped>
