@@ -72,7 +72,7 @@ const convertTime = function (time) {
 	let minutes = Math.floor(time / 60 - hours * 60);
 	let seconds = time % 60;
 	return `${(hours = hours === 0 ? '' : `${checkZero(hours)}:`)}${checkZero(
-		minutes
+		minutes,
 	)}:${checkZero(seconds)}`;
 };
 
@@ -176,7 +176,7 @@ const updateMove = function () {
 		'tile',
 		'tile--small',
 		`tile--${digit.textContent}`,
-		'highlighted'
+		'highlighted',
 	);
 
 	// Check if correct & if done

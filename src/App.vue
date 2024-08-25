@@ -22,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import TheFooter from './components/layout/TheFooter.vue'
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+import TheFooter from './components/layout/TheFooter.vue';
 
-const gameStarted = true
+const gameStarted = true;
 </script>
 
 <style scoped>

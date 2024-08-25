@@ -5,21 +5,19 @@
 </template>
 
 <script lang="ts">
-import BaseButton from '../components/base/BaseButton.vue'
+import BaseButton from '../components/base/BaseButton.vue';
 
 export default {
   components: { BaseButton },
 
   setup() {
     const startGameHandler = () => {
-      console.log('Start a new game!')
-    }
+      console.log('Start a new game!');
+    };
 
     return {
       startGameHandler
-    }
+    };
   }
-}
-
-BaseButton
+};
 </script>

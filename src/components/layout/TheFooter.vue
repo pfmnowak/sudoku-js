@@ -16,11 +16,11 @@
 </template>
 
 <script lang="ts">
-import SocialLink from '../SocialLink.vue'
+import SocialLink from '../SocialLink.vue';
 
 export default {
   components: { SocialLink }
-}
+};
 </script>
 
 <style lang="scss" scoped>

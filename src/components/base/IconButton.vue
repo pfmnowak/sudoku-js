@@ -1,11 +1,15 @@
 <template>
-  <button class="button" type="button">{{ title }}</button>
+  <button class="button button--round" type="button">
+    <svg class="button__icon">
+      <use :xlink:href="[`/src/assets/sprite.svg#${icon}`]"></use>
+    </svg>
+  </button>
 </template>
 
 <script lang="ts">
 export default {
   props: {
-    title: String
+    icon: String
   }
 };
 </script>
@@ -35,12 +39,9 @@ export default {
   }
 }
 
-.button--cta {
-  border-radius: 1rem;
-
-  &:hover {
-    background-color: #fff;
-  }
+.button__icon {
+  width: 100%;
+  height: 100%;
 }
 
 .button--round {
