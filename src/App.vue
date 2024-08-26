@@ -15,17 +15,62 @@
     </div>
   </header>
 
+  <button @click="onConversationsAPIReady">Open the Chat</button>
+
+  <div id="some-lovely-custom-id"></div>
   <RouterView />
 
   <TheFooter />
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import TheFooter from './components/layout/TheFooter.vue';
 
 const gameStarted = true;
+
+const onConversationsAPIReady = () => {
+  console.log(`HubSpot Conversations API: ${window.HubSpotConversations}`);
+
+  const status = window.HubSpotConversations.widget.status();
+  console.log(`___HubSpot status___: ${status}`);
+
+  console.log(`HubSpot Conversations WIDżET: ${window.HubSpotConversations.widget}`);
+  // Ładujemy chuja
+  window.HubSpotConversations.widget.load();
+};
+
+onMounted(() => {
+  console.log('On Mounted');
+
+  /*
+    configure window.hsConversationsSettings if needed.
+  */
+  window.hsConversationsSettings = {
+    loadImmediately: false,
+    inlineEmbedSelector: '#some-lovely-custom-id',
+    enableWidgetCookieBanner: true,
+    disableAttachment: true
+  };
+
+  /*
+    If external API methods are already available, use them.
+  */
+  if (window.HubSpotConversations) {
+    // onConversationsAPIReady();
+    console.log('API REDI');
+  } else {
+    console.log('API NOT REDI');
+    /*
+  Otherwise, callbacks can be added to the hsConversationsOnReady on the window object.
+  These callbacks will be called once the external API has been initialized.
+  */
+    // window.hsConversationsOnReady = [onConversationsAPIReady];
+  }
+  console.log('END if On Mounted');
+});
 </script>
 
 <style scoped>
