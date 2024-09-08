@@ -1,6 +1,7 @@
 <template>
   <section class="toolbar-section">
     <IconButton icon="icon-chevron-left" @click="$router.push({ path: '/', replace: true })" />
+    <!-- <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" /> -->
     <div class="timer"></div>
     <IconButton icon="icon-rotate-left" @click="() => {}" />
   </section>
