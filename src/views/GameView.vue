@@ -6,61 +6,7 @@
     <IconButton icon="icon-rotate-left" @click="() => {}" />
   </section>
   <section id="game" class="game-section">
-    <div class="board" id="board">
-      <table class="board__table">
-        <tbody class="board__row-group">
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-        </tbody>
-        <tbody class="board__row-group">
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-        </tbody>
-        <tbody class="board__row-group">
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-          <tr class="board__row">
-            <td v-for="index in 9" :key="index" class="board__cell">
-              <div class="tile tile--small"></div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <BoardTable />
     <div class="number-container hidden">
       <div v-for="index in 9" :key="index" :class="[`tile tile--big tile--${index}`]">
         {{ index }}
@@ -72,6 +18,7 @@
 
 <script setup lang="ts">
 import IconButton from '@/components/base/IconButton.vue';
+import BoardTable from '@/components/Board/BoardTable.vue';
 import { useGameStateStore } from '@/store';
 import { onMounted } from 'vue';
 
@@ -110,12 +57,9 @@ const loadData = function () {
   // clearState();
   // Store current board
   store.currentBoard = [...store.board];
-  // Update the board
-  // boardView.generateBoard(store.board);
+
   // Start the timer
   // startTimer();
-
-  console.log('store.currentBoard', store.currentBoard);
 };
 
 onMounted(() => {
@@ -126,58 +70,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.board {
-  padding: 2rem 5rem;
-
-  // @include respond(tab-port) {
-  padding: 2rem 0rem;
-  // }
-
-  &__table {
-    border-collapse: collapse;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__row-group {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__row-group:not(:last-child) {
-    // border-bottom: 2px solid $color-gray-light;
-    border-bottom: 2px solid lightgrey;
-  }
-
-  &__row {
-    display: flex;
-
-    &:not(:last-child) {
-      // border-bottom: 1px solid $color-gray-dark;
-      border-bottom: 1px solid darkgrey;
-    }
-  }
-
-  &__cell {
-    width: 6rem;
-    height: 6rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:not(:last-child) {
-      // border-right: 1px solid $color-gray-dark;
-      border-right: 1px solid darkgrey;
-    }
-
-    &:nth-child(3),
-    &:nth-child(6) {
-      // border-right: 2px solid $color-gray-light !important;
-      border-right: 2px solid lightgrey !important;
-    }
-  }
-}
-
 .tile {
   display: flex;
   justify-content: center;
