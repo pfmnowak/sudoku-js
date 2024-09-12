@@ -3,7 +3,7 @@ import { ref } from 'vue';
 
 export const useGameStateStore = defineStore('gameState', () => {
   const currentBoard = ref<string[]>([]);
-  const selectedNum = ref(null);
+  const selectedNum = ref('');
   const selectedTile = ref(null);
   const disableSelect = ref(false);
   const solution = ref<string>('');

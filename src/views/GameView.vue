@@ -7,18 +7,14 @@
   </section>
   <section id="game" class="game-section">
     <BoardTable />
-    <div class="number-container hidden">
-      <div v-for="index in 9" :key="index" :class="[`tile tile--big tile--${index}`]">
-        {{ index }}
-      </div>
-      <div class="tile tile--big tile--x">X</div>
-    </div>
+    <NumberContainer />
   </section>
 </template>
 
 <script setup lang="ts">
 import IconButton from '@/components/base/IconButton.vue';
 import BoardTable from '@/components/Board/BoardTable.vue';
+import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
 import { useGameStateStore } from '@/store';
 import { onMounted } from 'vue';
 
@@ -70,28 +66,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.tile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  width: 80%;
-  height: 80%;
-  font-size: 3rem;
-  cursor: pointer;
-
-  &--big {
-    width: 6rem;
-    height: 6rem;
-    // border: 3px solid $color-green-dark;
-    border: 3px solid darkgreen;
-    font-size: 4rem;
-
-    margin-left: 1rem;
-    margin-top: 1rem;
-  }
-}
-
 .toolbar-section {
   display: flex;
   align-items: center;
@@ -107,22 +81,6 @@ onMounted(() => {
 
   // @include respond(tab-port) {
   flex-direction: column;
-  // }
-}
-.number-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  flex: 0 0 auto;
-
-  flex-direction: column;
-  height: 35rem;
-
-  // @include respond(tab-port) {
-  flex-direction: row;
-  width: 35rem;
-  height: auto;
   // }
 }
 </style>
