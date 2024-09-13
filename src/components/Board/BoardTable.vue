@@ -33,7 +33,7 @@ const getCellIndex = (rowGroup: number, row: number, cell: number) => {
 
 const getCellValue = (cellIndex: number) => {
   if (!currentBoard.value || currentBoard.value.length === 0) {
-    return;
+    return '';
   }
   return currentBoard.value[cellIndex].value === '-' ? '' : currentBoard.value[cellIndex].value;
 };

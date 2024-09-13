@@ -9,7 +9,8 @@ type Cell = {
 export const useGameStateStore = defineStore('gameState', () => {
   const currentBoard = ref<Cell[]>([]);
   const selectedNum = ref('');
-  const selectedTile = ref(null);
+  const selectedTile = ref('');
+  const highlightedValue = ref('');
   const disableSelect = ref(false);
   const solution = ref<string>('');
   const board = ref<string>('');
@@ -426,5 +427,14 @@ export const useGameStateStore = defineStore('gameState', () => {
       ]
     ]
   });
-  return { currentBoard, selectedNum, selectedTile, disableSelect, data, solution, board };
+  return {
+    currentBoard,
+    selectedNum,
+    selectedTile,
+    highlightedValue,
+    disableSelect,
+    data,
+    solution,
+    board
+  };
 });
