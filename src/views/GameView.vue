@@ -20,8 +20,6 @@ import { onMounted } from 'vue';
 
 const store = useGameStateStore();
 
-// const currentBoard = store.currentBoard;
-
 const startGame = () => {
   getData();
   loadData();
@@ -52,7 +50,12 @@ const loadData = function () {
   // Clear previous board
   // clearState();
   // Store current board
-  store.currentBoard = [...store.board];
+  store.currentBoard = [...store.board].map((position) => {
+    return {
+      value: position,
+      disabled: position !== '-'
+    };
+  });
 
   // Start the timer
   // startTimer();

@@ -3,7 +3,12 @@
     <table class="board__table">
       <tbody v-for="indexRowGroup in 3" :key="indexRowGroup" class="board__row-group">
         <tr v-for="indexRow in 3" :key="indexRow" class="board__row">
-          <td v-for="indexCell in 9" :key="indexCell" class="board__cell">
+          <td
+            v-for="indexCell in 9"
+            :key="indexCell"
+            class="board__cell"
+            @click="selectCell(getCellIndex(indexRowGroup, indexRow, indexCell))"
+          >
             <div class="tile tile--small">
               {{ getCellValue(indexRowGroup, indexRow, indexCell) }}
             </div>
@@ -24,9 +29,25 @@ const currentBoard = computed(() => {
   return store.currentBoard;
 });
 
+const getCellIndex = (rowGroup: number, row: number, cell: number) => {
+  return (rowGroup - 1) * 27 + (row - 1) * 9 + cell - 1;
+};
+
 const getCellValue = (rowGroup: number, row: number, cell: number) => {
-  const index = (rowGroup - 1) * 27 + (row - 1) * 9 + cell - 1;
-  return currentBoard.value[index] === '-' ? '' : currentBoard.value[index];
+  const index = getCellIndex(rowGroup, row, cell);
+
+  if (!currentBoard.value || currentBoard.value.length === 0) {
+    return;
+  }
+  return currentBoard.value[index].value === '-' ? '' : currentBoard.value[index].value;
+};
+
+const selectCell = (cellIndex: any) => {
+  if (currentBoard.value[cellIndex].disabled) {
+    return;
+  }
+
+  currentBoard.value[cellIndex].value = store.selectedNum === 'X' ? '' : store.selectedNum;
 };
 </script>
 

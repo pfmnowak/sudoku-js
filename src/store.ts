@@ -1,8 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+type Cell = {
+  value: string;
+  disabled: boolean;
+};
+
 export const useGameStateStore = defineStore('gameState', () => {
-  const currentBoard = ref<string[]>([]);
+  const currentBoard = ref<Cell[]>([]);
   const selectedNum = ref('');
   const selectedTile = ref(null);
   const disableSelect = ref(false);
