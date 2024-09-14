@@ -1,7 +1,7 @@
 <template>
   <td @click="selectCell" class="board__cell">
     <div class="tile tile--small" :class="tileClasses">
-      {{ displayValue }}
+      {{ cellValue }}
     </div>
   </td>
 </template>
@@ -18,12 +18,12 @@ const props = defineProps<{
 
 const store = useGameStateStore();
 
-const displayValue = computed(() => props.getCellValue(props.cellIndex));
+const cellValue = computed(() => props.getCellValue(props.cellIndex));
 
 const tileClasses = computed(() => ({
   selected: store.selectedCell === props.cellIndex.toString(),
   disabled: store.currentBoard[props.cellIndex]?.disabled || false,
-  highlighted: store.highlightedValue === displayValue.value
+  highlighted: store.highlightedValue === cellValue.value
 }));
 
 const selectCell = () => {
@@ -37,10 +37,10 @@ const selectCell = () => {
   }
 
   if (!store.selectedDigitOption) {
-    if (store.highlightedValue === displayValue.value) {
+    if (store.highlightedValue === cellValue.value) {
       store.highlightedValue = '';
     } else {
-      store.highlightedValue = displayValue.value;
+      store.highlightedValue = cellValue.value;
     }
     return;
   }

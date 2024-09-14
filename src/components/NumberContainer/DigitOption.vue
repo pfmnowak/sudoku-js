@@ -27,6 +27,8 @@ const setSelectedNumber = (value: Cell['value']) => {
     return;
   }
 
+  store.selectedCell = '';
+
   if (store.highlightedValue === value) {
     store.selectedDigitOption = '';
     store.highlightedValue = '';
