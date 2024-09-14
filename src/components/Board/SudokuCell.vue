@@ -1,6 +1,6 @@
 <template>
-  <td @click="selectCell" class="board__cell" :class="tileClasses">
-    <div class="tile tile--small">
+  <td @click="selectCell" class="board__cell">
+    <div class="tile tile--small" :class="tileClasses">
       {{ displayValue }}
     </div>
   </td>
@@ -76,9 +76,8 @@ const selectCell = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   font-size: 3rem;
   cursor: pointer;
 }
