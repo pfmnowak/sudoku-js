@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-type Cell = {
-  value: string;
+export type Cell = {
+  value: '' | '-' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'X';
   disabled: boolean;
 };
 
 export const useGameStateStore = defineStore('gameState', () => {
   const currentBoard = ref<Cell[]>([]);
-  const selectedNum = ref('');
-  const selectedTile = ref('');
-  const highlightedValue = ref('');
+  const selectedDigitOption = ref<Cell['value']>('');
+  const selectedCell = ref('');
+  const highlightedValue = ref<Cell['value']>('');
   const disableSelect = ref(false);
   const solution = ref<string>('');
   const board = ref<string>('');
@@ -429,8 +429,8 @@ export const useGameStateStore = defineStore('gameState', () => {
   });
   return {
     currentBoard,
-    selectedNum,
-    selectedTile,
+    selectedDigitOption,
+    selectedCell,
     highlightedValue,
     disableSelect,
     data,

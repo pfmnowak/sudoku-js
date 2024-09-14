@@ -43,7 +43,8 @@ const selectCell = (cellIndex: any) => {
     return;
   }
 
-  currentBoard.value[cellIndex].value = store.selectedNum === 'X' ? '' : store.selectedNum;
+  currentBoard.value[cellIndex].value =
+    store.selectedDigitOption === 'X' ? '' : store.selectedDigitOption;
 };
 </script>
 

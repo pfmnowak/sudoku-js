@@ -7,12 +7,12 @@
 </template>
 
 <script setup lang="ts">
-import { useGameStateStore } from '@/store';
+import { useGameStateStore, type Cell } from '@/store';
 import { computed, defineProps } from 'vue';
 
 const props = defineProps<{
   cellIndex: number;
-  getCellValue: (index: number) => string;
+  getCellValue: (index: number) => Cell['value'];
   selectCell: (index: number) => void;
 }>();
 
@@ -21,20 +21,22 @@ const store = useGameStateStore();
 const displayValue = computed(() => props.getCellValue(props.cellIndex));
 
 const tileClasses = computed(() => ({
-  selected: store.selectedTile === props.cellIndex.toString(),
+  selected: store.selectedCell === props.cellIndex.toString(),
   disabled: store.currentBoard[props.cellIndex]?.disabled || false,
-  highlighted: store.highlightedValue === displayValue.value && store.selectedNum === null
+  highlighted: store.highlightedValue === displayValue.value
 }));
 
 const selectCell = () => {
-  if (store.disableSelect) return;
-
-  if (store.selectedTile === props.cellIndex.toString()) {
-    store.selectedTile = '';
+  if (store.disableSelect) {
     return;
   }
 
-  if (!store.selectedNum) {
+  if (store.selectedCell === props.cellIndex.toString()) {
+    store.selectedCell = '';
+    return;
+  }
+
+  if (!store.selectedDigitOption) {
     if (store.highlightedValue === displayValue.value) {
       store.highlightedValue = '';
     } else {
@@ -43,9 +45,11 @@ const selectCell = () => {
     return;
   }
 
-  if (store.currentBoard[props.cellIndex].disabled) return;
+  if (store.currentBoard[props.cellIndex].disabled) {
+    return;
+  }
 
-  store.selectedTile = props.cellIndex.toString();
+  store.selectedCell = props.cellIndex.toString();
   props.selectCell(props.cellIndex);
 };
 </script>
