@@ -1,6 +1,6 @@
 <template>
   <section class="toolbar-section">
-    <IconButton icon="icon-chevron-left" @click="$router.go(-1)" />
+    <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" />
   </section>
   <div>
     <h1>This is a new game page</h1>
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import IconButton from '@/components/base/IconButton.vue';
+import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
 </script>
 
 <style lang="scss" scoped></style>
