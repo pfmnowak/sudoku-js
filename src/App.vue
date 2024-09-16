@@ -1,7 +1,7 @@
 <template>
   <v-responsive class="border rounded" pa-4>
     <v-app>
-      <v-main>
+      <v-main style="padding: 2rem; display: flex; flex-direction: column">
         <RouterView />
       </v-main>
       <TheFooter />

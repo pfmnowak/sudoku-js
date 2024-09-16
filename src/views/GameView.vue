@@ -1,9 +1,8 @@
 <template>
   <section class="toolbar-section">
-    <IconButton icon="icon-chevron-left" @click="$router.push({ path: '/', replace: true })" />
-    <!-- <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" /> -->
+    <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" />
     <div class="timer"></div>
-    <IconButton icon="icon-rotate-left" @click="() => {}" />
+    <IconButtonMDI icon="mdi-restore" @click="$router.push({ path: '/', replace: true })" />
   </section>
   <section id="game" class="game-section">
     <BoardTable />
@@ -12,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import IconButton from '@/components/base/IconButton.vue';
+import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
 import BoardTable from '@/components/Board/BoardTable.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
-import { useGameStateStore } from '@/store';
+import { useGameStateStore, type Cell } from '@/store';
 import { onMounted } from 'vue';
 
 const store = useGameStateStore();
@@ -39,20 +38,10 @@ const getData = () => {
 };
 
 const loadData = function () {
-  // Show number container
-  // document.querySelector('.number-container').classList.remove('hidden');
-  // setNumberContainerVisible
-
-  // Activate the board
   store.disableSelect = false;
-
-  // ToDo: Reset will do these too
-  // Clear previous board
-  // clearState();
-  // Store current board
   store.currentBoard = [...store.board].map((position) => {
     return {
-      value: position,
+      value: position as Cell['value'],
       disabled: position !== '-'
     };
   });
