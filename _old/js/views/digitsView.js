@@ -4,7 +4,7 @@ class DigitsView {
 		digits.forEach(tile =>
 			tile.addEventListener('click', function () {
 				handler(tile);
-			})
+			}),
 		);
 	}
 }

@@ -19,23 +19,24 @@ const getData = function () {
 	let board;
 	let solution;
 
-	if (document.querySelector('.beginner').checked)
+	if (document.querySelector('.beginner').checked) {
 		[board, solution] =
 			model.data.beginner[
 				Math.floor(Math.random() * model.data.beginner.length)
 			];
-	else if (document.querySelector('.easy').checked)
+	} else if (document.querySelector('.easy').checked) {
 		[board, solution] =
 			model.data.easy[Math.floor(Math.random() * model.data.easy.length)];
-	else if (document.querySelector('.medium').checked)
+	} else if (document.querySelector('.medium').checked) {
 		[board, solution] =
 			model.data.medium[Math.floor(Math.random() * model.data.medium.length)];
-	else if (document.querySelector('.hard').checked)
+	} else if (document.querySelector('.hard').checked) {
 		[board, solution] =
 			model.data.hard[Math.floor(Math.random() * model.data.hard.length)];
-	else
+	} else {
 		[board, solution] =
 			model.data.master[Math.floor(Math.random() * model.data.master.length)];
+	}
 
 	model.state.solution = solution;
 	model.state.board = board;
@@ -80,7 +81,9 @@ const checkZero = i => (i < 10 ? `0${i}` : i);
 
 const controlTiles = function (tile) {
 	// If selecting is disabled
-	if (model.state.disableSelect) return;
+	if (model.state.disableSelect) {
+		return;
+	}
 
 	// If the tile is already selected
 	if (tile.classList.contains('selected')) {
@@ -100,7 +103,9 @@ const controlTiles = function (tile) {
 			.querySelectorAll('.tile')
 			.forEach(t => t.classList.remove('highlighted'));
 
-		if (highlighted) return;
+		if (highlighted) {
+			return;
+		}
 		// Highlight all tiles with the given value
 		document
 			.querySelectorAll(`.tile--${tile.textContent}`)
@@ -109,7 +114,9 @@ const controlTiles = function (tile) {
 	}
 
 	// If the tile is disabled
-	if (tile.classList.contains('disabled')) return;
+	if (tile.classList.contains('disabled')) {
+		return;
+	}
 
 	// Deselect all other tiles
 	document
@@ -124,7 +131,9 @@ const controlTiles = function (tile) {
 
 const controlDigits = function (tile) {
 	// If selecting is not disabled
-	if (model.state.disableSelect) return;
+	if (model.state.disableSelect) {
+		return;
+	}
 
 	// Remove highlight from all the tiles
 	document
@@ -158,7 +167,9 @@ const updateMove = function () {
 	let digit = model.state.selectedNum;
 
 	// If a tile and number is selected
-	if (!tile || !digit) return;
+	if (!tile || !digit) {
+		return;
+	}
 
 	// Update current board in a model
 	model.state.currentBoard[tile.id] = digit.textContent;
@@ -168,7 +179,9 @@ const updateMove = function () {
 	tile.textContent = '';
 	tile.classList.add('tile', 'tile--small');
 
-	if (digit.textContent === 'X') return;
+	if (digit.textContent === 'X') {
+		return;
+	}
 
 	// Set the tile to the correct number
 	tile.textContent = digit.textContent;
@@ -222,7 +235,9 @@ const clearState = (clearTiles = true) => {
 	model.state.selectedTile = null;
 
 	// If there is a Timer clear it
-	if (timer) clearTimeout(timer);
+	if (timer) {
+		clearTimeout(timer);
+	}
 };
 
 const toggleModal = () => {
