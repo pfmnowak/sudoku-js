@@ -1,7 +1,7 @@
 <template>
   <section class="toolbar-section">
     <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" />
-    <div class="timer"></div>
+    <div class="timer">{{ formattedTime }}</div>
     <IconButtonMDI icon="mdi-restore" @click="$router.push({ path: '/', replace: true })" />
   </section>
   <section id="game" class="game-section">
@@ -15,14 +15,28 @@ import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
 import BoardTable from '@/components/Board/BoardTable.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
 import { useGameStateStore, type Cell } from '@/store';
-import { onMounted } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 
 const store = useGameStateStore();
+
+const formattedTime = computed(() => {
+  const hours = Math.floor(store.timer / 3600);
+  const minutes = Math.floor((store.timer % 3600) / 60);
+  const seconds = store.timer % 60;
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+});
 
 const startGame = () => {
   getData();
   loadData();
+  store.resetTimer();
+  store.startTimer();
 };
+
+// const resumeGame = () => {
+//   store.startTimer();
+// };
 
 const getData = () => {
   // Choose board difficulty
@@ -45,15 +59,16 @@ const loadData = function () {
       disabled: position !== '-'
     };
   });
-
-  // Start the timer
-  // startTimer();
 };
 
 onMounted(() => {
   startGame();
   // depending on the button pressed / previous path
   // resumeGame();
+});
+
+onUnmounted(() => {
+  store.stopTimer();
 });
 </script>
 

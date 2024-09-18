@@ -427,6 +427,31 @@ export const useGameStateStore = defineStore('gameState', () => {
       ]
     ]
   });
+
+  const timer = ref(0);
+  let intervalId: ReturnType<typeof setInterval> | null = null;
+
+  const startTimer = () => {
+    if (intervalId) {
+      return;
+    }
+    intervalId = setInterval(() => {
+      timer.value += 1;
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+  };
+
+  const resetTimer = () => {
+    stopTimer();
+    timer.value = 0;
+  };
+
   return {
     currentBoard,
     selectedDigitOption,
@@ -435,6 +460,10 @@ export const useGameStateStore = defineStore('gameState', () => {
     disableSelect,
     data,
     solution,
-    board
+    board,
+    timer,
+    startTimer,
+    stopTimer,
+    resetTimer
   };
 });
