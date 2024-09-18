@@ -28,7 +28,6 @@ const formattedTime = computed(() => {
 });
 
 const startGame = () => {
-  getData();
   loadData();
   store.resetTimer();
   store.startTimer();
@@ -37,19 +36,6 @@ const startGame = () => {
 // const resumeGame = () => {
 //   store.startTimer();
 // };
-
-const getData = () => {
-  // Choose board difficulty
-  let board;
-  let solution;
-
-  // if (document.querySelector('.beginner').checked)
-  [board, solution] = store.data.beginner[Math.floor(Math.random() * store.data.beginner.length)];
-  // Tutaj computed() property z funkcją
-
-  store.solution = solution;
-  store.board = board;
-};
 
 const loadData = function () {
   store.disableSelect = false;
