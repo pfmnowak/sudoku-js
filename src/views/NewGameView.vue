@@ -40,7 +40,7 @@ const difficulty = ref<Difficulty>('medium');
 
 const startGame = () => {
   setDifficulty();
-  router.push({ path: '/game' });
+  router.push({ path: '/game', query: { mode: 'new' } });
 };
 
 const setDifficulty = () => {

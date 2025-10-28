@@ -16,8 +16,10 @@ import BoardTable from '@/components/Board/BoardTable.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
 import { useGameStateStore, type Cell } from '@/store';
 import { computed, onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
 
 const store = useGameStateStore();
+const route = useRoute();
 
 const formattedTime = computed(() => {
   const hours = Math.floor(store.timer / 3600);
@@ -33,9 +35,9 @@ const startGame = () => {
   store.startTimer();
 };
 
-// const resumeGame = () => {
-//   store.startTimer();
-// };
+const resumeGame = () => {
+  store.startTimer();
+};
 
 const loadData = function () {
   store.disableSelect = false;
@@ -48,9 +50,11 @@ const loadData = function () {
 };
 
 onMounted(() => {
-  startGame();
-  // depending on the button pressed / previous path
-  // resumeGame();
+  if (route.query.mode === 'new') {
+    startGame();
+  } else if (route.query.mode === 'resume') {
+    resumeGame();
+  }
 });
 
 onUnmounted(() => {

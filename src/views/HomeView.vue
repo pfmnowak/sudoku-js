@@ -5,7 +5,9 @@
       <BaseButton title="Start a New Game" class="button--cta" :href="href" @click="navigate" />
     </RouterLink>
     <nav>
-      <RouterLink v-if="gameStarted" to="/game">Resume a Game</RouterLink>
+      <RouterLink v-if="gameStarted" :to="{ name: 'game', query: { mode: 'resume' } }"
+        >Resume a Game</RouterLink
+      >
       <RouterLink to="/leaderboard">Leaderboard</RouterLink>
       <RouterLink to="/scores">Scores</RouterLink>
     </nav>
