@@ -31,6 +31,7 @@ const formattedTime = computed(() => {
 
 const startGame = () => {
   loadData();
+  clearSelectionState();
   store.resetTimer();
   store.startTimer();
 };
@@ -39,9 +40,15 @@ const resumeGame = () => {
   store.startTimer();
 };
 
+const clearSelectionState = () => {
+  store.highlightedValue = '';
+  store.selectedCell = '';
+  store.selectedDigitOption = '';
+};
+
 const loadData = function () {
   store.disableSelect = false;
-  store.currentBoard = [...store.board].map((position) => {
+  store.currentBoard = [...store.initialBoard].map((position) => {
     return {
       value: position as Cell['value'],
       disabled: position !== '-'

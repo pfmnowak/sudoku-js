@@ -13,7 +13,7 @@ export const useGameStateStore = defineStore('gameState', () => {
   const highlightedValue = ref<Cell['value']>('');
   const disableSelect = ref(false);
   const solution = ref<string>('');
-  const board = ref<string>('');
+  const initialBoard = ref<string>('');
 
   const data = ref({
     beginner: [
@@ -460,7 +460,7 @@ export const useGameStateStore = defineStore('gameState', () => {
     disableSelect,
     data,
     solution,
-    board,
+    initialBoard,
     timer,
     startTimer,
     stopTimer,

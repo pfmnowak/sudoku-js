@@ -51,6 +51,32 @@ const selectCell = () => {
 
   store.selectedCell = props.cellIndex.toString();
   props.selectCell(props.cellIndex);
+
+  if (checkIfDone()) {
+    endGame();
+  }
+};
+
+const checkIfDone = () => {
+  return store.currentBoard.map((cell) => cell.value).join('') === store.solution;
+};
+
+const endGame = () => {
+  store.stopTimer();
+  store.disableSelect = true;
+  clearSelectionState();
+
+  // Open modal
+  // toggleEndgameModal();
+  const result = store.timer;
+  alert(`Congratulations! You have completed the Sudoku puzzle in ${result} seconds!`);
+  console.log('$$$ GAME OVER :D');
+};
+
+const clearSelectionState = () => {
+  store.highlightedValue = '';
+  store.selectedCell = '';
+  store.selectedDigitOption = '';
 };
 </script>
 

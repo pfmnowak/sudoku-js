@@ -51,7 +51,7 @@ const setDifficulty = () => {
     store.data[difficulty.value][Math.floor(Math.random() * store.data[difficulty.value].length)];
 
   store.solution = solution;
-  store.board = board;
+  store.initialBoard = board;
 };
 </script>
 
