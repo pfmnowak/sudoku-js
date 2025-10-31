@@ -8,11 +8,13 @@
     <BoardTable />
     <NumberContainer />
   </section>
+  <EndGameDialog />
 </template>
 
 <script setup lang="ts">
 import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
 import BoardTable from '@/components/Board/BoardTable.vue';
+import EndGameDialog from '@/components/EndGameDialog/EndGameDialog.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
 import { useGameStateStore, type Cell } from '@/store';
 import { computed, onMounted, onUnmounted } from 'vue';

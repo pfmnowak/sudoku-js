@@ -65,12 +65,8 @@ const endGame = () => {
   store.stopTimer();
   store.disableSelect = true;
   clearSelectionState();
-
   // Open modal
-  // toggleEndgameModal();
-  const result = store.timer;
-  alert(`Congratulations! You have completed the Sudoku puzzle in ${result} seconds!`);
-  console.log('$$$ GAME OVER :D');
+  store.toggleEndGameModal();
 };
 
 const clearSelectionState = () => {

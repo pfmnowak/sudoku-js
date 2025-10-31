@@ -452,6 +452,10 @@ export const useGameStateStore = defineStore('gameState', () => {
     timer.value = 0;
   };
 
+  const endGameModalOpen = ref(false);
+
+  const toggleEndGameModal = () => (endGameModalOpen.value = !endGameModalOpen.value);
+
   return {
     currentBoard,
     selectedDigitOption,
@@ -464,6 +468,8 @@ export const useGameStateStore = defineStore('gameState', () => {
     timer,
     startTimer,
     stopTimer,
-    resetTimer
+    resetTimer,
+    endGameModalOpen,
+    toggleEndGameModal
   };
 });
