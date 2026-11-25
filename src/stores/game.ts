@@ -54,6 +54,11 @@ export const useGameStore = defineStore('game', () => {
   /** Undone moves, most recently undone last; any new move clears it. */
   const future = ref<Move[]>([]);
 
+  /** Play time banked before the current running stretch. */
+  const elapsedMs = ref(0);
+  /** When the current running stretch began (`Date.now()`), or `null` while the clock is stopped. */
+  const startedAt = ref<number | null>(null);
+
   const conflicts = computed(() => findConflicts(cells.value));
   const isInProgress = computed(() => status.value === 'playing' || status.value === 'paused');
   const canUndo = computed(() => status.value === 'playing' && history.value.length > 0);
@@ -91,8 +96,20 @@ export const useGameStore = defineStore('game', () => {
 
   const isSolved = () => cells.value.every((value, i) => value === solution.value[i]);
 
+  const stopClock = () => {
+    if (startedAt.value !== null) {
+      elapsedMs.value += Math.max(0, Date.now() - startedAt.value);
+      startedAt.value = null;
+    }
+  };
+
+  /** Total play time in ms at the given moment; reactive only to pauses, so tick `now` to animate. */
+  const elapsedAt = (now: number = Date.now()): number =>
+    elapsedMs.value + (startedAt.value === null ? 0 : Math.max(0, now - startedAt.value));
+
   const checkWin = () => {
     if (status.value === 'playing' && isSolved()) {
+      stopClock();
       status.value = 'won';
       selectedCell.value = null;
       selectedDigit.value = null;
@@ -157,6 +174,26 @@ export const useGameStore = defineStore('game', () => {
     notesMode.value = false;
     history.value = [];
     future.value = [];
+    elapsedMs.value = 0;
+    startedAt.value = Date.now();
+    status.value = 'playing';
+  };
+
+  /** Stops the clock and locks input; used when the game view is left or the tab is hidden. */
+  const pause = () => {
+    if (status.value !== 'playing') {
+      return;
+    }
+    stopClock();
+    status.value = 'paused';
+  };
+
+  /** Restarts the clock of a paused game. */
+  const resume = () => {
+    if (status.value !== 'paused') {
+      return;
+    }
+    startedAt.value = Date.now();
     status.value = 'playing';
   };
 
@@ -219,12 +256,17 @@ export const useGameStore = defineStore('game', () => {
     notesMode,
     history,
     future,
+    elapsedMs,
+    startedAt,
     conflicts,
     isInProgress,
     canUndo,
     canRedo,
     highlightedDigit,
+    elapsedAt,
     newGame,
+    pause,
+    resume,
     selectCell,
     selectDigit,
     toggleNotesMode,

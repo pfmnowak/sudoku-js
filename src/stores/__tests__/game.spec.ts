@@ -1,5 +1,5 @@
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EMPTY, digitBit } from '@/engine/board';
 import { useGameStore } from '../game';
 
@@ -254,5 +254,60 @@ describe('undo and redo', () => {
     store.newGame('easy');
     expect(store.history).toHaveLength(0);
     expect(store.future).toHaveLength(0);
+  });
+});
+
+describe('clock', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1_000_000);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('counts time only while playing', () => {
+    const store = startGame();
+    vi.advanceTimersByTime(5_000);
+    expect(store.elapsedAt()).toBe(5_000);
+
+    store.pause();
+    expect(store.status).toBe('paused');
+    vi.advanceTimersByTime(60_000);
+    expect(store.elapsedAt()).toBe(5_000);
+
+    store.resume();
+    vi.advanceTimersByTime(2_000);
+    expect(store.elapsedAt()).toBe(7_000);
+  });
+
+  it('blocks input while paused', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.pause();
+    store.placeDigit(1, index);
+    expect(store.cells[index]).toBe(EMPTY);
+  });
+
+  it('freezes the time on a win and ignores pause/resume afterwards', () => {
+    const store = startGame();
+    const last = fillAllButOne(store);
+    vi.advanceTimersByTime(3_000);
+    store.placeDigit(store.solution[last], last);
+    vi.advanceTimersByTime(10_000);
+    expect(store.elapsedAt()).toBe(3_000);
+
+    store.pause();
+    store.resume();
+    expect(store.status).toBe('won');
+    expect(store.elapsedAt()).toBe(3_000);
+  });
+
+  it('resets the time for a new game', () => {
+    const store = startGame();
+    vi.advanceTimersByTime(3_000);
+    store.newGame('easy');
+    expect(store.elapsedAt()).toBe(0);
   });
 });
