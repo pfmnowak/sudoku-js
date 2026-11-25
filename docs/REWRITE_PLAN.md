@@ -195,7 +195,7 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] `useGameStore`: board, notes, givens, selection (`number | null`), notes mode, status
       (`playing | paused | won`)
 - [x] Actions: place digit, erase, toggle note, select cell — win detection in the store, not in components
-- [ ] Undo/redo as a list of moves
+- [x] Undo/redo as a list of moves
 - [ ] Timer as `elapsedMs + startedAt`; pause on leaving the game view and on `visibilitychange`
 - [ ] Persistence in `localStorage`; restore after F5 / browser restart
 - [ ] Unit tests for the store actions

@@ -49,8 +49,15 @@ export const useGameStore = defineStore('game', () => {
   const selectedDigit = ref<number | null>(null);
   const notesMode = ref(false);
 
+  /** Moves made so far, oldest first; `undo` pops from here. */
+  const history = ref<Move[]>([]);
+  /** Undone moves, most recently undone last; any new move clears it. */
+  const future = ref<Move[]>([]);
+
   const conflicts = computed(() => findConflicts(cells.value));
   const isInProgress = computed(() => status.value === 'playing' || status.value === 'paused');
+  const canUndo = computed(() => status.value === 'playing' && history.value.length > 0);
+  const canRedo = computed(() => status.value === 'playing' && future.value.length > 0);
 
   /** Digit to highlight across the board: the picked numpad digit, else the selected cell's digit. */
   const highlightedDigit = computed<number | null>(() => {
@@ -92,17 +99,44 @@ export const useGameStore = defineStore('game', () => {
     }
   };
 
-  /** Applies a move built from the given cells' new contents, skipping cells that would not change. */
-  const commit = (updates: readonly { index: number; after: CellState }[]): Move | null => {
+  /**
+   * Applies a move built from the given cells' new contents and records it for undo.
+   * Cells that would not change are skipped; a move that changes nothing is not recorded.
+   */
+  const commit = (updates: readonly { index: number; after: CellState }[]) => {
     const move: Move = updates
       .map(({ index, after }) => ({ index, before: cellState(index), after }))
       .filter(({ before, after }) => before.value !== after.value || before.notes !== after.notes);
     if (move.length === 0) {
-      return null;
+      return;
     }
     writeCells(move.map(({ index, after }) => ({ index, state: after })));
+    history.value.push(move);
+    future.value = [];
     checkWin();
-    return move;
+  };
+
+  /** Reverts the last move and selects the cell it touched. */
+  const undo = () => {
+    const move = canUndo.value ? history.value.pop() : undefined;
+    if (!move) {
+      return;
+    }
+    writeCells(move.map(({ index, before }) => ({ index, state: before })));
+    future.value.push(move);
+    selectedCell.value = move[0].index;
+  };
+
+  /** Re-applies the last undone move and selects the cell it touched. */
+  const redo = () => {
+    const move = canRedo.value ? future.value.pop() : undefined;
+    if (!move) {
+      return;
+    }
+    writeCells(move.map(({ index, after }) => ({ index, state: after })));
+    history.value.push(move);
+    selectedCell.value = move[0].index;
+    checkWin();
   };
 
   /**
@@ -121,6 +155,8 @@ export const useGameStore = defineStore('game', () => {
     selectedCell.value = null;
     selectedDigit.value = null;
     notesMode.value = false;
+    history.value = [];
+    future.value = [];
     status.value = 'playing';
   };
 
@@ -181,8 +217,12 @@ export const useGameStore = defineStore('game', () => {
     selectedCell,
     selectedDigit,
     notesMode,
+    history,
+    future,
     conflicts,
     isInProgress,
+    canUndo,
+    canRedo,
     highlightedDigit,
     newGame,
     selectCell,
@@ -191,6 +231,8 @@ export const useGameStore = defineStore('game', () => {
     placeDigit,
     erase,
     toggleNote,
-    input
+    input,
+    undo,
+    redo
   };
 });

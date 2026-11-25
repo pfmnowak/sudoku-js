@@ -179,3 +179,80 @@ describe('win detection', () => {
     expect(store.cells[last]).toBe(store.solution[last]);
   });
 });
+
+describe('undo and redo', () => {
+  it('undoes and redoes moves in order', () => {
+    const store = startGame();
+    const [a, b] = emptyCells(store);
+    store.placeDigit(1, a);
+    store.toggleNote(2, b);
+    store.toggleNote(3, b);
+    expect(store.canUndo).toBe(true);
+    expect(store.canRedo).toBe(false);
+
+    store.undo();
+    expect(store.notes[b]).toBe(digitBit(2));
+    expect(store.selectedCell).toBe(b);
+    store.undo();
+    store.undo();
+    expect(store.cells[a]).toBe(EMPTY);
+    expect(store.notes[b]).toBe(0);
+    expect(store.canUndo).toBe(false);
+
+    store.redo();
+    expect(store.cells[a]).toBe(1);
+    store.redo();
+    store.redo();
+    expect(store.notes[b]).toBe(digitBit(2) | digitBit(3));
+    expect(store.canRedo).toBe(false);
+  });
+
+  it('restores the notes a placed digit wiped out', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.toggleNote(5, index);
+    store.placeDigit(4, index);
+    store.undo();
+    expect(store.cells[index]).toBe(EMPTY);
+    expect(store.notes[index]).toBe(digitBit(5));
+  });
+
+  it('drops the redo stack on a new move', () => {
+    const store = startGame();
+    const [a, b] = emptyCells(store);
+    store.placeDigit(1, a);
+    store.undo();
+    store.placeDigit(2, b);
+    expect(store.canRedo).toBe(false);
+    store.redo();
+    expect(store.cells[a]).toBe(EMPTY);
+  });
+
+  it('does not record moves that change nothing', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.erase(index);
+    store.placeDigit(3, index);
+    store.placeDigit(3, index);
+    expect(store.history).toHaveLength(1);
+  });
+
+  it('blocks undo once the game is won', () => {
+    const store = startGame();
+    const last = fillAllButOne(store);
+    store.placeDigit(store.solution[last], last);
+    expect(store.status).toBe('won');
+    expect(store.canUndo).toBe(false);
+    store.undo();
+    expect(store.cells[last]).toBe(store.solution[last]);
+  });
+
+  it('starts every new game with empty history', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.placeDigit(1, index);
+    store.newGame('easy');
+    expect(store.history).toHaveLength(0);
+    expect(store.future).toHaveLength(0);
+  });
+});
