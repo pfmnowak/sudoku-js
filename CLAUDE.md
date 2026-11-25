@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Sudoku game being migrated from a vanilla JS/SASS app (kept for reference in `_old/`, not part of the build) to Vue 3 + TypeScript + Vite, with Pinia for state, Vue Router, and Vuetify 3 (MDI icons, dark theme by default). `ToDo.txt` lists the planned pages and features (leaderboard, scores, auth, local storage/DB persistence, i18n, PWA); the Leaderboard and Scores views are still placeholders.
 
-**Planned rewrite:** [`docs/REWRITE_PLAN.md`](docs/REWRITE_PLAN.md) (in Polish) holds the analysis of the current app and the agreed direction — rebuild from scratch on Vue 3 + TS + Vite + Pinia without Vuetify, with a framework-free `src/engine/` (solver, generator, difficulty grader, puzzle transforms), split stores with localStorage persistence, CSS Grid board and CSS-variable themes. It supersedes `ToDo.txt` where they disagree. The architecture described below is the current (pre-rewrite) state.
+**Planned rewrite:** [`docs/REWRITE_PLAN.md`](docs/REWRITE_PLAN.md) holds the analysis of the current app and the agreed direction — rebuild from scratch on Vue 3 + TS + Vite + Pinia without Vuetify, with a framework-free `src/engine/` (solver, generator, difficulty grader, puzzle transforms), split stores with localStorage persistence, CSS Grid board and CSS-variable themes. Auth, a database and a global leaderboard are dropped. It supersedes `ToDo.txt` where they disagree. The architecture described below is the current (pre-rewrite) state.
 
 ## Commands
 

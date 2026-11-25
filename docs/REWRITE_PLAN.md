@@ -1,128 +1,183 @@
-# Sudoku — analiza stanu aplikacji i rekomendacja
+# Sudoku — App Assessment and Rewrite Plan
 
-## Kontekst
+## Context
 
-Projekt: Sudoku (vanilla JS + SCSS → Vue 3 + TS + Vite + Pinia + Vuetify, stan z brancha `develop` po merge `feature/vue-app-migration`, listopad 2026).
-Cel produktu: responsywna gra (desktop + telefon), kilka poziomów trudności, dużo różnych plansz, motywy.
-Prośba: rzetelna ocena kodu/architektury/funkcjonalności + decyzja „przepisać od zera czy kontynuować”.
+Project: Sudoku (vanilla JS + SCSS → Vue 3 + TS + Vite + Pinia + Vuetify; assessed on `develop` after merging
+`feature/vue-app-migration`, November 2026).
+Product goal: a responsive game (desktop + phone) with several difficulty levels, many distinct puzzles, and themes.
+Question asked: an honest review of the code, architecture and functionality, plus a decision on whether to rewrite
+from scratch or keep building on what exists.
 
-Co zrobiłem: przeczytałem cały kod `src/` i porównałem z `_old/`, uruchomiłem `vue-tsc`, napisałem skrypt
-sprawdzający bank łamigłówek (zgodność z rozwiązaniem, unikalność rozwiązania, liczba podpowiedzi).
+Method: read all of `src/` and compared it with `_old/`, ran `vue-tsc`, and wrote a script that checks the puzzle
+bank (consistency with the solution, uniqueness of the solution, clue counts).
 
 ---
 
-## 1. Stan faktyczny w liczbach
+## 1. Current state in numbers
 
-- Realnej logiki jest ~400 linii (bez danych i scaffoldu). Gra = 6 komponentów + 1 store.
-- Bank: **100 łamigłówek** (20 na poziom), wpisanych na sztywno w `src/store.ts`.
-- **`npm run build` nie przechodzi** — błąd typu w `NumberContainer.vue:3` (`index.toString()` to `string`, a prop oczekuje `Cell['value']`).
-- Testy: tylko scaffoldowy `HelloWorld.spec.ts`.
+- About 400 lines of actual logic (excluding data and scaffold). The game is 6 components + 1 store.
+- Puzzle bank: **100 puzzles** (20 per level), hardcoded in `src/store.ts`.
+- **`npm run build` fails** — type error in `NumberContainer.vue:3` (`index.toString()` is a `string`, while the
+  prop expects `Cell['value']`).
+- Tests: only the scaffold's `HelloWorld.spec.ts`.
 
-## 2. Mocne strony (rzeczywiste)
+## 2. Strengths (real ones)
 
-- **Dane łamigłówek są poprawne**: każda z 100 zgadza się ze swoim rozwiązaniem i ma **dokładnie jedno rozwiązanie** (sprawdzone solverem), brak duplikatów. To jedyny element warty przeniesienia 1:1.
-- Sensowny stack: Vue 3 `<script setup>`, TS, Pinia setup store, lazy-loaded trasy, ESLint + Prettier.
-- Przepływ gry jest prosty i czytelny (NewGame → Game?mode=new/resume → wygrana → dialog).
-- Pauza przez `onUnmounted` + timer w store — prosty pomysł, który działa.
-- Stara wersja miała przemyślany SCSS (architektura 7-1, responsywne `font-size` na `html`) — dobre źródło wzorców wizualnych.
+- **The puzzle data is correct**: each of the 100 puzzles matches its solution and has **exactly one solution**
+  (verified with a solver), with no duplicates. This is the only part worth carrying over as-is.
+- Sensible stack: Vue 3 `<script setup>`, TS, Pinia setup store, lazy-loaded routes, ESLint + Prettier.
+- The game flow is simple and easy to follow (NewGame → Game?mode=new/resume → win → dialog).
+- Pausing via `onUnmounted` + a timer in the store — a simple idea that works.
+- The old version had well-structured SCSS (7-1 architecture, responsive `font-size` on `html`) — a good source of
+  visual patterns.
 
-## 3. Błędy funkcjonalne (to po prostu nie działa jak powinno)
+## 3. Functional bugs (things that simply don't work as intended)
 
-1. **Build się wywala** (błąd TS, j.w.).
-2. **Responsywność jest zepsuta, nie „niedokończona”.** Stara apka ustawiała `html { font-size: 62.5% }` (1rem = 10px) i skalowała to breakpointami. W Vue tego nie ma (`base.css` ma `font-size: 15px` na `body`), więc 1rem = 16px: komórka `6rem` = 96px → plansza ~870px szerokości, numpad 560px, toolbar `padding: 5rem 10rem`. Na telefonie gra jest niegrywalna, na małym laptopie też ciasno. Mixin `respond()` jest zakomentowany, a style „mobilne” zostały wpisane na stałe.
-3. **Odświeżenie strony = utrata gry.** Brak jakiejkolwiek persystencji; `/game?mode=new` po F5 renderuje pustą planszę (`initialBoard === ''`).
-4. **„Resume a Game” jest zawsze widoczne** (`const gameStarted = true` w `HomeView.vue`) — bez rozpoczętej gry pokazuje pustą planszę.
-5. **Resume po wygranej wznawia timer** na rozwiązanej, zablokowanej planszy.
-6. **Przycisk „restart” (`mdi-restore`) robi to samo co „wstecz”** — nawiguje na `/`.
-7. Klikanie: drugie kliknięcie tej samej komórki tylko ją „odznacza” zamiast wpisać cyfrę; kliknięcie pustej komórki bez wybranej cyfry ustawia `highlightedValue = ''`, co nadaje klasę `highlighted` wszystkim pustym komórkom (niewidoczne, ale świadczy o modelu stanu).
-8. `EndGameDialog`: „1 minutes”, „1 hours”; brak akcji typu „nowa gra / do menu”.
-9. Strona główna to wciąż scaffold Vite: `HelloWorld` z tekstem „You've successfully created a project with Vite + Vue 3. What's next?”.
-10. Footer: „© 2022” i link do repo `sudoku-js`.
+1. **The build fails** (TS error, see above).
+2. **Responsiveness is broken, not just "unfinished".** The old app set `html { font-size: 62.5% }` (1rem = 10px)
+   and scaled it with breakpoints. The Vue app doesn't (`base.css` sets `font-size: 15px` on `body`), so
+   1rem = 16px: a `6rem` cell is 96px → the board is ~870px wide, the numpad 560px, the toolbar has
+   `padding: 5rem 10rem`. The game is unplayable on a phone and cramped on a small laptop. The `respond()` mixin is
+   commented out and the "mobile" styles are hardcoded.
+3. **Refreshing the page loses the game.** There is no persistence at all; after F5, `/game?mode=new` renders an
+   empty board (`initialBoard === ''`).
+4. **"Resume a Game" is always visible** (`const gameStarted = true` in `HomeView.vue`) — without a started game it
+   shows an empty board.
+5. **Resuming after a win restarts the timer** on a solved, locked board.
+6. **The "restart" button (`mdi-restore`) does the same as "back"** — it navigates to `/`.
+7. Clicking: a second click on the same cell only deselects it instead of placing the digit; clicking an empty cell
+   with no digit selected sets `highlightedValue = ''`, which gives the `highlighted` class to every empty cell
+   (invisible, but it says something about the state model).
+8. `EndGameDialog`: "1 minutes", "1 hours"; no "new game / back to menu" actions.
+9. The home page is still the Vite scaffold: `HelloWorld` with "You've successfully created a project with Vite +
+   Vue 3. What's next?".
+10. Footer: "© 2022" and a link to the `sudoku-js` repo.
 
-## 4. Braki funkcjonalne względem tego, czym ma być gra sudoku
+## 4. Missing features relative to what a sudoku game needs
 
-Brakuje rzeczy, które dziś są standardem w każdej aplikacji sudoku i które **determinują architekturę**:
-- **notatki (pencil marks)** — bez nich trudne poziomy są w praktyce niegrywalne,
+Missing pieces that are standard in any sudoku app today and that **drive the architecture**:
+- **notes (pencil marks)** — without them the hard levels are practically unplayable,
 - **undo/redo**,
-- **sygnalizacja konfliktów/błędów** (choćby opcjonalna),
-- **obsługa klawiatury** (strzałki, 1–9, Backspace) i tryb „najpierw komórka, potem cyfra” (teraz działa tylko „najpierw cyfra”),
-- podświetlanie wiersza/kolumny/bloku zaznaczonej komórki, licznik pozostałych cyfr,
-- motywy — **nie istnieją**; jest wymuszony ciemny motyw Vuetify + jasno/ciemne zmienne ze scaffoldu (`prefers-color-scheme`) + zahardkodowane kolory w SCSS. Trzy niezależne systemy kolorów, które się gryzą.
+- **conflict/mistake highlighting** (at least as an option),
+- **keyboard support** (arrows, 1–9, Backspace) and a "cell first, then digit" input mode (currently only
+  "digit first" works),
+- highlighting of the selected cell's row/column/box, a remaining-count per digit,
+- themes — **they don't exist**; there is Vuetify's forced dark theme + the scaffold's light/dark variables
+  (`prefers-color-scheme`) + hardcoded colors in SCSS. Three independent color systems that clash.
 
-## 5. Różnorodność plansz i poziomy trudności — największa słabość koncepcyjna
+## 5. Puzzle variety and difficulty — the biggest conceptual weakness
 
-- 20 plansz na poziom → po ~20 grach zaczynają się powtórki (a losowanie bez historii powtarza wcześniej).
-- **Trudność jest mierzona tylko liczbą podpowiedzi, i to niespójnie**: beginner 57, easy 43–44, medium 33–35, **hard 23–31, master 22–32 (średnio identycznie: 25,8)**. „Master” nie jest trudniejszy od „hard”. Liczba podpowiedzi słabo koreluje z realną trudnością — decydują techniki potrzebne do rozwiązania.
-- Dane siedzą w reaktywnym `ref` w store (niepotrzebny koszt reaktywności i bundle).
+- 20 puzzles per level → repeats start after ~20 games (random picks without history repeat even sooner).
+- **Difficulty is measured only by clue count, and inconsistently**: beginner 57, easy 43–44, medium 33–35,
+  **hard 23–31, master 22–32 (identical average: 25.8)**. "Master" is not harder than "hard". Clue count correlates
+  poorly with real difficulty — what matters is which solving techniques are required.
+- The data lives in a reactive `ref` in the store (needless reactivity and bundle cost).
 
-## 6. Architektura i jakość kodu
+## 6. Architecture and code quality
 
-- **Logika gry w komponentach widoku**: wykrywanie wygranej w `SudokuCell`, budowanie planszy w `GameView`, losowanie w `NewGameView`. Nie ma warstwy domenowej, której dałoby się przetestować bez DOM.
-- **Store = „god object”**: bank danych + stan planszy + stan UI zaznaczeń + timer + stan modala.
-- Model danych jest przypadkowy: `Cell['value']` miesza `''`, `'-'` i `'X'` (akcja UI „wymaż” jako wartość komórki), `selectedCell` jako **string** z indeksem, porównanie planszy przez `join('')` stringów.
-- **Funkcje przekazywane jako propsy** (`getCellValue`, `selectCell`) — wzorzec z Reacta; w Vue idiomatyczne są `emit` albo bezpośrednio akcje store’u. Do tego komórka i tak czyta store bezpośrednio — dwa kanały dla tych samych danych.
-- `<table>` z `display: flex` na każdym poziomie — traci semantykę tabeli, a nie zyskuje gridu; komórki to `div`y z `@click` (brak focusu, klawiatury, ARIA).
-- Timer liczy ticki `setInterval` zamiast mierzyć czas od znacznika — dryf, brak pauzy przy ukryciu karty.
-- **Vuetify**: importowane *wszystkie* komponenty i dyrektywy (`vuetify.ts`), a używane są 4–5 (btn-toggle, btn, dialog, card, icon). `v-responsive` owija `v-app` (powinno być odwrotnie), inline style w `App.vue`. Dla gry z własnymi motywami Vuetify bardziej przeszkadza niż pomaga.
-- Martwy kod/scaffold: `HelloWorld`, `icons/*`, `logo.svg`, `sprite.svg`, zakomentowane zmienne SCSS i `console.log` w niezacommitowanej zmianie.
-- Zależności z połowy 2024: ESLint 8 (legacy config, EOL), Vite 5, Vitest 1, TS 5.4 — upgrade i tak byłby potrzebny.
+- **Game logic lives in view components**: win detection in `SudokuCell`, board construction in `GameView`, puzzle
+  picking in `NewGameView`. There is no domain layer that could be tested without the DOM.
+- **The store is a god object**: puzzle bank + board state + selection UI state + timer + modal state.
+- The data model is ad hoc: `Cell['value']` mixes `''`, `'-'` and `'X'` (the "erase" UI action stored as a cell
+  value), `selectedCell` is the index as a **string**, the board is compared by `join('')`-ing strings.
+- **Functions passed as props** (`getCellValue`, `selectCell`) — a React pattern; idiomatic Vue uses `emit` or store
+  actions directly. On top of that the cell reads the store directly anyway — two channels for the same data.
+- `<table>` with `display: flex` at every level — it loses table semantics without gaining a grid; cells are `div`s
+  with `@click` (no focus, no keyboard, no ARIA).
+- The timer counts `setInterval` ticks instead of measuring time from a timestamp — drift, no pausing when the tab is
+  hidden.
+- **Vuetify**: *all* components and directives are imported (`vuetify.ts`), while 4–5 are used (btn-toggle, btn,
+  dialog, card, icon). `v-responsive` wraps `v-app` (it should be the other way round), inline styles in `App.vue`.
+  For a game with custom themes, Vuetify gets in the way more than it helps.
+- Dead code / scaffold: `HelloWorld`, `icons/*`, `logo.svg`, `sprite.svg`, commented-out SCSS variables.
+- Dependencies from mid-2024: ESLint 8 (legacy config, EOL), Vite 5, Vitest 1, TS 5.4 — an upgrade would be needed
+  anyway.
 
-## 7. Werdykt: przepisać czy kontynuować?
+## 7. Verdict: rewrite or continue?
 
-**Przepisać od zera, w tym samym repo (nowy branch), zostając przy Vue 3 + TS + Vite + Pinia.**
+**Rewrite from scratch, in the same repo (new branch), staying with Vue 3 + TS + Vite + Pinia.**
 
-Uzasadnienie:
-- Kodu jest tak mało, że „kontynuacja” niczego nie oszczędza — a każda brakująca funkcja (notatki, undo, persystencja, klawiatura, motywy, generator) wymaga innego modelu danych niż obecny. Refaktor dotknąłby 100% plików.
-- Do ocalenia: **bank 100 łamigłówek** (jako dane seedowe/fallback), kolorystyka i układ ze starego SCSS, ogólny przepływ ekranów.
-- Zmiana frameworka nie jest potrzebna — Vue jest tu w pełni wystarczający i go znasz.
-- **Vuetify — rekomenduję usunąć.** Gra potrzebuje 3–4 prostych kontrolek i pełnej kontroli nad wyglądem dla motywów; własne komponenty + CSS custom properties będą prostsze i lżejsze. (Jeśli wolisz Material look w menu — da się zostawić z `vite-plugin-vuetify` dla tree-shakingu, ale to kompromis.)
+Rationale:
+- There is so little code that "continuing" saves nothing — and every missing feature (notes, undo, persistence,
+  keyboard, themes, generator) needs a different data model than the current one. A refactor would touch 100% of the
+  files.
+- Worth keeping: **the bank of 100 puzzles** (as seed/fallback data), the color palette and layout from the old SCSS,
+  the overall screen flow.
+- No need to switch frameworks — Vue is fully adequate here.
+- **Vuetify — recommended to remove.** The game needs 3–4 simple controls and full control over the look for
+  theming; custom components + CSS custom properties will be simpler and lighter. (If a Material look in the menus is
+  preferred, it can stay with `vite-plugin-vuetify` for tree-shaking, but that is a compromise.)
 
-## 8. Jak ja bym to zbudował
+## 8. Target design
 
-### 8.1 Warstwa domenowa — `src/engine/` (czysty TS, zero Vue, pokryty testami)
-- `board.ts` — plansza jako `Uint8Array(81)` (0 = puste), maska podpowiedzi, notatki jako bitmaska 9 bitów na komórkę; helpery wiersz/kolumna/blok, `findConflicts()`.
-- `solver.ts` — szybki solver bitmaskowy z liczeniem rozwiązań (stop po 2) → weryfikacja unikalności.
-- `generator.ts` — losowa pełna siatka → usuwanie komórek (z symetrią) dopóki rozwiązanie jest unikalne.
-- `grader.ts` — **solver „ludzki”** z technikami (naked/hidden single, pairs/triples, pointing/box-line, X-Wing, …); poziom = najtrudniejsza technika potrzebna + liczba kroków. To realnie odróżnia hard od master.
-- `transform.ts` — **transformacje zachowujące trudność**: permutacja cyfr (9!), zamiany wierszy w pasmach i pasm, kolumn i stosów, transpozycja. Z jednej łamigłówki powstają miliardy wizualnie różnych — natychmiastowy sposób na różnorodność przy istniejących 100 planszach, nawet przed generatorem.
-- `rng.ts` — PRNG z seedem (np. mulberry32) → powtarzalne gry, „łamigłówka dnia”, możliwość udostępnienia seeda.
-- Generowanie trudnych plansz w **Web Workerze** (może trwać setki ms); fallback = przetransformowana plansza z banku.
+### 8.1 Domain layer — `src/engine/` (plain TS, no Vue, covered by tests)
+- `board.ts` — board as `Uint8Array(81)` (0 = empty), a givens mask, notes as a 9-bit mask per cell;
+  row/column/box helpers, `findConflicts()`.
+- `solver.ts` — a fast bitmask solver that counts solutions (stops at 2) → uniqueness check.
+- `generator.ts` — random full grid → remove cells (symmetrically) while the solution stays unique.
+- `grader.ts` — a **human-style solver** with techniques (naked/hidden singles, pairs/triples, pointing/box-line,
+  X-Wing, …); level = hardest technique required + number of steps. This is what actually separates hard from master.
+- `transform.ts` — **difficulty-preserving transforms**: digit permutation (9!), swapping rows within bands and
+  swapping bands, the same for columns and stacks, transposition. One puzzle yields billions of visually different
+  ones — an immediate way to get variety from the existing 100 puzzles, even before the generator exists.
+- Hard puzzles are generated in a **Web Worker** (it can take hundreds of ms); fallback = a transformed puzzle from
+  the bank.
+- **Nice to have — seeded RNG** (`rng.ts`, e.g. mulberry32): a tiny PRNG where the same seed always yields the same
+  sequence of numbers. If the generator and transforms draw randomness from it instead of `Math.random()`, a puzzle
+  is fully determined by `{ seed, difficulty }`. That enables replaying the same game, a "daily puzzle" (seed derived
+  from the date — everyone gets the same board, no server needed), sharing a puzzle via a link
+  (`/game?seed=12345&level=hard`) and reproducing bugs. Not required for the MVP, but the generator and transforms
+  should accept a `rand` function as a parameter from the start, so adding it later needs no rework.
 
-### 8.2 Stan — Pinia, rozbity wg odpowiedzialności
-- `useGameStore`: plansza, notatki, podpowiedzi, historia undo/redo (lista ruchów), zaznaczenie (`number | null`), tryb notatek, status (`playing | paused | won`), czas jako `elapsedMs + startedAt`.
-- `useSettingsStore`: motyw, pokazywanie błędów, podświetlenia, auto-usuwanie notatek.
-- `useStatsStore`: wyniki per poziom (najlepszy/średni czas, liczba gier, seria).
-- Persystencja w `localStorage` (własny `watch` lub `pinia-plugin-persistedstate`) → resume działa też po F5 i zamknięciu przeglądarki; „Resume” widoczne tylko gdy istnieje gra w toku.
+### 8.2 State — Pinia, split by responsibility
+- `useGameStore`: board, notes, givens, undo/redo history (a list of moves), selection (`number | null`), notes mode,
+  status (`playing | paused | won`), time as `elapsedMs + startedAt`.
+- `useSettingsStore`: theme, mistake highlighting, highlight options, auto-removal of notes.
+- `useStatsStore`: results per level (best/average time, games played, streak).
+- Persistence in `localStorage` (a custom `watch` or `pinia-plugin-persistedstate`) → resume also works after F5 and
+  after closing the browser; "Resume" is shown only when a game is in progress.
 
 ### 8.3 UI
-- Plansza jako **CSS Grid 9×9**, rozmiar `min(94vw, 70dvh)` + `aspect-ratio: 1`, font w `cqi` (container queries) — skaluje się płynnie od telefonu do monitora.
-- Układ: numpad obok planszy na szerokim ekranie, pod planszą na wąskim; przyciski min. 44px (dotyk).
-- Wejście: komórka-najpierw **i** cyfra-najpierw, pełna klawiatura, przełącznik notatek, undo, erase.
-- Komórki jako `button`/`role="gridcell"` z roving tabindex — dostępność za darmo przy okazji obsługi klawiatury.
-- **Motywy przez CSS custom properties** na `[data-theme="…"]` (np. light, dark, sepia/paper, high-contrast); domyślny wg `prefers-color-scheme`. Jeden system kolorów zamiast trzech.
-- Ekrany: Home (Kontynuuj / Nowa gra / Statystyki / Ustawienia), wybór trudności, Gra, Statystyki, Ustawienia.
+- Board as a **9×9 CSS Grid**, sized `min(94vw, 70dvh)` + `aspect-ratio: 1`, font in `cqi` (container queries) —
+  scales smoothly from phone to monitor.
+- Layout: numpad beside the board on wide screens, below it on narrow ones; buttons at least 44px (touch).
+- Input: both cell-first **and** digit-first, full keyboard support, notes toggle, undo, erase.
+- Cells as `button`/`role="gridcell"` with a roving tabindex — accessibility comes almost for free with keyboard
+  support.
+- **Themes via CSS custom properties** on `[data-theme="…"]` (e.g. light, dark, sepia/paper, high-contrast); the
+  default follows `prefers-color-scheme`. One color system instead of three.
+- Screens: Home (Continue / New game / Stats / Settings), difficulty picker, Game, Stats, Settings.
 
-### 8.4 Zakres — co zrobić, a co odpuścić
-- **Zrobić (MVP):** engine + transformacje + generator z gradingiem, notatki, undo, konflikty, klawiatura, persystencja, responsywność, motywy, lokalne statystyki.
-- **Potem:** PWA (`vite-plugin-pwa` — sudoku offline to idealny przypadek), i18n PL/EN (`vue-i18n`), łamigłówka dnia z seeda, deploy na GitHub Pages.
-- **Odpuścić / odłożyć na koniec:** logowanie, baza danych, globalny leaderboard. Wymaga backendu (np. Supabase), a wyniki z klienta da się trywialnie sfałszować — duży koszt, mała wartość dla gry jednoosobowej. Lokalne statystyki pokrywają 90% potrzeby.
+### 8.4 Scope
+- **In scope (MVP):** engine + transforms + generator with grading, notes, undo, conflicts, keyboard, persistence,
+  responsiveness, themes, local stats.
+- **Later:** PWA (`vite-plugin-pwa` — offline sudoku is an ideal fit), PL/EN i18n (`vue-i18n`), deploy to GitHub
+  Pages.
+- **Nice to have:** seeded RNG with daily puzzle and shareable puzzle links (see 8.1).
+- **Dropped (decided):** login/auth, a database and a global leaderboard. They would require a backend (e.g.
+  Supabase), and client-submitted scores are trivial to fake — high cost, little value for a single-player game.
+  Local stats cover the real need. The Leaderboard view and the auth/DB items in `ToDo.txt` are out of scope.
 
 ### 8.5 Tooling
-- Aktualne wersje Vite / Vitest / TS / vue-tsc, ESLint 9 (flat config).
-- Testy jednostkowe głównie dla `engine/` (solver, generator, grader, transformacje, konflikty) — tam jest ryzyko i tam testy dają najwięcej; kilka testów komponentów; opcjonalnie Playwright dla jednego scenariusza „rozwiąż łamigłówkę”.
-- Usunąć scaffold (`HelloWorld`, `icons/`, `base.css` z Vue theme) i Vuetify.
+- Current versions of Vite / Vitest / TS / vue-tsc, ESLint 9 (flat config).
+- Unit tests mainly for `engine/` (solver, generator, grader, transforms, conflicts) — that is where the risk is and
+  where tests pay off most; a few component tests; optionally Playwright for a single "solve a puzzle" scenario.
+- Remove the scaffold (`HelloWorld`, `icons/`, `base.css` with the Vue theme) and Vuetify.
 
-## 9. Proponowana kolejność prac (gdybyś chciał, żebym to realizował)
+## 9. Order of work
 
-1. Nowy branch, upgrade toolingu, wyczyszczenie scaffoldu, usunięcie Vuetify.
-2. `engine/`: board + solver + konflikty + transformacje + RNG, z testami. Bank 100 plansz przeniesiony do `src/engine/data/puzzles.json`.
-3. Store gry + persystencja; plansza (CSS Grid), numpad, klawiatura, notatki, undo — grywalne MVP na telefonie i desktopie.
-4. Motywy + ustawienia; ekran wygranej; statystyki lokalne.
-5. Grader + generator w Web Workerze; przeskalowanie poziomów trudności wg technik.
-6. PWA, i18n, łamigłówka dnia, deploy.
+1. New branch, tooling upgrade, scaffold cleanup, Vuetify removal.
+2. `engine/`: board + solver + conflicts + transforms, with tests. Move the 100-puzzle bank to
+   `src/engine/data/puzzles.json`.
+3. Game store + persistence; board (CSS Grid), numpad, keyboard, notes, undo — a playable MVP on phone and desktop.
+4. Themes + settings; win screen; local stats.
+5. Grader + generator in a Web Worker; rescale difficulty levels by technique.
+6. PWA, i18n, deploy.
+7. Nice to have: seeded RNG, daily puzzle, shareable puzzle links.
 
-## Weryfikacja (dla implementacji)
+## Verification
 
-- `npm run build` i `npm run type-check` bez błędów; `npx vitest run` — testy engine’u zielone.
-- Test solvera: wszystkie 100 plansz z banku mają 1 rozwiązanie; transformacje zachowują poprawność i unikalność.
-- `npm run dev` + przeglądarka (DevTools emulacja 360×740 i 1440×900): rozegranie gry myszą, dotykiem i klawiaturą, F5 w trakcie gry → wznowienie, zmiana motywu, wygrana → statystyki zaktualizowane.
+- `npm run build` and `npm run type-check` pass; `npx vitest run` — engine tests green.
+- Solver test: all 100 bank puzzles have exactly one solution; transforms preserve validity and uniqueness.
+- `npm run dev` + browser (DevTools emulation at 360×740 and 1440×900): play a game with mouse, touch and keyboard,
+  F5 mid-game → resumes, switch theme, win → stats updated.
