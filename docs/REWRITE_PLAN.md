@@ -179,7 +179,7 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 ### 9.2 Engine — board and solver
 - [x] `src/engine/` skeleton with a Vitest setup for framework-free tests
 - [x] Move the 100-puzzle bank to `src/engine/data/puzzles.json` (out of the reactive store)
-- [ ] `board.ts`: `Uint8Array(81)` grid, givens mask, 9-bit notes mask, row/column/box index helpers, parse/serialize
+- [x] `board.ts`: `Uint8Array(81)` grid, givens mask, 9-bit notes mask, row/column/box index helpers, parse/serialize
       to the 81-char string format
 - [ ] `findConflicts()` + tests
 - [ ] `solver.ts`: bitmask solver that counts solutions (stops at 2) + tests

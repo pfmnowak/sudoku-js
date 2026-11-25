@@ -21,7 +21,10 @@ export const puzzleBank: Readonly<Record<Difficulty, readonly PuzzleEntry[]>> = 
  * Picks a random entry of the given difficulty from the bank.
  * @param rand - source of uniform numbers in `[0, 1)`; swap in a seeded RNG for reproducible picks
  */
-export const pickPuzzle = (difficulty: Difficulty, rand: () => number = Math.random): PuzzleEntry => {
+export const pickPuzzle = (
+  difficulty: Difficulty,
+  rand: () => number = Math.random
+): PuzzleEntry => {
   const entries = puzzleBank[difficulty];
-  return entries[Math.floor(rand() * entries.length)]!;
+  return entries[Math.floor(rand() * entries.length)];
 };
