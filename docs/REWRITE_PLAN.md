@@ -182,7 +182,7 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] `board.ts`: `Uint8Array(81)` grid, givens mask, 9-bit notes mask, row/column/box index helpers, parse/serialize
       to the 81-char string format
 - [x] `findConflicts()` + tests
-- [ ] `solver.ts`: bitmask solver that counts solutions (stops at 2) + tests
+- [x] `solver.ts`: bitmask solver that counts solutions (stops at 2) + tests
 - [ ] Bank test: every puzzle matches its solution and has exactly one solution
 
 ### 9.3 Engine — transforms
