@@ -192,9 +192,9 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] `getPuzzle(level)`: random bank puzzle + random transform
 
 ### 9.4 Game store and persistence
-- [ ] `useGameStore`: board, notes, givens, selection (`number | null`), notes mode, status
+- [x] `useGameStore`: board, notes, givens, selection (`number | null`), notes mode, status
       (`playing | paused | won`)
-- [ ] Actions: place digit, erase, toggle note, select cell — win detection in the store, not in components
+- [x] Actions: place digit, erase, toggle note, select cell — win detection in the store, not in components
 - [ ] Undo/redo as a list of moves
 - [ ] Timer as `elapsedMs + startedAt`; pause on leaving the game view and on `visibilitychange`
 - [ ] Persistence in `localStorage`; restore after F5 / browser restart
