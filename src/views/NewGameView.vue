@@ -33,8 +33,8 @@
 import AppIcon from '@/components/base/AppIcon.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import IconButton from '@/components/base/IconButton.vue';
-import { getPuzzle, type Difficulty } from '@/engine/puzzles';
-import { useGameStateStore } from '@/store';
+import { type Difficulty } from '@/engine/puzzles';
+import { useGameStore } from '@/stores/game';
 import {
   mdiChevronLeft,
   mdiEmoticonAngryOutline,
@@ -54,22 +54,14 @@ const difficultyOptions: { value: Difficulty; label: string; icon: string }[] = 
   { value: 'master', label: 'Master', icon: mdiEmoticonDevilOutline }
 ];
 
-const store = useGameStateStore();
+const store = useGameStore();
 const router = useRouter();
 const difficulty = ref<Difficulty>('medium');
 
-/** Loads a random puzzle of the chosen difficulty into the store and opens the game view. */
+/** Starts a game of the chosen difficulty and opens the game view. */
 const startGame = () => {
-  setDifficulty();
-  router.push({ path: '/game', query: { mode: 'new' } });
-};
-
-/** Gets a fresh puzzle of the selected difficulty (a randomly transformed bank entry) and writes it to the store. */
-const setDifficulty = () => {
-  const { puzzle, solution } = getPuzzle(difficulty.value);
-
-  store.solution = solution;
-  store.initialBoard = puzzle;
+  store.newGame(difficulty.value);
+  router.push({ name: 'game' });
 };
 </script>
 

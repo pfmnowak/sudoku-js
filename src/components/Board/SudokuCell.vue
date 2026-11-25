@@ -7,72 +7,43 @@
 </template>
 
 <script setup lang="ts">
-import { useGameStateStore, type Cell } from '@/store';
-import { computed, defineProps } from 'vue';
+import { EMPTY } from '@/engine/board';
+import { useGameStore } from '@/stores/game';
+import { computed } from 'vue';
 
 const props = defineProps<{
   cellIndex: number;
-  getCellValue: (index: number) => Cell['value'];
-  selectCell: (index: number) => void;
 }>();
 
-const store = useGameStateStore();
+const store = useGameStore();
 
-const cellValue = computed(() => props.getCellValue(props.cellIndex));
+const cellValue = computed(() => store.cells[props.cellIndex] || '');
 
 const tileClasses = computed(() => ({
-  selected: store.selectedCell === props.cellIndex.toString(),
-  disabled: store.currentBoard[props.cellIndex]?.disabled || false,
-  highlighted: store.highlightedValue === cellValue.value
+  selected: store.selectedCell === props.cellIndex,
+  disabled: store.givens[props.cellIndex] === 1,
+  highlighted:
+    store.highlightedDigit !== null && store.cells[props.cellIndex] === store.highlightedDigit
 }));
 
+/**
+ * With a numpad digit picked, writes it (or erases, for the eraser) into this cell;
+ * otherwise toggles the selection of this cell, which highlights its digit across the board.
+ */
 const selectCell = () => {
-  if (store.disableSelect) {
+  if (store.status !== 'playing') {
     return;
   }
-
-  if (store.selectedCell === props.cellIndex.toString()) {
-    store.selectedCell = '';
+  if (store.selectedDigit === null) {
+    store.selectCell(store.selectedCell === props.cellIndex ? null : props.cellIndex);
     return;
   }
-
-  if (!store.selectedDigitOption) {
-    if (store.highlightedValue === cellValue.value) {
-      store.highlightedValue = '';
-    } else {
-      store.highlightedValue = cellValue.value;
-    }
-    return;
+  store.selectCell(props.cellIndex);
+  if (store.selectedDigit === EMPTY) {
+    store.erase();
+  } else {
+    store.placeDigit(store.selectedDigit);
   }
-
-  if (store.currentBoard[props.cellIndex].disabled) {
-    return;
-  }
-
-  store.selectedCell = props.cellIndex.toString();
-  props.selectCell(props.cellIndex);
-
-  if (checkIfDone()) {
-    endGame();
-  }
-};
-
-const checkIfDone = () => {
-  return store.currentBoard.map((cell) => cell.value).join('') === store.solution;
-};
-
-const endGame = () => {
-  store.stopTimer();
-  store.disableSelect = true;
-  clearSelectionState();
-  // Open modal
-  store.toggleEndGameModal();
-};
-
-const clearSelectionState = () => {
-  store.highlightedValue = '';
-  store.selectedCell = '';
-  store.selectedDigitOption = '';
 };
 </script>
 

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Sudoku game being migrated from a vanilla JS/SASS app (kept for reference in `_old/`, not part of the build) to Vue 3 + TypeScript + Vite, with Pinia for state and Vue Router. There is no UI library: controls are plain elements, icons are `@mdi/js` path strings rendered by `components/base/AppIcon.vue` / `IconButton.vue`, the end-game modal is a native `<dialog>`, and the dark palette lives as CSS variables in `src/assets/main.css`. `ToDo.txt` lists the planned pages and features (leaderboard, scores, auth, local storage/DB persistence, i18n, PWA); the Leaderboard and Scores views are still placeholders.
 
-**Planned rewrite:** [`docs/REWRITE_PLAN.md`](docs/REWRITE_PLAN.md) holds the analysis of the current app and the agreed direction — rebuild from scratch on Vue 3 + TS + Vite + Pinia without Vuetify, with a framework-free `src/engine/` (solver, generator, difficulty grader, puzzle transforms), split stores with localStorage persistence, CSS Grid board and CSS-variable themes. Auth, a database and a global leaderboard are dropped. It supersedes `ToDo.txt` where they disagree. The architecture described below is the current (pre-rewrite) state.
+**Planned rewrite:** [`docs/REWRITE_PLAN.md`](docs/REWRITE_PLAN.md) holds the analysis of the current app and the agreed direction — rebuild from scratch on Vue 3 + TS + Vite + Pinia without Vuetify, with a framework-free `src/engine/` (solver, generator, difficulty grader, puzzle transforms), split stores with localStorage persistence, CSS Grid board and CSS-variable themes. Auth, a database and a global leaderboard are dropped. It supersedes `ToDo.txt` where they disagree. The architecture below describes the rewrite as it stands; the game components are still the pre-rewrite UI.
 
 ## Commands
 
@@ -19,7 +19,7 @@ npm is the package manager (`package-lock.json`).
 - `npm run lint` — ESLint **with `--fix`** (rewrites files)
 - `npm run format` — Prettier over `src/`
 
-Unit tests live in `src/**/__tests__/` and are excluded from the app tsconfig (covered by `tsconfig.vitest.json`). The only existing test is the scaffold's `HelloWorld.spec.ts`.
+Unit tests live in `src/**/__tests__/` and are excluded from the app tsconfig (covered by `tsconfig.vitest.json`). Vitest runs two projects: `engine` (node env, `src/engine/**`) and `ui` (jsdom, everything else).
 
 ## Code style
 
@@ -27,18 +27,15 @@ Prettier: single quotes, semicolons, 2-space indent, print width 100, no trailin
 
 ## Architecture
 
-All game state lives in a single Pinia setup store, `useGameStateStore` in `src/store.ts`. It holds:
+**Engine** (`src/engine/`, framework-free, tested in a node-env Vitest project): `board.ts` (grid as `Uint8Array(81)`, `0` = empty; givens; notes as 9-bit masks; unit/peer tables; `parseGrid`/`serializeGrid`; `findConflicts`), `solver.ts` (bitmask solver, `countSolutions` stops at a limit), `transform.ts` (difficulty-preserving transforms) and `puzzles.ts` (the 100-puzzle bank from `data/puzzles.json`; `getPuzzle(level, rand)` returns a randomly transformed bank entry). Randomness is always an injectable `rand: () => number`.
 
-- the puzzle bank (`data`): hardcoded `[puzzle, solution]` string pairs per difficulty (`beginner`, `easy`, `medium`, `hard`, `master`). Puzzles are 81-char strings with `-` for empty cells; solutions are 81 digits.
-- board state: `initialBoard` / `solution` (strings), `currentBoard` (`Cell[]` of `{ value, disabled }`, where `disabled` marks given clues)
-- selection state: `selectedDigitOption`, `highlightedValue`, `selectedCell` (cell index stored as a **string**), `disableSelect` (locks input after a win)
-- the timer (`timer` seconds + `startTimer`/`stopTimer`/`resetTimer`, backed by a module-level `setInterval`) and `endGameModalOpen`
+**State:** `useGameStore` in `src/stores/game.ts` holds the board (`cells`/`givens`/`notes` in `shallowRef`s — typed arrays are not deeply reactive, so every change replaces the array), selection (`selectedCell: number | null`, `selectedDigit` where `0` is the eraser), `notesMode`, `status` (`idle | playing | paused | won`), undo/redo as `history`/`future` lists of multi-cell moves, and the clock as `elapsedMs` + `startedAt` (read with `elapsedAt(now)`). All input goes through store actions (`placeDigit`, `erase`, `toggleNote`, `input`, `undo`, `redo`), which ignore givens and non-`playing` states; win detection happens in the store. The store saves itself to `localStorage` (`sudoku:game`, versioned) on every change and restores on creation, always as `paused`.
 
 Game flow across views:
 
-1. `NewGameView` picks a random puzzle for the chosen difficulty, writes `initialBoard`/`solution` to the store, and navigates to `/game?mode=new`.
-2. `GameView` reads `route.query.mode` on mount: `new` builds `currentBoard` from `initialBoard` and restarts the timer; `resume` just restarts the timer on the existing board. The timer is stopped on unmount, which is how "pause" works.
-3. Input: clicking a `DigitOption` (1–9, or `X` to erase) selects/highlights a digit; clicking a `SudokuCell` then writes it via the `selectCell` callback passed down from `BoardTable`. With no digit selected, clicking a cell toggles highlighting of its value.
-4. Win detection is in `SudokuCell`: after each placement it compares the joined `currentBoard` values to `solution`; on a match it stops the timer, locks input, and opens `EndGameDialog`.
+1. `NewGameView` calls `store.newGame(difficulty)` and navigates to `/game`.
+2. `GameView` redirects home when there is no game; `useGameClock` resumes the game on mount, pauses it on unmount and on `visibilitychange`, and ticks the displayed time. `HomeView` shows "Resume" only while `store.isInProgress`.
+3. Input (legacy UI, to be replaced in 9.5): clicking a `DigitOption` (1–9, or `X` = eraser) picks a digit; clicking a `SudokuCell` then writes it. With no digit picked, clicking a cell toggles its selection, which highlights its digit.
+4. `EndGameDialog` opens on the `playing → won` transition.
 
 `BoardTable` renders the 9×9 grid as three `<tbody>` row groups of three rows to draw the 3×3 box borders, mapping (group, row, cell) to a flat index 0–80. The game components' SCSS still carries commented-out variables/mixins from `_old/sass` (e.g. `respond(tab-port)`), which have not been ported.

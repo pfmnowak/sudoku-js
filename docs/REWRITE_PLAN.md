@@ -196,10 +196,10 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
       (`playing | paused | won`)
 - [x] Actions: place digit, erase, toggle note, select cell — win detection in the store, not in components
 - [x] Undo/redo as a list of moves
-- [ ] Timer as `elapsedMs + startedAt`; pause on leaving the game view and on `visibilitychange`
-- [ ] Persistence in `localStorage`; restore after F5 / browser restart
-- [ ] Unit tests for the store actions
-- [ ] Remove the old `store.ts`
+- [x] Timer as `elapsedMs + startedAt`; pause on leaving the game view and on `visibilitychange`
+- [x] Persistence in `localStorage`; restore after F5 / browser restart
+- [x] Unit tests for the store actions
+- [x] Remove the old `store.ts`
 
 ### 9.5 Game UI — playable MVP
 - [ ] Board as a 9×9 CSS Grid, `min(94vw, 70dvh)` + `aspect-ratio: 1`, font in `cqi`

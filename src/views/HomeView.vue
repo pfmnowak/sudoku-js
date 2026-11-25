@@ -5,9 +5,7 @@
       <BaseButton title="Start a New Game" class="button--cta" :href="href" @click="navigate" />
     </RouterLink>
     <nav>
-      <RouterLink v-if="gameStarted" :to="{ name: 'game', query: { mode: 'resume' } }"
-        >Resume a Game</RouterLink
-      >
+      <RouterLink v-if="store.isInProgress" :to="{ name: 'game' }">Resume a Game</RouterLink>
       <RouterLink to="/leaderboard">Leaderboard</RouterLink>
       <RouterLink to="/scores">Scores</RouterLink>
     </nav>
@@ -16,8 +14,9 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/base/BaseButton.vue';
+import { useGameStore } from '@/stores/game';
 
-const gameStarted = true;
+const store = useGameStore();
 </script>
 
 <style scoped>

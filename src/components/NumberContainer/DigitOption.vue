@@ -1,41 +1,35 @@
 <template>
-  <div
-    :class="[`tile tile--big tile--${optionValue}`, tileClasses]"
-    @click="setSelectedNumber(optionValue)"
-  >
-    {{ optionValue }}
+  <div :class="[`tile tile--big tile--${label}`, tileClasses]" @click="pickDigit">
+    {{ label }}
   </div>
 </template>
 
 <script setup lang="ts">
-import { useGameStateStore, type Cell } from '@/store';
+import { EMPTY } from '@/engine/board';
+import { useGameStore } from '@/stores/game';
 import { computed } from 'vue';
 
+/** A numpad button: digit `1`-`9`, or `EMPTY` (0) for the eraser shown as `X`. */
 const props = defineProps<{
-  optionValue: Cell['value'];
+  digit: number;
 }>();
 
-const store = useGameStateStore();
+const store = useGameStore();
+
+const label = computed(() => (props.digit === EMPTY ? 'X' : String(props.digit)));
 
 const tileClasses = computed(() => ({
-  selected: store.selectedDigitOption === props.optionValue,
-  highlighted: store.highlightedValue === props.optionValue && store.selectedDigitOption === ''
+  selected: store.selectedDigit === props.digit,
+  highlighted: store.selectedDigit === null && store.highlightedDigit === props.digit
 }));
 
-const setSelectedNumber = (value: Cell['value']) => {
-  if (store.disableSelect) {
+/** Picks this digit for digit-first input, or drops it when it is already picked. */
+const pickDigit = () => {
+  if (store.status !== 'playing') {
     return;
   }
-
-  store.selectedCell = '';
-
-  if (store.highlightedValue === value) {
-    store.selectedDigitOption = '';
-    store.highlightedValue = '';
-  } else {
-    store.selectedDigitOption = value;
-    store.highlightedValue = value;
-  }
+  store.selectCell(null);
+  store.selectDigit(props.digit);
 };
 </script>
 

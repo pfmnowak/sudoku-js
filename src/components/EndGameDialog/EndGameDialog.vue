@@ -1,12 +1,12 @@
 <template>
-  <dialog ref="dialog" class="end-game-dialog" @close="store.endGameModalOpen = false">
+  <dialog ref="dialog" class="end-game-dialog">
     <h2 class="end-game-dialog__title">
       <AppIcon :path="mdiTrophyOutline" />
       Congratulations!
     </h2>
     <p>🏆 You have completed the Sudoku puzzle in {{ formattedTime }} 🥳</p>
     <div class="end-game-dialog__actions">
-      <BaseButton title="Ok" class="button--cta" @click="store.endGameModalOpen = false" />
+      <BaseButton title="Ok" class="button--cta" @click="dialog?.close()" />
     </div>
   </dialog>
 </template>
@@ -14,34 +14,33 @@
 <script setup lang="ts">
 import AppIcon from '@/components/base/AppIcon.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
-import { useGameStateStore } from '@/store';
+import { useGameStore } from '@/stores/game';
 import { mdiTrophyOutline } from '@mdi/js';
 import { computed, ref, watch } from 'vue';
 
 /**
- * Modal shown after the puzzle is solved, built on the native `<dialog>` element.
- * Visibility mirrors `store.endGameModalOpen`; closing it (button or Esc) resets that flag.
+ * Modal shown when the puzzle gets solved, built on the native `<dialog>` element.
+ * It opens on the transition to `won` only, so a won game restored after a reload does not reopen it.
  */
-const store = useGameStateStore();
+const store = useGameStore();
 const dialog = ref<HTMLDialogElement>();
 
 watch(
-  () => store.endGameModalOpen,
-  (isOpen) => {
-    if (isOpen) {
+  () => store.status,
+  (status, previous) => {
+    if (status === 'won' && previous === 'playing') {
       dialog.value?.showModal();
-    } else {
-      dialog.value?.close();
     }
   }
 );
 
 const formattedTime = computed(() => {
-  const hours = Math.floor(store.timer / 3600).toString();
-  const minutes = Math.floor((store.timer % 3600) / 60).toString();
-  const seconds = (store.timer % 60).toString();
+  const totalSeconds = Math.floor(store.elapsedAt() / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-  return `${hours && hours !== '0' ? hours + ' hours, ' : ''}${minutes && minutes !== '0' ? minutes + ' minutes and ' : ''}${seconds} seconds`;
+  return `${hours ? hours + ' hours, ' : ''}${minutes ? minutes + ' minutes and ' : ''}${seconds} seconds`;
 });
 </script>
 

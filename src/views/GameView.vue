@@ -25,58 +25,26 @@ import { mdiChevronLeft, mdiRestore } from '@mdi/js';
 import BoardTable from '@/components/Board/BoardTable.vue';
 import EndGameDialog from '@/components/EndGameDialog/EndGameDialog.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
-import { useGameStateStore, type Cell } from '@/store';
-import { computed, onMounted, onUnmounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useGameClock } from '@/composables/useGameClock';
+import { useGameStore } from '@/stores/game';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-const store = useGameStateStore();
-const route = useRoute();
+const store = useGameStore();
+const router = useRouter();
+const { elapsedMs } = useGameClock();
+
+if (store.status === 'idle') {
+  router.replace('/');
+}
 
 const formattedTime = computed(() => {
-  const hours = Math.floor(store.timer / 3600);
-  const minutes = Math.floor((store.timer % 3600) / 60);
-  const seconds = store.timer % 60;
+  const totalSeconds = Math.floor(elapsedMs.value / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-});
-
-const startGame = () => {
-  loadData();
-  clearSelectionState();
-  store.resetTimer();
-  store.startTimer();
-};
-
-const resumeGame = () => {
-  store.startTimer();
-};
-
-const clearSelectionState = () => {
-  store.highlightedValue = '';
-  store.selectedCell = '';
-  store.selectedDigitOption = '';
-};
-
-const loadData = function () {
-  store.disableSelect = false;
-  store.currentBoard = [...store.initialBoard].map((position) => {
-    return {
-      value: position as Cell['value'],
-      disabled: position !== '-'
-    };
-  });
-};
-
-onMounted(() => {
-  if (route.query.mode === 'new') {
-    startGame();
-  } else if (route.query.mode === 'resume') {
-    resumeGame();
-  }
-});
-
-onUnmounted(() => {
-  store.stopTimer();
+  return [hours, minutes, seconds].map((part) => part.toString().padStart(2, '0')).join(':');
 });
 </script>
 
