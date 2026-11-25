@@ -183,7 +183,7 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
       to the 81-char string format
 - [x] `findConflicts()` + tests
 - [x] `solver.ts`: bitmask solver that counts solutions (stops at 2) + tests
-- [ ] Bank test: every puzzle matches its solution and has exactly one solution
+- [x] Bank test: every puzzle matches its solution and has exactly one solution
 
 ### 9.3 Engine — transforms
 - [ ] `transform.ts`: digit permutation, row/column swaps within bands/stacks, band/stack swaps, transposition
