@@ -1,45 +1,25 @@
-# sudoku-vue
+# Sudoku
 
-This template should help get you started developing with Vue 3 in Vite.
+A responsive Sudoku game built with Vue 3, TypeScript, Vite and Pinia.
 
-## Recommended IDE Setup
+The app is being rebuilt — see [`docs/REWRITE_PLAN.md`](docs/REWRITE_PLAN.md) for the assessment of the current
+state and the planned architecture. The original vanilla JS/SASS version is kept in `_old/` for reference.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
+## Getting started
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Scripts
 
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+| Command              | Description                                   |
+| -------------------- | --------------------------------------------- |
+| `npm run dev`        | Start the Vite dev server                     |
+| `npm run build`      | Type-check and build for production           |
+| `npm run preview`    | Preview the production build                  |
+| `npm run type-check` | Type-check only                               |
+| `npm run test:unit`  | Run unit tests with Vitest                    |
+| `npm run lint`       | Lint with ESLint (applies fixes)              |
+| `npm run format`     | Format `src/` with Prettier                   |

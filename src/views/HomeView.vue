@@ -1,6 +1,6 @@
 <template>
   <header>
-    <HelloWorld msg="Sudoku" />
+    <h1 class="title">Sudoku</h1>
     <RouterLink to="/new-game" v-slot="{ href, navigate }">
       <BaseButton title="Start a New Game" class="button--cta" :href="href" @click="navigate" />
     </RouterLink>
@@ -15,13 +15,18 @@
 </template>
 
 <script setup lang="ts">
-import HelloWorld from '@/components/HelloWorld.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const gameStarted = true;
 </script>
 
 <style scoped>
+.title {
+  font-weight: 500;
+  font-size: 2.6rem;
+  color: var(--color-accent);
+}
+
 header {
   display: flex;
   flex-direction: column;
