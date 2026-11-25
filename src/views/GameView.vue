@@ -94,8 +94,6 @@ onUnmounted(() => {
   align-items: center;
   user-select: none;
 
-  // @include respond(tab-port) {
   flex-direction: column;
-  // }
 }
 </style>

@@ -86,13 +86,11 @@ const clearSelectionState = () => {
     justify-content: center;
 
     &:not(:last-child) {
-      // border-right: 1px solid $color-gray-dark;
       border-right: 1px solid darkgrey;
     }
 
     &:nth-child(3),
     &:nth-child(6) {
-      // border-right: 2px solid $color-gray-light !important;
       border-right: 2px solid lightgrey !important;
     }
   }
@@ -109,24 +107,17 @@ const clearSelectionState = () => {
 }
 
 .disabled {
-  //   background-color: rgba($color-gray-dark, 0.6);
   background-color: rgba(#333, 0.6);
   color: #ddd;
-  //   color: $color-gray-light;
   cursor: auto !important;
 }
 
 .highlighted {
   color: #32cd32;
-  //   color: $color-green-light;
-  // background-color: rgba($color-green-light, 0.6);
 }
 
 .selected {
-  // background-color: $color-green-light;
   background-color: rgba(#32cd32, 0.6);
-  //   background-color: rgba($color-green-light, 0.6);
   color: #fff;
-  //   color: $color-white;
 }
 </style>

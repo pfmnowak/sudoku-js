@@ -23,10 +23,8 @@ const digits: Cell['value'][] = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
   flex-direction: column;
   height: 35rem;
 
-  // @include respond(tab-port) {
   flex-direction: row;
   width: 35rem;
   height: auto;
-  // }
 }
 </style>

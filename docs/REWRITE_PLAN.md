@@ -174,7 +174,7 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
       scaffold home header, fix the `NumberContainer` build error
 - [x] Remove Vuetify — native elements, `@mdi/js` icons via `AppIcon` / `IconButton`, native `<dialog>`
 - [x] Upgrade Vue, Vite, Vitest, TS, vue-tsc; migrate to ESLint flat config
-- [ ] Remove the remaining leftovers (`src/assets/sprite.svg`, commented-out SCSS from `_old/`)
+- [x] Remove the remaining leftovers (`src/assets/sprite.svg`, commented-out SCSS from `_old/`)
 
 ### 9.2 Engine — board and solver
 - [ ] `src/engine/` skeleton with a Vitest setup for framework-free tests

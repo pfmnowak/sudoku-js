@@ -1,14 +1,15 @@
 <template>
   <div class="social">
     <a :href="link" class="social__link" :title="title">
-      <svg class="social__icon">
-        <use xlink:href="../assets/sprite.svg#icon-github"></use>
-      </svg>
+      <AppIcon :path="mdiGithub" class="social__icon" />
     </a>
   </div>
 </template>
 
 <script setup lang="ts">
+import { mdiGithub } from '@mdi/js';
+import AppIcon from './base/AppIcon.vue';
+
 defineProps<{
   link: string;
   title: string;
@@ -27,6 +28,7 @@ defineProps<{
     background-color: #ddd;
     border-radius: 50%;
     margin-right: 1rem;
+    color: #333;
 
     &:hover {
       background-color: #fff;

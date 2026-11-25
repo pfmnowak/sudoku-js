@@ -18,10 +18,8 @@ import SocialLink from '../SocialLink.vue';
 
 <style lang="scss" scoped>
 footer {
-  /* //   color: $color-gray-light; */
   text-align: center;
   padding: 3rem 0;
   margin-top: 5rem;
-  /* //   font-size: $default-font-size; */
 }
 </style>

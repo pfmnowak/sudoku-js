@@ -53,7 +53,6 @@ const setSelectedNumber = (value: Cell['value']) => {
   &--big {
     width: 6rem;
     height: 6rem;
-    // border: 3px solid $color-green-dark;
     border: 3px solid darkgreen;
     font-size: 4rem;
 
@@ -64,15 +63,10 @@ const setSelectedNumber = (value: Cell['value']) => {
 
 .highlighted {
   color: #32cd32;
-  //   color: $color-green-light;
-  // background-color: rgba($color-green-light, 0.6);
 }
 
 .selected {
-  // background-color: $color-green-light;
   background-color: rgba(#32cd32, 0.6);
-  //   background-color: rgba($color-green-light, 0.6);
   color: #fff;
-  //   color: $color-white;
 }
 </style>

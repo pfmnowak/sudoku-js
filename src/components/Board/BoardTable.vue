@@ -52,9 +52,7 @@ const selectCell = (cellIndex: number) => {
 .board {
   padding: 2rem 5rem;
 
-  // @include respond(tab-port) {
   padding: 2rem 0rem;
-  // }
 
   &__table {
     border-collapse: collapse;
@@ -68,7 +66,6 @@ const selectCell = (cellIndex: number) => {
   }
 
   &__row-group:not(:last-child) {
-    // border-bottom: 2px solid $color-gray-light;
     border-bottom: 2px solid lightgrey;
   }
 
@@ -76,7 +73,6 @@ const selectCell = (cellIndex: number) => {
     display: flex;
 
     &:not(:last-child) {
-      // border-bottom: 1px solid $color-gray-dark;
       border-bottom: 1px solid darkgrey;
     }
   }
