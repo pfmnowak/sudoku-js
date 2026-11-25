@@ -1,12 +1,17 @@
 <template>
   <div>
-    <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" />
+    <IconButton
+      :icon="mdiChevronLeft"
+      label="Back to home"
+      @click="$router.push({ path: '/', replace: true })"
+    />
     <h1>This is a Scores page</h1>
   </div>
 </template>
 
 <script setup lang="ts">
-import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
+import IconButton from '@/components/base/IconButton.vue';
+import { mdiChevronLeft } from '@mdi/js';
 </script>
 
 <style lang="scss" scoped></style>

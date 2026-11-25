@@ -1,58 +1,118 @@
 <template>
   <section class="toolbar-section">
-    <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" />
+    <IconButton
+      :icon="mdiChevronLeft"
+      label="Back to home"
+      @click="$router.push({ path: '/', replace: true })"
+    />
   </section>
 
-  <v-container class="text-center">
+  <section class="new-game">
     <h1>New game</h1>
-    <h3 class="mb-4">Choose a difficulty</h3>
+    <h3>Choose a difficulty</h3>
 
-    <v-row class="justify-center my-2">
-      <v-btn-toggle v-model="difficulty" mandatory>
-        <v-btn value="beginner" class="mx-2">
-          <v-icon>mdi-emoticon-excited-outline</v-icon>Beginner</v-btn
-        >
-        <v-btn value="easy" class="mx-2"> <v-icon>mdi-emoticon-happy-outline</v-icon>Easy</v-btn>
-        <v-btn value="medium" class="mx-2">
-          <v-icon>mdi-emoticon-neutral-outline</v-icon>Standard</v-btn
-        >
-        <v-btn value="hard" class="mx-2"> <v-icon>mdi-emoticon-angry-outline</v-icon>Hard</v-btn>
-        <v-btn value="master" class="mx-2">
-          <v-icon>mdi-emoticon-devil-outline</v-icon>Master</v-btn
-        >
-      </v-btn-toggle>
-    </v-row>
+    <div class="difficulty-picker" role="group" aria-label="Difficulty">
+      <button
+        v-for="option in difficultyOptions"
+        :key="option.value"
+        type="button"
+        class="difficulty-picker__option"
+        :aria-pressed="difficulty === option.value"
+        @click="difficulty = option.value"
+      >
+        <AppIcon :path="option.icon" />
+        {{ option.label }}
+      </button>
+    </div>
 
-    <v-btn @click="startGame" class="mt-5" color="primary">Start a Game!</v-btn>
-  </v-container>
+    <BaseButton title="Start a Game!" class="button--cta" @click="startGame" />
+  </section>
 </template>
 
 <script setup lang="ts">
-import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
+import AppIcon from '@/components/base/AppIcon.vue';
+import BaseButton from '@/components/base/BaseButton.vue';
+import IconButton from '@/components/base/IconButton.vue';
 import { useGameStateStore } from '@/store';
+import {
+  mdiChevronLeft,
+  mdiEmoticonAngryOutline,
+  mdiEmoticonDevilOutline,
+  mdiEmoticonExcitedOutline,
+  mdiEmoticonHappyOutline,
+  mdiEmoticonNeutralOutline
+} from '@mdi/js';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 type Difficulty = 'beginner' | 'easy' | 'medium' | 'hard' | 'master';
+
+const difficultyOptions: { value: Difficulty; label: string; icon: string }[] = [
+  { value: 'beginner', label: 'Beginner', icon: mdiEmoticonExcitedOutline },
+  { value: 'easy', label: 'Easy', icon: mdiEmoticonHappyOutline },
+  { value: 'medium', label: 'Standard', icon: mdiEmoticonNeutralOutline },
+  { value: 'hard', label: 'Hard', icon: mdiEmoticonAngryOutline },
+  { value: 'master', label: 'Master', icon: mdiEmoticonDevilOutline }
+];
+
 const store = useGameStateStore();
 const router = useRouter();
 const difficulty = ref<Difficulty>('medium');
 
+/** Loads a random puzzle of the chosen difficulty into the store and opens the game view. */
 const startGame = () => {
   setDifficulty();
   router.push({ path: '/game', query: { mode: 'new' } });
 };
 
+/** Picks a random `[puzzle, solution]` pair for the selected difficulty from the puzzle bank. */
 const setDifficulty = () => {
-  let board;
-  let solution;
-
-  [board, solution] =
-    store.data[difficulty.value][Math.floor(Math.random() * store.data[difficulty.value].length)];
+  const puzzles = store.data[difficulty.value];
+  const [board, solution] = puzzles[Math.floor(Math.random() * puzzles.length)];
 
   store.solution = solution;
   store.initialBoard = board;
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.new-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.difficulty-picker {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+
+  &__option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.4rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    &[aria-pressed='true'] {
+      background-color: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+  }
+}
+</style>

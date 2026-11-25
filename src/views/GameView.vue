@@ -1,8 +1,16 @@
 <template>
   <section class="toolbar-section">
-    <IconButtonMDI icon="$prev" @click="$router.push({ path: '/', replace: true })" />
+    <IconButton
+      :icon="mdiChevronLeft"
+      label="Back to home"
+      @click="$router.push({ path: '/', replace: true })"
+    />
     <div class="timer">{{ formattedTime }}</div>
-    <IconButtonMDI icon="mdi-restore" @click="$router.push({ path: '/', replace: true })" />
+    <IconButton
+      :icon="mdiRestore"
+      label="Restart"
+      @click="$router.push({ path: '/', replace: true })"
+    />
   </section>
   <section id="game" class="game-section">
     <BoardTable />
@@ -12,7 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import IconButtonMDI from '@/components/base/IconButtonMDI.vue';
+import IconButton from '@/components/base/IconButton.vue';
+import { mdiChevronLeft, mdiRestore } from '@mdi/js';
 import BoardTable from '@/components/Board/BoardTable.vue';
 import EndGameDialog from '@/components/EndGameDialog/EndGameDialog.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';

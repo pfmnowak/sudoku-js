@@ -1,4 +1,7 @@
 :root {
+  color-scheme: dark;
+  --color-background: #121212;
+  --color-surface: #212121;
   --color-text: rgba(235, 235, 235, 0.64);
   --color-border: rgba(84, 84, 84, 0.48);
   --color-accent: hsla(160, 100%, 37%, 1);
@@ -14,6 +17,7 @@
 
 body {
   min-height: 100vh;
+  background: var(--color-background);
   color: var(--color-text);
   line-height: 1.6;
   font-family:
@@ -33,6 +37,13 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  border-style: none;
 }
 
 #app {
@@ -55,6 +66,13 @@ a {
 }
 
 @media (max-width: 900px) {
+  button {
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-style: none;
+  }
+
   #app {
     padding: 0;
   }
