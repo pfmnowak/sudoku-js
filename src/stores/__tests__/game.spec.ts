@@ -1,7 +1,8 @@
 import { createPinia, setActivePinia } from 'pinia';
+import { nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { EMPTY, digitBit } from '@/engine/board';
-import { useGameStore } from '../game';
+import { GAME_STORAGE_KEY, useGameStore } from '../game';
 
 const startGame = () => {
   const store = useGameStore();
@@ -27,7 +28,12 @@ const fillAllButOne = (store: ReturnType<typeof useGameStore>) => {
 };
 
 beforeEach(() => {
+  localStorage.clear();
   setActivePinia(createPinia());
+});
+
+afterEach(() => {
+  vi.useRealTimers();
 });
 
 describe('newGame', () => {
@@ -263,10 +269,6 @@ describe('clock', () => {
     vi.setSystemTime(1_000_000);
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('counts time only while playing', () => {
     const store = startGame();
     vi.advanceTimersByTime(5_000);
@@ -309,5 +311,73 @@ describe('clock', () => {
     vi.advanceTimersByTime(3_000);
     store.newGame('easy');
     expect(store.elapsedAt()).toBe(0);
+  });
+});
+
+describe('persistence', () => {
+  /** Simulates a page reload: a fresh Pinia whose store restores from localStorage. */
+  const reload = () => {
+    setActivePinia(createPinia());
+    return useGameStore();
+  };
+
+  it('saves nothing until a game starts', async () => {
+    useGameStore();
+    await nextTick();
+    expect(localStorage.getItem(GAME_STORAGE_KEY)).toBeNull();
+  });
+
+  it('restores the board, notes, history and time after a reload, paused', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1_000_000);
+    const store = startGame();
+    const [a, b] = emptyCells(store);
+    store.placeDigit(7, a);
+    store.toggleNote(2, b);
+    store.undo();
+    store.toggleNote(4, b);
+    vi.advanceTimersByTime(4_000);
+    store.pause();
+    await nextTick();
+
+    const restored = reload();
+    expect(restored.status).toBe('paused');
+    expect(restored.difficulty).toBe('easy');
+    expect(restored.puzzle).toBe(store.puzzle);
+    expect(restored.cells).toEqual(store.cells);
+    expect(restored.givens).toEqual(store.givens);
+    expect(restored.solution).toEqual(store.solution);
+    expect(restored.notes).toEqual(store.notes);
+    expect(restored.history).toEqual(store.history);
+    expect(restored.future).toEqual(store.future);
+    expect(restored.elapsedAt()).toBe(4_000);
+
+    restored.resume();
+    restored.undo();
+    expect(restored.notes[b]).toBe(0);
+  });
+
+  it('brings a game that was playing back as paused', async () => {
+    const store = startGame();
+    store.placeDigit(1, emptyCells(store)[0]);
+    await nextTick();
+    expect(reload().status).toBe('paused');
+  });
+
+  it('keeps a won game won', async () => {
+    const store = startGame();
+    const last = fillAllButOne(store);
+    store.placeDigit(store.solution[last], last);
+    await nextTick();
+    const restored = reload();
+    expect(restored.status).toBe('won');
+    expect(restored.isInProgress).toBe(false);
+  });
+
+  it('ignores a corrupted or outdated save', () => {
+    localStorage.setItem(GAME_STORAGE_KEY, '{not json');
+    expect(reload().status).toBe('idle');
+    localStorage.setItem(GAME_STORAGE_KEY, JSON.stringify({ version: 0 }));
+    expect(reload().status).toBe('idle');
   });
 });

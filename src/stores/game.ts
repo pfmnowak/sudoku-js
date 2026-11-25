@@ -1,15 +1,17 @@
 import { defineStore } from 'pinia';
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 import {
   CELL_COUNT,
   EMPTY,
   createBoard,
   findConflicts,
   parseGrid,
+  serializeGrid,
   toggleNote as toggleNoteMask,
   type Grid
 } from '@/engine/board';
-import { getPuzzle, type Difficulty } from '@/engine/puzzles';
+import { DIFFICULTIES, getPuzzle, type Difficulty } from '@/engine/puzzles';
+import { readStorage, writeStorage } from './storage';
 
 /** `idle` means no game has been started yet. */
 export type GameStatus = 'idle' | 'playing' | 'paused' | 'won';
@@ -30,10 +32,57 @@ export type CellChange = {
 /** A single player action; it may touch several cells, and is undone as a whole. */
 export type Move = CellChange[];
 
+export const GAME_STORAGE_KEY = 'sudoku:game';
+
+/**
+ * Shape of the game saved in `localStorage`. Grids are stored as 81-char strings.
+ * Bump `version` on any incompatible change; saves with another version are discarded.
+ */
+type SavedGame = {
+  version: 1;
+  status: 'paused' | 'won';
+  difficulty: Difficulty;
+  puzzle: string;
+  solution: string;
+  cells: string;
+  notes: number[];
+  history: Move[];
+  future: Move[];
+  elapsedMs: number;
+};
+
+const isSavedGame = (value: unknown): value is SavedGame => {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const save = value as Partial<SavedGame>;
+  return (
+    save.version === 1 &&
+    (save.status === 'paused' || save.status === 'won') &&
+    DIFFICULTIES.includes(save.difficulty as Difficulty) &&
+    typeof save.puzzle === 'string' &&
+    /^[1-9-]{81}$/.test(save.puzzle) &&
+    typeof save.solution === 'string' &&
+    /^[1-9]{81}$/.test(save.solution) &&
+    typeof save.cells === 'string' &&
+    /^[1-9-]{81}$/.test(save.cells) &&
+    Array.isArray(save.notes) &&
+    save.notes.length === CELL_COUNT &&
+    save.notes.every((mask) => Number.isInteger(mask) && mask >= 0 && mask <= 0x1ff) &&
+    Array.isArray(save.history) &&
+    Array.isArray(save.future) &&
+    typeof save.elapsedMs === 'number' &&
+    save.elapsedMs >= 0
+  );
+};
+
 /**
  * The game in progress: board, selection, input mode and status.
  * Typed arrays are not deeply reactive in Vue, so `cells` and `notes` live in shallow refs
  * and every change replaces the array with an updated copy.
+ *
+ * The game is saved to `localStorage` on every change and restored when the store is created,
+ * so it survives a reload or a browser restart. A restored game always comes back paused.
  */
 export const useGameStore = defineStore('game', () => {
   const status = ref<GameStatus>('idle');
@@ -242,6 +291,54 @@ export const useGameStore = defineStore('game', () => {
       placeDigit(digit, index);
     }
   };
+
+  const toSavedGame = (): SavedGame | null => {
+    if (status.value === 'idle' || difficulty.value === null) {
+      return null;
+    }
+    return {
+      version: 1,
+      status: status.value === 'won' ? 'won' : 'paused',
+      difficulty: difficulty.value,
+      puzzle: puzzle.value,
+      solution: serializeGrid(solution.value),
+      cells: serializeGrid(cells.value),
+      notes: Array.from(notes.value),
+      history: history.value,
+      future: future.value,
+      elapsedMs: elapsedAt()
+    };
+  };
+
+  const restore = (save: SavedGame) => {
+    difficulty.value = save.difficulty;
+    puzzle.value = save.puzzle;
+    solution.value = parseGrid(save.solution);
+    givens.value = createBoard(save.puzzle).givens;
+    cells.value = parseGrid(save.cells);
+    notes.value = Uint16Array.from(save.notes);
+    history.value = save.history;
+    future.value = save.future;
+    elapsedMs.value = save.elapsedMs;
+    startedAt.value = null;
+    status.value = save.status;
+  };
+
+  const saved = readStorage(GAME_STORAGE_KEY);
+  if (isSavedGame(saved)) {
+    restore(saved);
+  }
+
+  watch(
+    [status, cells, notes, history, future, elapsedMs],
+    () => {
+      const save = toSavedGame();
+      if (save) {
+        writeStorage(GAME_STORAGE_KEY, save);
+      }
+    },
+    { deep: true }
+  );
 
   return {
     status,
