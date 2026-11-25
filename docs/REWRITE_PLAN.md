@@ -177,8 +177,8 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] Remove the remaining leftovers (`src/assets/sprite.svg`, commented-out SCSS from `_old/`)
 
 ### 9.2 Engine — board and solver
-- [ ] `src/engine/` skeleton with a Vitest setup for framework-free tests
-- [ ] Move the 100-puzzle bank to `src/engine/data/puzzles.json` (out of the reactive store)
+- [x] `src/engine/` skeleton with a Vitest setup for framework-free tests
+- [x] Move the 100-puzzle bank to `src/engine/data/puzzles.json` (out of the reactive store)
 - [ ] `board.ts`: `Uint8Array(81)` grid, givens mask, 9-bit notes mask, row/column/box index helpers, parse/serialize
       to the 81-char string format
 - [ ] `findConflicts()` + tests
