@@ -166,14 +166,83 @@ Rationale:
 
 ## 9. Order of work
 
-1. New branch, tooling upgrade, scaffold cleanup, Vuetify removal.
-2. `engine/`: board + solver + conflicts + transforms, with tests. Move the 100-puzzle bank to
-   `src/engine/data/puzzles.json`.
-3. Game store + persistence; board (CSS Grid), numpad, keyboard, notes, undo — a playable MVP on phone and desktop.
-4. Themes + settings; win screen; local stats.
-5. Grader + generator in a Web Worker; rescale difficulty levels by technique.
-6. PWA, i18n, deploy.
-7. Nice to have: seeded RNG, daily puzzle, shareable puzzle links.
+All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
+
+### 9.1 Branch, tooling, cleanup
+- [x] Create the `feature/sudoku-rewrite` branch
+- [x] Remove the Vite scaffold (`HelloWorld` + its test, `icons/`, `logo.svg`, `base.css`, `leaves.jpg`), replace the
+      scaffold home header, fix the `NumberContainer` build error
+- [x] Remove Vuetify — native elements, `@mdi/js` icons via `AppIcon` / `IconButton`, native `<dialog>`
+- [x] Upgrade Vue, Vite, Vitest, TS, vue-tsc; migrate to ESLint flat config
+- [ ] Remove the remaining leftovers (`src/assets/sprite.svg`, commented-out SCSS from `_old/`)
+
+### 9.2 Engine — board and solver
+- [ ] `src/engine/` skeleton with a Vitest setup for framework-free tests
+- [ ] Move the 100-puzzle bank to `src/engine/data/puzzles.json` (out of the reactive store)
+- [ ] `board.ts`: `Uint8Array(81)` grid, givens mask, 9-bit notes mask, row/column/box index helpers, parse/serialize
+      to the 81-char string format
+- [ ] `findConflicts()` + tests
+- [ ] `solver.ts`: bitmask solver that counts solutions (stops at 2) + tests
+- [ ] Bank test: every puzzle matches its solution and has exactly one solution
+
+### 9.3 Engine — transforms
+- [ ] `transform.ts`: digit permutation, row/column swaps within bands/stacks, band/stack swaps, transposition
+- [ ] All randomness taken from a `rand: () => number` parameter (ready for a seeded RNG later)
+- [ ] Tests: transforms preserve validity, givens count and uniqueness
+- [ ] `getPuzzle(level)`: random bank puzzle + random transform
+
+### 9.4 Game store and persistence
+- [ ] `useGameStore`: board, notes, givens, selection (`number | null`), notes mode, status
+      (`playing | paused | won`)
+- [ ] Actions: place digit, erase, toggle note, select cell — win detection in the store, not in components
+- [ ] Undo/redo as a list of moves
+- [ ] Timer as `elapsedMs + startedAt`; pause on leaving the game view and on `visibilitychange`
+- [ ] Persistence in `localStorage`; restore after F5 / browser restart
+- [ ] Unit tests for the store actions
+- [ ] Remove the old `store.ts`
+
+### 9.5 Game UI — playable MVP
+- [ ] Board as a 9×9 CSS Grid, `min(94vw, 70dvh)` + `aspect-ratio: 1`, font in `cqi`
+- [ ] Cells as buttons with `role="gridcell"` and a roving tabindex
+- [ ] Highlighting: selected cell's row/column/box, same digits, conflicts
+- [ ] Notes rendered as a 3×3 mini-grid in a cell
+- [ ] Numpad with remaining-count per digit; erase, undo, notes toggle (≥ 44px touch targets)
+- [ ] Input modes: cell-first and digit-first
+- [ ] Keyboard: arrows, 1–9, Backspace/Delete, a key for notes mode, Ctrl+Z / Ctrl+Y
+- [ ] Layout: numpad beside the board on wide screens, below it on narrow ones
+- [ ] Home: "Continue" only when a game is in progress; difficulty picker; working "restart" action
+- [ ] Check at 360×740 and 1440×900 (mouse, touch, keyboard)
+
+### 9.6 Themes, settings, win screen, stats
+- [ ] One color system: CSS custom properties on `[data-theme]` (light, dark, paper, high-contrast); default follows
+      `prefers-color-scheme`
+- [ ] `useSettingsStore` (persisted): theme, mistake highlighting, highlight options, auto-removal of notes
+- [ ] Settings screen
+- [ ] Win screen: correct pluralization of the time, "New game" / "Back to menu" actions; resuming a won game does not
+      restart the timer
+- [ ] `useStatsStore` (persisted): games played/won, best and average time per level, streak
+- [ ] Stats screen (replaces the Scores placeholder); remove the Leaderboard view
+- [ ] Footer: current year, link to this repo
+
+### 9.7 Grader and generator
+- [ ] `grader.ts`: human-style solver — naked/hidden singles, pairs/triples, pointing/box-line, X-Wing, …
+- [ ] Level = hardest technique required + number of steps; tests on hand-picked puzzles
+- [ ] Re-grade the 100 bank puzzles and re-assign their levels
+- [ ] `generator.ts`: full grid → symmetric cell removal while the solution stays unique, graded to a target level
+- [ ] Generation in a Web Worker; fallback to a transformed bank puzzle on timeout
+- [ ] Rescale the difficulty levels so each one is measurably harder than the previous
+
+### 9.8 PWA, i18n, deploy
+- [ ] PWA via `vite-plugin-pwa` (offline play, install prompt, icons)
+- [ ] PL/EN i18n via `vue-i18n`
+- [ ] Deploy to GitHub Pages (CI workflow: lint, type-check, tests, build)
+- [ ] Optional: Playwright "solve a puzzle" scenario
+- [ ] Merge `feature/sudoku-rewrite` into `develop`; update `CLAUDE.md` and `README.md`; delete `ToDo.txt`
+
+### 9.9 Nice to have
+- [ ] `rng.ts` — seeded PRNG (mulberry32) wired into transforms and the generator
+- [ ] Daily puzzle (seed derived from the date)
+- [ ] Shareable puzzle links (`/game?seed=…&level=…`)
 
 ## Verification
 
