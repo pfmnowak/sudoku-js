@@ -38,7 +38,7 @@ const getCellValue = (cellIndex: number) => {
   return currentBoard.value[cellIndex].value === '-' ? '' : currentBoard.value[cellIndex].value;
 };
 
-const selectCell = (cellIndex: any) => {
+const selectCell = (cellIndex: number) => {
   if (currentBoard.value[cellIndex].disabled) {
     return;
   }
