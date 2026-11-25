@@ -181,7 +181,7 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] Move the 100-puzzle bank to `src/engine/data/puzzles.json` (out of the reactive store)
 - [x] `board.ts`: `Uint8Array(81)` grid, givens mask, 9-bit notes mask, row/column/box index helpers, parse/serialize
       to the 81-char string format
-- [ ] `findConflicts()` + tests
+- [x] `findConflicts()` + tests
 - [ ] `solver.ts`: bitmask solver that counts solutions (stops at 2) + tests
 - [ ] Bank test: every puzzle matches its solution and has exactly one solution
 

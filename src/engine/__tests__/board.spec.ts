@@ -8,6 +8,7 @@ import {
   boxOf,
   colOf,
   createBoard,
+  findConflicts,
   hasNote,
   indexOf,
   isFilled,
@@ -87,5 +88,27 @@ describe('createBoard', () => {
     expect(board.notes.every((mask) => mask === 0)).toBe(true);
     expect(isFilled(board.cells)).toBe(false);
     expect(isFilled(parseGrid(solution))).toBe(true);
+  });
+});
+
+describe('findConflicts', () => {
+  it('finds nothing in a valid puzzle or a solved grid', () => {
+    expect(findConflicts(parseGrid(puzzle)).size).toBe(0);
+    expect(findConflicts(parseGrid(solution)).size).toBe(0);
+  });
+
+  it('reports both cells of a row clash', () => {
+    const grid = new Uint8Array(81);
+    grid[indexOf(3, 1)] = 7;
+    grid[indexOf(3, 7)] = 7;
+    expect([...findConflicts(grid)].sort((a, b) => a - b)).toEqual([28, 34]);
+  });
+
+  it('reports column and box clashes, including every repeat in a unit', () => {
+    const grid = new Uint8Array(81);
+    grid[indexOf(0, 0)] = 5;
+    grid[indexOf(8, 0)] = 5;
+    grid[indexOf(1, 1)] = 5;
+    expect([...findConflicts(grid)].sort((a, b) => a - b)).toEqual([0, 10, 72]);
   });
 });

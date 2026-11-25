@@ -113,3 +113,28 @@ export const createBoard = (puzzle: string): Board => {
 
 /** True when every cell holds a digit. Says nothing about correctness. */
 export const isFilled = (grid: Grid): boolean => grid.every((value) => value !== EMPTY);
+
+/**
+ * Finds every filled cell whose digit repeats somewhere in its row, column or box.
+ * Both cells of a clashing pair are reported, so the UI can highlight all of them.
+ */
+export const findConflicts = (grid: Grid): Set<number> => {
+  const conflicts = new Set<number>();
+  for (const unit of UNITS) {
+    const seenAt = new Map<number, number>();
+    for (const index of unit) {
+      const value = grid[index];
+      if (value === EMPTY) {
+        continue;
+      }
+      const previous = seenAt.get(value);
+      if (previous === undefined) {
+        seenAt.set(value, index);
+      } else {
+        conflicts.add(previous);
+        conflicts.add(index);
+      }
+    }
+  }
+  return conflicts;
+};
