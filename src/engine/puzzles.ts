@@ -1,4 +1,6 @@
 import bank from './data/puzzles.json';
+import { parseGrid, serializeGrid } from './board';
+import { applyTransform, randomTransform } from './transform';
 
 /** Difficulty levels the puzzle bank is grouped by, from easiest to hardest. */
 export type Difficulty = 'beginner' | 'easy' | 'medium' | 'hard' | 'master';
@@ -27,4 +29,22 @@ export const pickPuzzle = (
 ): PuzzleEntry => {
   const entries = puzzleBank[difficulty];
   return entries[Math.floor(rand() * entries.length)];
+};
+
+/**
+ * Returns a fresh puzzle of the given difficulty: a random bank entry passed through a random
+ * difficulty-preserving transform, so the 20 entries per level yield billions of distinct boards.
+ * The same transform is applied to the solution, so the pair stays consistent.
+ * @param rand - source of uniform numbers in `[0, 1)`; swap in a seeded RNG for reproducible puzzles
+ */
+export const getPuzzle = (
+  difficulty: Difficulty,
+  rand: () => number = Math.random
+): PuzzleEntry => {
+  const entry = pickPuzzle(difficulty, rand);
+  const transform = randomTransform(rand);
+  return {
+    puzzle: serializeGrid(applyTransform(parseGrid(entry.puzzle), transform)),
+    solution: serializeGrid(applyTransform(parseGrid(entry.solution), transform))
+  };
 };

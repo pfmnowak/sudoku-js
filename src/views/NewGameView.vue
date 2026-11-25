@@ -33,7 +33,7 @@
 import AppIcon from '@/components/base/AppIcon.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import IconButton from '@/components/base/IconButton.vue';
-import { pickPuzzle, type Difficulty } from '@/engine/puzzles';
+import { getPuzzle, type Difficulty } from '@/engine/puzzles';
 import { useGameStateStore } from '@/store';
 import {
   mdiChevronLeft,
@@ -64,9 +64,9 @@ const startGame = () => {
   router.push({ path: '/game', query: { mode: 'new' } });
 };
 
-/** Picks a random puzzle of the selected difficulty from the bank and writes it to the store. */
+/** Gets a fresh puzzle of the selected difficulty (a randomly transformed bank entry) and writes it to the store. */
 const setDifficulty = () => {
-  const { puzzle, solution } = pickPuzzle(difficulty.value);
+  const { puzzle, solution } = getPuzzle(difficulty.value);
 
   store.solution = solution;
   store.initialBoard = puzzle;

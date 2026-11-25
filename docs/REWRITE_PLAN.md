@@ -186,10 +186,10 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] Bank test: every puzzle matches its solution and has exactly one solution
 
 ### 9.3 Engine — transforms
-- [ ] `transform.ts`: digit permutation, row/column swaps within bands/stacks, band/stack swaps, transposition
-- [ ] All randomness taken from a `rand: () => number` parameter (ready for a seeded RNG later)
-- [ ] Tests: transforms preserve validity, givens count and uniqueness
-- [ ] `getPuzzle(level)`: random bank puzzle + random transform
+- [x] `transform.ts`: digit permutation, row/column swaps within bands/stacks, band/stack swaps, transposition
+- [x] All randomness taken from a `rand: () => number` parameter (ready for a seeded RNG later)
+- [x] Tests: transforms preserve validity, givens count and uniqueness
+- [x] `getPuzzle(level)`: random bank puzzle + random transform
 
 ### 9.4 Game store and persistence
 - [ ] `useGameStore`: board, notes, givens, selection (`number | null`), notes mode, status
