@@ -1,13 +1,17 @@
 import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { getPuzzle } from '@/engine/puzzles';
 import { EMPTY } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
 import NumberPad from '../NumberPad.vue';
 
 const setup = () => {
   const store = useGameStore();
-  store.newGame('easy', () => 0);
+  store.newGame(
+    'easy',
+    getPuzzle('easy', () => 0)
+  );
   const wrapper = mount(NumberPad);
   const digit = (value: number) => wrapper.findAll('.pad__digit')[value - 1];
   const action = (name: string) =>

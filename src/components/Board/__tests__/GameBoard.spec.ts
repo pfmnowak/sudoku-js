@@ -2,6 +2,7 @@ import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { getPuzzle } from '@/engine/puzzles';
 import { EMPTY, PEERS } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
 import { useSettingsStore } from '@/stores/settings';
@@ -9,7 +10,10 @@ import GameBoard from '../GameBoard.vue';
 
 const setup = () => {
   const store = useGameStore();
-  store.newGame('easy', () => 0);
+  store.newGame(
+    'easy',
+    getPuzzle('easy', () => 0)
+  );
   const wrapper = mount(GameBoard, { attachTo: document.body });
   const cell = (index: number) => wrapper.get(`[data-index="${index}"]`);
   const emptyIndex = store.cells.indexOf(EMPTY);

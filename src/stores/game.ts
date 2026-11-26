@@ -15,7 +15,7 @@ import {
   toggleNote as toggleNoteMask,
   type Grid
 } from '@/engine/board';
-import { DIFFICULTIES, getPuzzle, type Difficulty } from '@/engine/puzzles';
+import { DIFFICULTIES, getPuzzle, type Difficulty, type PuzzleEntry } from '@/engine/puzzles';
 import { useSettingsStore } from './settings';
 import { useStatsStore } from './stats';
 import { readStorage, writeStorage } from './storage';
@@ -255,11 +255,11 @@ export const useGameStore = defineStore('game', () => {
   };
 
   /**
-   * Starts a new game of the given difficulty from a randomly transformed bank puzzle.
-   * @param rand - source of uniform numbers in `[0, 1)`, injectable for reproducible games
+   * Starts a new game of the given difficulty.
+   * @param entry - the puzzle to play, usually from `createPuzzle`; defaults to a randomly
+   *   transformed bank puzzle
    */
-  const newGame = (level: Difficulty, rand: () => number = Math.random) => {
-    const entry = getPuzzle(level, rand);
+  const newGame = (level: Difficulty, entry: PuzzleEntry = getPuzzle(level)) => {
     stats.recordStart(level, isInProgress.value);
     isNewBest.value = false;
     const board = createBoard(entry.puzzle);

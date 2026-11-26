@@ -2,6 +2,7 @@ import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { getPuzzle } from '@/engine/puzzles';
 import { createMemoryHistory, createRouter } from 'vue-router';
 import { EMPTY } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
@@ -49,7 +50,10 @@ beforeAll(() => {
 beforeEach(() => {
   localStorage.clear();
   setActivePinia(createPinia());
-  useGameStore().newGame('easy', () => 0);
+  useGameStore().newGame(
+    'easy',
+    getPuzzle('easy', () => 0)
+  );
 });
 
 describe('EndGameDialog', () => {

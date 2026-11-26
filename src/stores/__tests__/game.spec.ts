@@ -1,13 +1,17 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { getPuzzle } from '@/engine/puzzles';
 import { EMPTY, PEERS, digitBit } from '@/engine/board';
 import { GAME_STORAGE_KEY, useGameStore } from '../game';
 import { useSettingsStore } from '../settings';
 
 const startGame = () => {
   const store = useGameStore();
-  store.newGame('easy', () => 0);
+  store.newGame(
+    'easy',
+    getPuzzle('easy', () => 0)
+  );
   return store;
 };
 
@@ -43,7 +47,10 @@ describe('newGame', () => {
     expect(store.status).toBe('idle');
     expect(store.isInProgress).toBe(false);
 
-    store.newGame('easy', () => 0);
+    store.newGame(
+      'easy',
+      getPuzzle('easy', () => 0)
+    );
     expect(store.status).toBe('playing');
     expect(store.isInProgress).toBe(true);
     expect(store.difficulty).toBe('easy');

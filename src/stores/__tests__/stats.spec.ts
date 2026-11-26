@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { getPuzzle } from '@/engine/puzzles';
 import { EMPTY } from '@/engine/board';
 import { useGameStore } from '../game';
 import { STATS_STORAGE_KEY, useStatsStore } from '../stats';
@@ -77,7 +78,10 @@ describe('useStatsStore', () => {
   it('is fed by the game: a start counts as played and a solved puzzle as won', () => {
     const game = useGameStore();
     const stats = useStatsStore();
-    game.newGame('easy', () => 0);
+    game.newGame(
+      'easy',
+      getPuzzle('easy', () => 0)
+    );
     expect(stats.levels.easy.played).toBe(1);
 
     solve(game);
@@ -91,10 +95,19 @@ describe('useStatsStore', () => {
   it('breaks the streak when a new game replaces an unfinished one', () => {
     const game = useGameStore();
     const stats = useStatsStore();
-    game.newGame('easy', () => 0);
+    game.newGame(
+      'easy',
+      getPuzzle('easy', () => 0)
+    );
     solve(game);
-    game.newGame('easy', () => 0);
-    game.newGame('medium', () => 0);
+    game.newGame(
+      'easy',
+      getPuzzle('easy', () => 0)
+    );
+    game.newGame(
+      'medium',
+      getPuzzle('medium', () => 0)
+    );
     expect(stats.currentStreak).toBe(0);
     expect(stats.bestStreak).toBe(1);
     expect(stats.totals).toEqual({ played: 3, won: 1 });

@@ -2,6 +2,7 @@ import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { defineComponent } from 'vue';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { getPuzzle } from '@/engine/puzzles';
 import { EMPTY, digitBit } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
 import { useGameKeyboard } from '../useGameKeyboard';
@@ -24,7 +25,10 @@ const pressDigit = (digit: number, init: KeyboardEventInit = {}) =>
 
 const setup = () => {
   const store = useGameStore();
-  store.newGame('easy', () => 0);
+  store.newGame(
+    'easy',
+    getPuzzle('easy', () => 0)
+  );
   const wrapper = mount(Host);
   return { store, wrapper, emptyIndex: store.cells.indexOf(EMPTY) };
 };

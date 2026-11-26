@@ -25,7 +25,13 @@
       </button>
     </div>
 
-    <BaseButton title="Start a Game!" class="button--cta" @click="startGame" />
+    <BaseButton
+      :title="isGenerating ? 'Generating…' : 'Start a Game!'"
+      class="button--cta"
+      :disabled="isGenerating"
+      :aria-busy="isGenerating"
+      @click="startGame"
+    />
   </section>
 </template>
 
@@ -35,6 +41,7 @@ import BaseButton from '@/components/base/BaseButton.vue';
 import IconButton from '@/components/base/IconButton.vue';
 import { type Difficulty } from '@/engine/puzzles';
 import { useGameStore } from '@/stores/game';
+import { createPuzzle } from '@/workers/createPuzzle';
 import { DIFFICULTY_LABELS } from '@/utils/difficulty';
 import {
   mdiChevronLeft,
@@ -58,10 +65,14 @@ const difficultyOptions: { value: Difficulty; label: string; icon: string }[] = 
 const store = useGameStore();
 const router = useRouter();
 const difficulty = ref<Difficulty>('medium');
+const isGenerating = ref(false);
 
-/** Starts a game of the chosen difficulty and opens the game view. */
-const startGame = () => {
-  store.newGame(difficulty.value);
+/** Generates a puzzle of the chosen difficulty, starts the game with it and opens the game view. */
+const startGame = async () => {
+  isGenerating.value = true;
+  const level = difficulty.value;
+  const entry = await createPuzzle(level);
+  store.newGame(level, entry);
   router.push({ name: 'game' });
 };
 </script>
