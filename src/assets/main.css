@@ -5,6 +5,19 @@
   --color-text: rgba(235, 235, 235, 0.64);
   --color-border: rgba(84, 84, 84, 0.48);
   --color-accent: hsla(160, 100%, 37%, 1);
+  --color-text-strong: #f2f2f2;
+
+  --color-board-line: rgba(255, 255, 255, 0.14);
+  --color-board-line-strong: rgba(255, 255, 255, 0.42);
+  --color-cell: #1b1b1b;
+  --color-cell-given: #e6e6e6;
+  --color-cell-entered: hsl(160, 80%, 55%);
+  --color-cell-note: rgba(235, 235, 235, 0.6);
+  --color-cell-peer: #262a28;
+  --color-cell-same-digit: hsla(160, 100%, 37%, 0.32);
+  --color-cell-selected: hsla(160, 100%, 37%, 0.55);
+  --color-conflict: #ff6b6b;
+  --color-conflict-bg: rgba(255, 80, 80, 0.18);
 }
 
 *,

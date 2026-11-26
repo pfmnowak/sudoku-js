@@ -13,7 +13,7 @@
     />
   </section>
   <section id="game" class="game-section">
-    <BoardTable />
+    <GameBoard />
     <NumberContainer />
   </section>
   <EndGameDialog />
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import IconButton from '@/components/base/IconButton.vue';
 import { mdiChevronLeft, mdiRestore } from '@mdi/js';
-import BoardTable from '@/components/Board/BoardTable.vue';
+import GameBoard from '@/components/Board/GameBoard.vue';
 import EndGameDialog from '@/components/EndGameDialog/EndGameDialog.vue';
 import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
 import { useGameClock } from '@/composables/useGameClock';
