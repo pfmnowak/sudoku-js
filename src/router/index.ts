@@ -25,14 +25,13 @@ const router = createRouter({
       component: () => import('../views/SettingsView.vue')
     },
     {
-      path: '/leaderboard',
-      name: 'leaderboard',
-      component: () => import('../views/LeaderboardView.vue')
+      path: '/stats',
+      name: 'stats',
+      component: () => import('../views/StatsView.vue')
     },
     {
-      path: '/scores',
-      name: 'scores',
-      component: () => import('../views/ScoresView.vue')
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'home' }
     }
   ]
 });

@@ -8,8 +8,7 @@
       <BaseButton title="Start a New Game" class="button--cta" @click="navigate" />
     </RouterLink>
     <nav>
-      <RouterLink to="/leaderboard">Leaderboard</RouterLink>
-      <RouterLink to="/scores">Scores</RouterLink>
+      <RouterLink :to="{ name: 'stats' }">Statistics</RouterLink>
       <RouterLink :to="{ name: 'settings' }">Settings</RouterLink>
     </nav>
   </header>

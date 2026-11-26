@@ -36,6 +36,12 @@ describe('useStatsStore', () => {
     expect(stats.levels.easy.won).toBe(0);
   });
 
+  it('counts a win without a recorded start as played', () => {
+    const stats = useStatsStore();
+    stats.recordWin('easy', 1000);
+    expect(stats.levels.easy).toMatchObject({ played: 1, won: 1 });
+  });
+
   it('extends the streak with wins and breaks it on an abandoned game', () => {
     const stats = useStatsStore();
     stats.recordStart('easy', false);

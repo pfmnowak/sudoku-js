@@ -102,13 +102,15 @@ export const useStatsStore = defineStore('stats', () => {
   };
 
   /**
-   * Counts a won game with its time and extends the streak.
+   * Counts a won game with its time and extends the streak. A win whose start was never recorded
+   * (a game saved before stats existed) is counted as played too.
    * @returns whether the time is a new best for the level (the first win always is)
    */
   const recordWin = (level: Difficulty, timeMs: number): boolean => {
     const stats = levels.value[level];
     const isBest = stats.bestMs === null || timeMs < stats.bestMs;
     stats.won += 1;
+    stats.played = Math.max(stats.played, stats.won);
     stats.totalWonMs += timeMs;
     if (isBest) {
       stats.bestMs = timeMs;
