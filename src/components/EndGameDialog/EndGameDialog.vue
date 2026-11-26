@@ -56,7 +56,7 @@ const formattedTime = computed(() => {
 }
 
 .end-game-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-backdrop);
 }
 
 .end-game-dialog__title {
@@ -64,7 +64,7 @@ const formattedTime = computed(() => {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  color: #fff;
+  color: var(--color-text-strong);
 }
 
 .end-game-dialog__actions {

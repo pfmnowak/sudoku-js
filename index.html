@@ -1,10 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sudoku</title>
+    <script>
+      // Applies the saved theme before the first paint, so a forced theme does not flash.
+      try {
+        const theme = JSON.parse(localStorage.getItem('sudoku:settings'))?.theme;
+        if (['light', 'dark', 'paper', 'high-contrast'].includes(theme)) {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="app"></div>

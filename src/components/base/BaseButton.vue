@@ -3,49 +3,45 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Large text button for the main menu actions. Add `button--cta` for the accent-filled variant.
+ */
 defineProps<{
   title: string;
 }>();
 </script>
 
-<style lang="scss" scoped>
-.button,
-.button:link,
-.button:visited {
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: 1.5rem 3rem;
+<style scoped>
+.button {
   display: inline-block;
-  transition: all 0.2s;
-  position: relative;
-  font-size: 1.6rem;
-  border: none;
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0 1rem 2rem rgba(255, 255, 255, 0.2);
-  }
-
-  &:focus,
-  &:active {
-    outline: none;
-    box-shadow: 0 0.5rem 1rem rgba(255, 255, 255, 0.2);
-  }
-}
-
-.button--cta {
+  min-height: 44px;
+  padding: 1.1rem 2.5rem;
+  border: 2px solid var(--color-accent);
   border-radius: 1rem;
-
-  &:hover {
-    background-color: #fff;
-  }
+  background-color: transparent;
+  color: var(--color-accent);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    transform 0.2s;
 }
 
-.button--round {
-  width: 5rem;
-  height: 5rem;
-  padding: 1rem;
-  background-color: #ddd;
-  border-radius: 50%;
+.button:hover {
+  transform: translateY(-2px);
+  background-color: var(--color-hover);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.button--cta,
+.button--cta:hover {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
 }
 </style>

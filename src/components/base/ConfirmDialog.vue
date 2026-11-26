@@ -53,7 +53,7 @@ defineExpose({ open });
 }
 
 .confirm-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-backdrop);
 }
 
 .confirm-dialog__title {
@@ -79,16 +79,13 @@ defineExpose({ open });
 }
 
 .confirm-dialog__button:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--color-hover);
 }
 
-.confirm-dialog__button--confirm {
-  background-color: var(--color-cell-selected);
-  color: var(--color-text-strong);
-}
-
+.confirm-dialog__button--confirm,
 .confirm-dialog__button--confirm:hover {
   background-color: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 .confirm-dialog__button:focus-visible {

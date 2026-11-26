@@ -1,23 +1,88 @@
+/*
+ * Palettes. The default follows the OS preference through light-dark(); `data-theme` on <html>
+ * (set by the settings store) forces light or dark, or swaps in the paper and high-contrast palettes.
+ */
 :root {
-  color-scheme: dark;
-  --color-background: #121212;
-  --color-surface: #212121;
-  --color-text: rgba(235, 235, 235, 0.64);
-  --color-border: rgba(84, 84, 84, 0.48);
-  --color-accent: hsla(160, 100%, 37%, 1);
-  --color-text-strong: #f2f2f2;
+  color-scheme: light dark;
+  --color-background: light-dark(#f3f5f4, #121212);
+  --color-surface: light-dark(#ffffff, #212121);
+  --color-text: light-dark(rgba(20, 20, 20, 0.72), rgba(235, 235, 235, 0.64));
+  --color-text-strong: light-dark(#111111, #f2f2f2);
+  --color-border: light-dark(rgba(0, 0, 0, 0.16), rgba(84, 84, 84, 0.48));
+  --color-accent: light-dark(hsl(160, 100%, 27%), hsl(160, 100%, 37%));
+  --color-on-accent: light-dark(#ffffff, #06120d);
+  --color-hover: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+  --color-backdrop: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
 
-  --color-board-line: rgba(255, 255, 255, 0.14);
-  --color-board-line-strong: rgba(255, 255, 255, 0.42);
-  --color-cell: #1b1b1b;
-  --color-cell-given: #e6e6e6;
-  --color-cell-entered: hsl(160, 80%, 55%);
-  --color-cell-note: rgba(235, 235, 235, 0.6);
-  --color-cell-peer: #262a28;
-  --color-cell-same-digit: hsla(160, 100%, 37%, 0.32);
-  --color-cell-selected: hsla(160, 100%, 37%, 0.55);
-  --color-conflict: #ff6b6b;
-  --color-conflict-bg: rgba(255, 80, 80, 0.18);
+  --color-board-line: light-dark(rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.14));
+  --color-board-line-strong: light-dark(rgba(0, 0, 0, 0.66), rgba(255, 255, 255, 0.42));
+  --color-cell: light-dark(#ffffff, #1b1b1b);
+  --color-cell-given: light-dark(#1a1a1a, #e6e6e6);
+  --color-cell-entered: light-dark(hsl(160, 90%, 25%), hsl(160, 80%, 55%));
+  --color-cell-note: light-dark(rgba(0, 0, 0, 0.55), rgba(235, 235, 235, 0.6));
+  --color-cell-peer: light-dark(#e8efeb, #262a28);
+  --color-cell-same-digit: light-dark(hsla(160, 80%, 40%, 0.24), hsla(160, 100%, 37%, 0.32));
+  --color-cell-selected: light-dark(hsla(160, 80%, 40%, 0.42), hsla(160, 100%, 37%, 0.55));
+  --color-conflict: light-dark(#d32f2f, #ff6b6b);
+  --color-conflict-bg: light-dark(rgba(211, 47, 47, 0.12), rgba(255, 80, 80, 0.18));
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root[data-theme='paper'] {
+  color-scheme: light;
+  --color-background: #efe6d2;
+  --color-surface: #f8f1e1;
+  --color-text: rgba(60, 45, 25, 0.78);
+  --color-text-strong: #2e2416;
+  --color-border: rgba(70, 50, 20, 0.22);
+  --color-accent: #8a5a2b;
+  --color-on-accent: #fff8ec;
+  --color-hover: rgba(70, 50, 20, 0.08);
+  --color-backdrop: rgba(40, 30, 15, 0.45);
+
+  --color-board-line: rgba(70, 50, 20, 0.25);
+  --color-board-line-strong: #4a3826;
+  --color-cell: #fbf6ea;
+  --color-cell-given: #2e2416;
+  --color-cell-entered: #1f4e8c;
+  --color-cell-note: rgba(46, 36, 22, 0.62);
+  --color-cell-peer: #f0e5cd;
+  --color-cell-same-digit: rgba(31, 78, 140, 0.16);
+  --color-cell-selected: rgba(31, 78, 140, 0.3);
+  --color-conflict: #b3261e;
+  --color-conflict-bg: rgba(179, 38, 30, 0.12);
+}
+
+:root[data-theme='high-contrast'] {
+  color-scheme: dark;
+  --color-background: #000000;
+  --color-surface: #000000;
+  --color-text: #ffffff;
+  --color-text-strong: #ffffff;
+  --color-border: #ffffff;
+  --color-accent: #ffd400;
+  --color-on-accent: #000000;
+  --color-hover: rgba(255, 255, 255, 0.2);
+  --color-backdrop: rgba(0, 0, 0, 0.8);
+
+  --color-board-line: #8c8c8c;
+  --color-board-line-strong: #ffffff;
+  --color-cell: #000000;
+  --color-cell-given: #ffffff;
+  --color-cell-entered: #ffd400;
+  --color-cell-note: #e6e6e6;
+  --color-cell-peer: #1a1a40;
+  --color-cell-same-digit: #00466e;
+  --color-cell-selected: #0047b3;
+  --color-conflict: #ff6e6e;
+  --color-conflict-bg: #4d0000;
 }
 
 *,
@@ -74,18 +139,11 @@ a {
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: var(--color-hover);
   }
 }
 
 @media (max-width: 900px) {
-  button {
-    font: inherit;
-    color: inherit;
-    background-color: transparent;
-    border-style: none;
-  }
-
   #app {
     padding: 0;
   }

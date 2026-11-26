@@ -96,12 +96,13 @@ const startGame = () => {
     transition: background-color 0.2s;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.08);
+      background-color: var(--color-hover);
     }
 
     &[aria-pressed='true'] {
-      background-color: rgba(255, 255, 255, 0.16);
-      color: #fff;
+      border-color: var(--color-accent);
+      background-color: var(--color-accent);
+      color: var(--color-on-accent);
     }
   }
 }
