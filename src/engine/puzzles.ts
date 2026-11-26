@@ -16,7 +16,11 @@ export type PuzzleEntry = {
 
 export const DIFFICULTIES: readonly Difficulty[] = ['beginner', 'easy', 'medium', 'hard', 'master'];
 
-/** The hand-picked puzzle bank, kept as static data outside any reactive store. */
+/**
+ * The puzzle bank, kept as static data outside any reactive store: the original 100 puzzles
+ * re-sorted by their graded level, topped up with generated ones to at least 20 per level.
+ * It is the instant fallback when the generator runs out of time.
+ */
 export const puzzleBank: Readonly<Record<Difficulty, readonly PuzzleEntry[]>> = bank;
 
 /**
@@ -33,7 +37,7 @@ export const pickPuzzle = (
 
 /**
  * Returns a fresh puzzle of the given difficulty: a random bank entry passed through a random
- * difficulty-preserving transform, so the 20 entries per level yield billions of distinct boards.
+ * difficulty-preserving transform, so a few dozen entries per level yield billions of distinct boards.
  * The same transform is applied to the solution, so the pair stays consistent.
  * @param rand - source of uniform numbers in `[0, 1)`; swap in a seeded RNG for reproducible puzzles
  */
