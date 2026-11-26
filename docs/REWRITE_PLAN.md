@@ -214,15 +214,15 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] Check at 360×740 and 1440×900 (mouse, touch, keyboard)
 
 ### 9.6 Themes, settings, win screen, stats
-- [ ] One color system: CSS custom properties on `[data-theme]` (light, dark, paper, high-contrast); default follows
+- [x] One color system: CSS custom properties on `[data-theme]` (light, dark, paper, high-contrast); default follows
       `prefers-color-scheme`
-- [ ] `useSettingsStore` (persisted): theme, mistake highlighting, highlight options, auto-removal of notes
-- [ ] Settings screen
-- [ ] Win screen: correct pluralization of the time, "New game" / "Back to menu" actions; resuming a won game does not
+- [x] `useSettingsStore` (persisted): theme, mistake highlighting, highlight options, auto-removal of notes
+- [x] Settings screen
+- [x] Win screen: correct pluralization of the time, "New game" / "Back to menu" actions; resuming a won game does not
       restart the timer
-- [ ] `useStatsStore` (persisted): games played/won, best and average time per level, streak
-- [ ] Stats screen (replaces the Scores placeholder); remove the Leaderboard view
-- [ ] Footer: current year, link to this repo
+- [x] `useStatsStore` (persisted): games played/won, best and average time per level, streak
+- [x] Stats screen (replaces the Scores placeholder); remove the Leaderboard view
+- [x] Footer: current year, link to this repo
 
 ### 9.7 Grader and generator
 - [ ] `grader.ts`: human-style solver — naked/hidden singles, pairs/triples, pointing/box-line, X-Wing, …

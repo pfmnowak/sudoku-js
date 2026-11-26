@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A Sudoku game being migrated from a vanilla JS/SASS app (kept for reference in `_old/`, not part of the build) to Vue 3 + TypeScript + Vite, with Pinia for state and Vue Router. There is no UI library: controls are plain elements, icons are `@mdi/js` path strings rendered by `components/base/AppIcon.vue` / `IconButton.vue`, the end-game modal is a native `<dialog>`, and the dark palette lives as CSS variables in `src/assets/main.css`. `ToDo.txt` lists the planned pages and features (leaderboard, scores, auth, local storage/DB persistence, i18n, PWA); the Leaderboard and Scores views are still placeholders.
+A Sudoku game being migrated from a vanilla JS/SASS app (kept for reference in `_old/`, not part of the build) to Vue 3 + TypeScript + Vite, with Pinia for state and Vue Router. There is no UI library: controls are plain elements, icons are `@mdi/js` path strings rendered by `components/base/AppIcon.vue` / `IconButton.vue`, modals are native `<dialog>`s, and the palettes live as CSS variables in `src/assets/main.css`: the default follows `prefers-color-scheme` through `light-dark()`, and `data-theme` on `<html>` forces `light`, `dark`, `paper` or `high-contrast` (an inline script in `index.html` applies the saved theme before the first paint). `ToDo.txt` is the old feature list.
 
 **Planned rewrite:** [`docs/REWRITE_PLAN.md`](docs/REWRITE_PLAN.md) holds the analysis of the current app and the agreed direction — rebuild from scratch on Vue 3 + TS + Vite + Pinia without Vuetify, with a framework-free `src/engine/` (solver, generator, difficulty grader, puzzle transforms), split stores with localStorage persistence, CSS Grid board and CSS-variable themes. Auth, a database and a global leaderboard are dropped. It supersedes `ToDo.txt` where they disagree. The architecture below describes the rewrite as it stands.
 
@@ -31,12 +31,16 @@ Prettier: single quotes, semicolons, 2-space indent, print width 100, no trailin
 
 **State:** `useGameStore` in `src/stores/game.ts` holds the board (`cells`/`givens`/`notes` in `shallowRef`s — typed arrays are not deeply reactive, so every change replaces the array), selection (`selectedCell: number | null`, `selectedDigit` where `0` is the eraser), `notesMode`, `status` (`idle | playing | paused | won`), undo/redo as `history`/`future` lists of multi-cell moves, and the clock as `elapsedMs` + `startedAt` (read with `elapsedAt(now)`). All input goes through store actions (`pressCell`, `pressDigit`, `placeDigit`, `erase`, `toggleNote`, `input`, `moveSelection`, `undo`, `redo`, `restart`), which ignore givens and non-`playing` states; win detection happens in the store. The store saves itself to `localStorage` (`sudoku:game`, versioned) on every change and restores on creation, always as `paused`.
 
+`useSettingsStore` (`src/stores/settings.ts`, `sudoku:settings`) holds the theme, the mistake mode (`off | conflicts | solution`, read by the game store's `mistakes`), peer and same-digit highlighting and `autoRemoveNotes` (placing a digit drops it from peer notes in the same undoable move). `useStatsStore` (`src/stores/stats.ts`, `sudoku:stats`, versioned) counts games played and won, best and average time per level and the win streak; the game store feeds it from `newGame` (starting over an unfinished game breaks the streak) and on a win. Time and level labels for the UI come from `src/utils/time.ts` (`formatClock`, `formatDuration`) and `src/utils/difficulty.ts`.
+
 Game flow across views:
 
 1. `NewGameView` calls `store.newGame(difficulty)` and navigates to `/game`.
 2. `GameView` redirects home when there is no game; `useGameClock` resumes the game on mount, pauses it on unmount and on `visibilitychange`, and ticks the displayed time; `useGameKeyboard` adds keyboard play (arrows, 1–9, Shift+digit for a note, Backspace/Delete, N, Escape, Ctrl+Z/Ctrl+Y) and ignores keys while a `<dialog>` is open. Restart asks first through `base/ConfirmDialog`. `HomeView` shows "Continue" only while `store.isInProgress`.
 3. Input: cell-first (tap a cell, then a `NumberPad` digit) and digit-first (with no cell selected, tap a digit or the eraser to pick it, then tap cells). `store.pressCell`/`store.pressDigit` hold that logic.
-4. `EndGameDialog` opens on the `playing → won` transition.
+4. `EndGameDialog` opens on the `playing → won` transition with the time in words, a new-best badge or the level's best, the streak, and New game / Back to menu.
+
+Other screens: `SettingsView` (`/settings`, also reachable from the game toolbar), `StatsView` (`/stats`); both use `layout/PageHeader`. Shared controls live in `components/base/` (`BaseButton`, `IconButton`, `ConfirmDialog`, `ChoiceGroup`, `ToggleSwitch`).
 
 `GameBoard` is a 9×9 CSS Grid (`role="grid"`, rows as `display: contents`) sized by `--board-size` with fonts in `cqi`; `BoardCell` buttons use a roving tabindex and shade the selected cell's row/column/box, cells with the highlighted digit and conflicts, and draw notes as a 3×3 mini-grid. `NumberPad` shows remaining counts per digit plus erase/undo/redo/notes; `GameView` puts it beside the board on wide landscape screens (`--pad-columns: 3`) and below it otherwise.
 
