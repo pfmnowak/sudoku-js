@@ -7,12 +7,19 @@
         @click="router.push({ name: 'home' })"
       />
       <div class="game__timer" role="timer" aria-label="Elapsed time">{{ formattedTime }}</div>
-      <IconButton
-        :icon="mdiRestore"
-        label="Restart"
-        :disabled="!store.isInProgress"
-        @click="restartDialog?.open()"
-      />
+      <div class="game__toolbar-actions">
+        <IconButton
+          :icon="mdiRestore"
+          label="Restart"
+          :disabled="!store.isInProgress"
+          @click="restartDialog?.open()"
+        />
+        <IconButton
+          :icon="mdiCogOutline"
+          label="Settings"
+          @click="router.push({ name: 'settings' })"
+        />
+      </div>
     </header>
     <section class="game__play" aria-label="Game">
       <GameBoard />
@@ -38,7 +45,7 @@ import NumberPad from '@/components/NumberPad/NumberPad.vue';
 import { useGameClock } from '@/composables/useGameClock';
 import { useGameKeyboard } from '@/composables/useGameKeyboard';
 import { useGameStore } from '@/stores/game';
-import { mdiChevronLeft, mdiRestore } from '@mdi/js';
+import { mdiChevronLeft, mdiCogOutline, mdiRestore } from '@mdi/js';
 import { computed, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -79,11 +86,21 @@ const formattedTime = computed(() => {
 }
 
 .game__toolbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   max-width: var(--board-size);
+}
+
+.game__toolbar > :first-child {
+  justify-self: start;
+}
+
+.game__toolbar-actions {
+  display: flex;
+  justify-self: end;
+  gap: 0.25rem;
 }
 
 .game__timer {

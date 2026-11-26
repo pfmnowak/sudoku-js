@@ -63,7 +63,7 @@
 :root[data-theme='high-contrast'] {
   color-scheme: dark;
   --color-background: #000000;
-  --color-surface: #000000;
+  --color-surface: #1f1f1f;
   --color-text: #ffffff;
   --color-text-strong: #ffffff;
   --color-border: #ffffff;

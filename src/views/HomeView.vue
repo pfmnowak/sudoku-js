@@ -10,6 +10,7 @@
     <nav>
       <RouterLink to="/leaderboard">Leaderboard</RouterLink>
       <RouterLink to="/scores">Scores</RouterLink>
+      <RouterLink :to="{ name: 'settings' }">Settings</RouterLink>
     </nav>
   </header>
 </template>
