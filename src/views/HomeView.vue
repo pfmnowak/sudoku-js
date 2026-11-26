@@ -37,28 +37,20 @@ header {
 
 nav {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 nav a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+  border-radius: 0.4rem;
 }
 
-nav a:first-of-type {
-  border: 0;
+nav a + a {
+  border-left: 1px solid var(--color-border);
+  border-radius: 0;
 }
 </style>
