@@ -202,16 +202,16 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] Remove the old `store.ts`
 
 ### 9.5 Game UI — playable MVP
-- [ ] Board as a 9×9 CSS Grid, `min(94vw, 70dvh)` + `aspect-ratio: 1`, font in `cqi`
-- [ ] Cells as buttons with `role="gridcell"` and a roving tabindex
-- [ ] Highlighting: selected cell's row/column/box, same digits, conflicts
-- [ ] Notes rendered as a 3×3 mini-grid in a cell
-- [ ] Numpad with remaining-count per digit; erase, undo, notes toggle (≥ 44px touch targets)
-- [ ] Input modes: cell-first and digit-first
-- [ ] Keyboard: arrows, 1–9, Backspace/Delete, a key for notes mode, Ctrl+Z / Ctrl+Y
-- [ ] Layout: numpad beside the board on wide screens, below it on narrow ones
-- [ ] Home: "Continue" only when a game is in progress; difficulty picker; working "restart" action
-- [ ] Check at 360×740 and 1440×900 (mouse, touch, keyboard)
+- [x] Board as a 9×9 CSS Grid, `min(94vw, 70dvh)` + `aspect-ratio: 1`, font in `cqi`
+- [x] Cells as buttons with `role="gridcell"` and a roving tabindex
+- [x] Highlighting: selected cell's row/column/box, same digits, conflicts
+- [x] Notes rendered as a 3×3 mini-grid in a cell
+- [x] Numpad with remaining-count per digit; erase, undo, notes toggle (≥ 44px touch targets)
+- [x] Input modes: cell-first and digit-first
+- [x] Keyboard: arrows, 1–9, Backspace/Delete, a key for notes mode, Ctrl+Z / Ctrl+Y
+- [x] Layout: numpad beside the board on wide screens, below it on narrow ones
+- [x] Home: "Continue" only when a game is in progress; difficulty picker; working "restart" action
+- [x] Check at 360×740 and 1440×900 (mouse, touch, keyboard)
 
 ### 9.6 Themes, settings, win screen, stats
 - [ ] One color system: CSS custom properties on `[data-theme]` (light, dark, paper, high-contrast); default follows

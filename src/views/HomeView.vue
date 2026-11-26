@@ -1,11 +1,13 @@
 <template>
   <header>
     <h1 class="title">Sudoku</h1>
-    <RouterLink to="/new-game" v-slot="{ href, navigate }">
-      <BaseButton title="Start a New Game" class="button--cta" :href="href" @click="navigate" />
+    <RouterLink v-if="store.isInProgress" :to="{ name: 'game' }" v-slot="{ navigate }" custom>
+      <BaseButton title="Continue" class="button--cta" @click="navigate" />
+    </RouterLink>
+    <RouterLink to="/new-game" v-slot="{ navigate }" custom>
+      <BaseButton title="Start a New Game" class="button--cta" @click="navigate" />
     </RouterLink>
     <nav>
-      <RouterLink v-if="store.isInProgress" :to="{ name: 'game' }">Resume a Game</RouterLink>
       <RouterLink to="/leaderboard">Leaderboard</RouterLink>
       <RouterLink to="/scores">Scores</RouterLink>
     </nav>

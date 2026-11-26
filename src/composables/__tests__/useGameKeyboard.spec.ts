@@ -100,3 +100,15 @@ describe('useGameKeyboard', () => {
     expect(store.selectedCell).toBeNull();
   });
 });
+
+describe('useGameKeyboard with a dialog open', () => {
+  it('ignores keys while a dialog is open', () => {
+    const { store } = setup();
+    const dialog = document.createElement('dialog');
+    dialog.setAttribute('open', '');
+    document.body.append(dialog);
+    press('ArrowRight');
+    expect(store.selectedCell).toBeNull();
+    dialog.remove();
+  });
+});

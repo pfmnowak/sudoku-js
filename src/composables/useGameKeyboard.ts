@@ -26,6 +26,8 @@ const digitOf = (event: KeyboardEvent): number | null => {
  * - Backspace, Delete or 0 erase the selected cell
  * - N toggles notes mode
  * - Ctrl/Cmd+Z undoes, Ctrl/Cmd+Y or Ctrl/Cmd+Shift+Z redoes
+ *
+ * Keys are left alone while a text field has focus or a dialog is open.
  */
 export const useGameKeyboard = () => {
   const store = useGameStore();
@@ -76,7 +78,12 @@ export const useGameKeyboard = () => {
   };
 
   const onKeyDown = (event: KeyboardEvent) => {
-    if (event.defaultPrevented || event.altKey || isTextField(event.target)) {
+    if (
+      event.defaultPrevented ||
+      event.altKey ||
+      isTextField(event.target) ||
+      document.querySelector('dialog[open]')
+    ) {
       return;
     }
     if (store.status !== 'playing') {

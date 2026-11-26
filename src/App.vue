@@ -14,6 +14,6 @@ import TheFooter from './components/layout/TheFooter.vue';
 .main {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 1rem;
 }
 </style>
