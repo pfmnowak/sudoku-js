@@ -4,6 +4,7 @@ import { nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { EMPTY, PEERS } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
+import { useSettingsStore } from '@/stores/settings';
 import GameBoard from '../GameBoard.vue';
 
 const setup = () => {
@@ -58,15 +59,49 @@ describe('GameBoard', () => {
     expect(wrapper.findAll('.cell--same-digit')).toHaveLength(sameDigit - 1);
   });
 
-  it('marks conflicting cells', async () => {
+  it('marks conflicting cells as mistakes', async () => {
     const { store, cell } = setup();
     const given = store.givens.indexOf(1);
     const peer = PEERS[given].find((index) => store.cells[index] === EMPTY)!;
     store.placeDigit(store.cells[given], peer);
     await nextTick();
-    expect(cell(peer).classes()).toContain('cell--conflict');
-    expect(cell(given).classes()).toContain('cell--conflict');
+    expect(cell(peer).classes()).toContain('cell--mistake');
+    expect(cell(given).classes()).toContain('cell--mistake');
     expect(cell(peer).attributes('aria-invalid')).toBe('true');
+  });
+
+  it('marks every digit that differs from the solution in solution mode, and nothing when off', async () => {
+    const { store, cell } = setup();
+    const settings = useSettingsStore();
+    const isQuietWrong = (index: number, digit: number) =>
+      digit !== store.solution[index] && PEERS[index].every((peer) => store.cells[peer] !== digit);
+    const emptyIndex = store.cells.findIndex(
+      (value, index) =>
+        value === EMPTY && [1, 2, 3, 4, 5, 6, 7, 8, 9].some((d) => isQuietWrong(index, d))
+    );
+    const quietWrongDigit = [1, 2, 3, 4, 5, 6, 7, 8, 9].find((d) => isQuietWrong(emptyIndex, d));
+    expect(quietWrongDigit).toBeDefined();
+    store.placeDigit(quietWrongDigit!, emptyIndex);
+    await nextTick();
+    expect(cell(emptyIndex).classes()).not.toContain('cell--mistake');
+
+    settings.mistakes = 'solution';
+    await nextTick();
+    expect(cell(emptyIndex).classes()).toContain('cell--mistake');
+
+    settings.mistakes = 'off';
+    await nextTick();
+    expect(cell(emptyIndex).classes()).not.toContain('cell--mistake');
+  });
+
+  it('skips peer and same-digit shading when turned off in the settings', async () => {
+    const { store, wrapper, cell } = setup();
+    const settings = useSettingsStore();
+    settings.highlightPeers = false;
+    settings.highlightSameDigit = false;
+    await cell(store.givens.indexOf(1)).trigger('click');
+    expect(wrapper.findAll('.cell--peer')).toHaveLength(0);
+    expect(wrapper.findAll('.cell--same-digit')).toHaveLength(0);
   });
 
   it('renders notes as a 3×3 mini-grid with digits in place', async () => {

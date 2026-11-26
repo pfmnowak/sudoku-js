@@ -1,8 +1,9 @@
 import { createPinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { EMPTY, digitBit } from '@/engine/board';
+import { EMPTY, PEERS, digitBit } from '@/engine/board';
 import { GAME_STORAGE_KEY, useGameStore } from '../game';
+import { useSettingsStore } from '../settings';
 
 const startGame = () => {
   const store = useGameStore();
@@ -546,5 +547,36 @@ describe('restart', () => {
     const store = useGameStore();
     store.restart();
     expect(store.status).toBe('idle');
+  });
+});
+
+describe('auto-removal of notes', () => {
+  const setupNotes = (store: ReturnType<typeof useGameStore>) => {
+    const [index] = emptyCells(store);
+    const digit = store.solution[index];
+    const peer = PEERS[index].find((i) => store.cells[i] === EMPTY)!;
+    store.toggleNote(digit, peer);
+    store.toggleNote(wrongDigit(store, peer), peer);
+    return { index, digit, peer };
+  };
+
+  it('drops the placed digit from peer notes in the same move, and undo brings it back', () => {
+    const store = startGame();
+    const { index, digit, peer } = setupNotes(store);
+    const notesBefore = store.notes[peer];
+    store.placeDigit(digit, index);
+    expect(store.notes[peer]).toBe(notesBefore & ~digitBit(digit));
+    store.undo();
+    expect(store.cells[index]).toBe(EMPTY);
+    expect(store.notes[peer]).toBe(notesBefore);
+  });
+
+  it('leaves peer notes alone when turned off', () => {
+    const store = startGame();
+    useSettingsStore().autoRemoveNotes = false;
+    const { index, digit, peer } = setupNotes(store);
+    const notesBefore = store.notes[peer];
+    store.placeDigit(digit, index);
+    expect(store.notes[peer]).toBe(notesBefore);
   });
 });

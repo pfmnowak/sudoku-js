@@ -3,9 +3,11 @@ import { computed, ref, shallowRef, watch } from 'vue';
 import {
   CELL_COUNT,
   EMPTY,
+  PEERS,
   colOf,
   createBoard,
   findConflicts,
+  hasNote,
   indexOf,
   parseGrid,
   rowOf,
@@ -14,6 +16,7 @@ import {
   type Grid
 } from '@/engine/board';
 import { DIFFICULTIES, getPuzzle, type Difficulty } from '@/engine/puzzles';
+import { useSettingsStore } from './settings';
 import { readStorage, writeStorage } from './storage';
 
 /** `idle` means no game has been started yet. */
@@ -88,6 +91,8 @@ const isSavedGame = (value: unknown): value is SavedGame => {
  * so it survives a reload or a browser restart. A restored game always comes back paused.
  */
 export const useGameStore = defineStore('game', () => {
+  const settings = useSettingsStore();
+
   const status = ref<GameStatus>('idle');
   const difficulty = ref<Difficulty | null>(null);
   const puzzle = ref('');
@@ -112,6 +117,29 @@ export const useGameStore = defineStore('game', () => {
   const startedAt = ref<number | null>(null);
 
   const conflicts = computed(() => findConflicts(cells.value));
+
+  /** Entered digits that differ from the solution. */
+  const wrongCells = computed(() => {
+    const wrong = new Set<number>();
+    cells.value.forEach((value, index) => {
+      if (value !== EMPTY && value !== solution.value[index]) {
+        wrong.add(index);
+      }
+    });
+    return wrong;
+  });
+
+  /** Cells to mark as mistakes, as chosen by the `mistakes` setting. */
+  const mistakes = computed(() => {
+    switch (settings.mistakes) {
+      case 'conflicts':
+        return conflicts.value;
+      case 'solution':
+        return wrongCells.value;
+      default:
+        return new Set<number>();
+    }
+  });
   const isInProgress = computed(() => status.value === 'playing' || status.value === 'paused');
   const canUndo = computed(() => status.value === 'playing' && history.value.length > 0);
   const canRedo = computed(() => status.value === 'playing' && future.value.length > 0);
@@ -316,12 +344,24 @@ export const useGameStore = defineStore('game', () => {
     notesMode.value = !notesMode.value;
   };
 
-  /** Writes a digit into a non-given cell (the selected one by default) and clears its notes. */
+  /**
+   * Writes a digit into a non-given cell (the selected one by default) and clears its notes.
+   * With the `autoRemoveNotes` setting on, the same move also drops that digit from the notes
+   * of every peer, so a single undo brings them back.
+   */
   const placeDigit = (digit: number, index = selectedCell.value) => {
     if (!isEditable(index)) {
       return;
     }
-    commit([{ index, after: { value: digit, notes: 0 } }]);
+    const peerUpdates = settings.autoRemoveNotes
+      ? PEERS[index]
+          .filter((peer) => hasNote(notes.value[peer], digit))
+          .map((peer) => ({
+            index: peer,
+            after: { value: cells.value[peer], notes: toggleNoteMask(notes.value[peer], digit) }
+          }))
+      : [];
+    commit([{ index, after: { value: digit, notes: 0 } }, ...peerUpdates]);
   };
 
   /** Clears a non-given cell's digit and notes (the selected cell by default). */
@@ -454,6 +494,8 @@ export const useGameStore = defineStore('game', () => {
     elapsedMs,
     startedAt,
     conflicts,
+    wrongCells,
+    mistakes,
     isInProgress,
     remainingCounts,
     canUndo,

@@ -9,7 +9,7 @@
     :aria-label="label"
     :aria-selected="isSelected"
     :aria-readonly="isGiven"
-    :aria-invalid="isConflict"
+    :aria-invalid="isMistake"
     @click="store.pressCell(index)"
   >
     <template v-if="value">{{ value }}</template>
@@ -19,7 +19,7 @@
         :key="digit"
         class="cell__note"
         :class="{
-          'cell__note--highlighted': digit === store.highlightedDigit && hasNote(noteMask, digit)
+          'cell__note--highlighted': digit === sameDigit && hasNote(noteMask, digit)
         }"
       >
         {{ hasNote(noteMask, digit) ? digit : '' }}
@@ -31,28 +31,32 @@
 <script setup lang="ts">
 import { EMPTY, boxOf, colOf, hasNote, maskDigits, rowOf } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
+import { useSettingsStore } from '@/stores/settings';
 import { computed } from 'vue';
 
 /**
  * One board cell: a given or entered digit, or the cell's notes as a 3×3 mini-grid.
- * Shades the selected cell, its row/column/box, cells with the highlighted digit and conflicts.
+ * Shades the selected cell and marks mistakes; shading its row/column/box and cells with
+ * the highlighted digit can each be turned off in the settings.
  */
 const props = defineProps<{
   index: number;
 }>();
 
 const store = useGameStore();
+const settings = useSettingsStore();
 
 const value = computed(() => store.cells[props.index]);
 const noteMask = computed(() => store.notes[props.index]);
 const isGiven = computed(() => store.givens[props.index] === 1);
 const isSelected = computed(() => store.selectedCell === props.index);
-const isConflict = computed(() => store.conflicts.has(props.index));
+const isMistake = computed(() => store.mistakes.has(props.index));
+const sameDigit = computed(() => (settings.highlightSameDigit ? store.highlightedDigit : null));
 const isTabStop = computed(() => (store.selectedCell ?? 0) === props.index);
 
 const isPeerOfSelected = computed(() => {
   const selected = store.selectedCell;
-  if (selected === null || selected === props.index) {
+  if (!settings.highlightPeers || selected === null || selected === props.index) {
     return false;
   }
   return (
@@ -66,17 +70,16 @@ const cellClasses = computed(() => ({
   'cell--given': isGiven.value,
   'cell--selected': isSelected.value,
   'cell--peer': isPeerOfSelected.value,
-  'cell--same-digit':
-    value.value !== EMPTY && value.value === store.highlightedDigit && !isSelected.value,
-  'cell--conflict': isConflict.value
+  'cell--same-digit': value.value !== EMPTY && value.value === sameDigit.value && !isSelected.value,
+  'cell--mistake': isMistake.value
 }));
 
 const label = computed(() => {
   const position = `Row ${rowOf(props.index) + 1}, column ${colOf(props.index) + 1}`;
   if (value.value !== EMPTY) {
     const given = isGiven.value ? ', given' : '';
-    const conflict = isConflict.value ? ', conflict' : '';
-    return `${position}, ${value.value}${given}${conflict}`;
+    const mistake = isMistake.value ? ', mistake' : '';
+    return `${position}, ${value.value}${given}${mistake}`;
   }
   const notes = maskDigits(noteMask.value);
   return notes.length ? `${position}, notes ${notes.join(' ')}` : `${position}, empty`;
@@ -122,11 +125,11 @@ const label = computed(() => {
   background-color: var(--color-cell-selected);
 }
 
-.cell--conflict {
+.cell--mistake {
   color: var(--color-conflict);
 }
 
-.cell--conflict:not(.cell--selected) {
+.cell--mistake:not(.cell--selected) {
   background-color: var(--color-conflict-bg);
 }
 
