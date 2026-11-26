@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils';
+import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { EMPTY, PEERS } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
 import GameBoard from '../GameBoard.vue';
@@ -14,6 +14,8 @@ const setup = () => {
   const emptyIndex = store.cells.indexOf(EMPTY);
   return { store, wrapper, cell, emptyIndex };
 };
+
+enableAutoUnmount(afterEach);
 
 beforeEach(() => {
   localStorage.clear();

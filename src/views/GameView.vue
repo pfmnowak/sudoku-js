@@ -26,6 +26,7 @@ import GameBoard from '@/components/Board/GameBoard.vue';
 import EndGameDialog from '@/components/EndGameDialog/EndGameDialog.vue';
 import NumberPad from '@/components/NumberPad/NumberPad.vue';
 import { useGameClock } from '@/composables/useGameClock';
+import { useGameKeyboard } from '@/composables/useGameKeyboard';
 import { useGameStore } from '@/stores/game';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -33,6 +34,7 @@ import { useRouter } from 'vue-router';
 const store = useGameStore();
 const router = useRouter();
 const { elapsedMs } = useGameClock();
+useGameKeyboard();
 
 if (store.status === 'idle') {
   router.replace('/');

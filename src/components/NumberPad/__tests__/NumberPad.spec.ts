@@ -1,6 +1,6 @@
-import { mount } from '@vue/test-utils';
+import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { EMPTY } from '@/engine/board';
 import { useGameStore } from '@/stores/game';
 import NumberPad from '../NumberPad.vue';
@@ -14,6 +14,8 @@ const setup = () => {
     wrapper.findAll('.pad__action').find((button) => button.text().startsWith(name))!;
   return { store, wrapper, digit, action, emptyIndex: store.cells.indexOf(EMPTY) };
 };
+
+enableAutoUnmount(afterEach);
 
 beforeEach(() => {
   localStorage.clear();
