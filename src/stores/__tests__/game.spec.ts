@@ -375,6 +375,19 @@ describe('persistence', () => {
     expect(restored.isInProgress).toBe(false);
   });
 
+  it('does not restart the clock when a won game is resumed', async () => {
+    const store = startGame();
+    const last = fillAllButOne(store);
+    store.placeDigit(store.solution[last], last);
+    await nextTick();
+    const restored = reload();
+    const finalTime = restored.elapsedAt();
+    restored.resume();
+    expect(restored.status).toBe('won');
+    expect(restored.startedAt).toBeNull();
+    expect(restored.elapsedAt(Date.now() + 60_000)).toBe(finalTime);
+  });
+
   it('ignores a corrupted or outdated save', () => {
     localStorage.setItem(GAME_STORAGE_KEY, '{not json');
     expect(reload().status).toBe('idle');

@@ -35,7 +35,17 @@ defineProps<{
   transition: background-color 0.2s;
 }
 
-.icon-button:hover {
+.icon-button:hover:not(:disabled) {
   background-color: var(--color-hover);
+}
+
+.icon-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 </style>

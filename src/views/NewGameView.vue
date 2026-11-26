@@ -35,6 +35,7 @@ import BaseButton from '@/components/base/BaseButton.vue';
 import IconButton from '@/components/base/IconButton.vue';
 import { type Difficulty } from '@/engine/puzzles';
 import { useGameStore } from '@/stores/game';
+import { DIFFICULTY_LABELS } from '@/utils/difficulty';
 import {
   mdiChevronLeft,
   mdiEmoticonAngryOutline,
@@ -47,11 +48,11 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const difficultyOptions: { value: Difficulty; label: string; icon: string }[] = [
-  { value: 'beginner', label: 'Beginner', icon: mdiEmoticonExcitedOutline },
-  { value: 'easy', label: 'Easy', icon: mdiEmoticonHappyOutline },
-  { value: 'medium', label: 'Standard', icon: mdiEmoticonNeutralOutline },
-  { value: 'hard', label: 'Hard', icon: mdiEmoticonAngryOutline },
-  { value: 'master', label: 'Master', icon: mdiEmoticonDevilOutline }
+  { value: 'beginner', label: DIFFICULTY_LABELS.beginner, icon: mdiEmoticonExcitedOutline },
+  { value: 'easy', label: DIFFICULTY_LABELS.easy, icon: mdiEmoticonHappyOutline },
+  { value: 'medium', label: DIFFICULTY_LABELS.medium, icon: mdiEmoticonNeutralOutline },
+  { value: 'hard', label: DIFFICULTY_LABELS.hard, icon: mdiEmoticonAngryOutline },
+  { value: 'master', label: DIFFICULTY_LABELS.master, icon: mdiEmoticonDevilOutline }
 ];
 
 const store = useGameStore();

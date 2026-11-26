@@ -45,6 +45,7 @@ import NumberPad from '@/components/NumberPad/NumberPad.vue';
 import { useGameClock } from '@/composables/useGameClock';
 import { useGameKeyboard } from '@/composables/useGameKeyboard';
 import { useGameStore } from '@/stores/game';
+import { formatClock } from '@/utils/time';
 import { mdiChevronLeft, mdiCogOutline, mdiRestore } from '@mdi/js';
 import { computed, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
@@ -63,14 +64,7 @@ if (store.status === 'idle') {
   router.replace({ name: 'home' });
 }
 
-const formattedTime = computed(() => {
-  const totalSeconds = Math.floor(elapsedMs.value / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return [hours, minutes, seconds].map((part) => part.toString().padStart(2, '0')).join(':');
-});
+const formattedTime = computed(() => formatClock(elapsedMs.value));
 </script>
 
 <style scoped>

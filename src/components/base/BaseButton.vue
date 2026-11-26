@@ -4,7 +4,8 @@
 
 <script setup lang="ts">
 /**
- * Large text button for the main menu actions. Add `button--cta` for the accent-filled variant.
+ * Large text button for the main menu actions. Add `button--cta` for the accent-filled variant
+ * and `button--compact` for a smaller one, e.g. in a dialog.
  */
 defineProps<{
   title: string;
@@ -37,6 +38,12 @@ defineProps<{
 .button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+.button--compact {
+  padding: 0.6rem 1.25rem;
+  border-radius: 0.6rem;
+  font-size: 1rem;
 }
 
 .button--cta,
