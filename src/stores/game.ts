@@ -17,6 +17,7 @@ import {
 } from '@/engine/board';
 import { DIFFICULTIES, getPuzzle, type Difficulty } from '@/engine/puzzles';
 import { useSettingsStore } from './settings';
+import { useStatsStore } from './stats';
 import { readStorage, writeStorage } from './storage';
 
 /** `idle` means no game has been started yet. */
@@ -92,6 +93,7 @@ const isSavedGame = (value: unknown): value is SavedGame => {
  */
 export const useGameStore = defineStore('game', () => {
   const settings = useSettingsStore();
+  const stats = useStatsStore();
 
   const status = ref<GameStatus>('idle');
   const difficulty = ref<Difficulty | null>(null);
@@ -115,6 +117,8 @@ export const useGameStore = defineStore('game', () => {
   const elapsedMs = ref(0);
   /** When the current running stretch began (`Date.now()`), or `null` while the clock is stopped. */
   const startedAt = ref<number | null>(null);
+  /** Whether the game just won set a new best time for its level; not saved. */
+  const isNewBest = ref(false);
 
   const conflicts = computed(() => findConflicts(cells.value));
 
@@ -202,6 +206,8 @@ export const useGameStore = defineStore('game', () => {
   const checkWin = () => {
     if (status.value === 'playing' && isSolved()) {
       stopClock();
+      isNewBest.value =
+        difficulty.value !== null && stats.recordWin(difficulty.value, elapsedMs.value);
       status.value = 'won';
       selectedCell.value = null;
       selectedDigit.value = null;
@@ -254,6 +260,8 @@ export const useGameStore = defineStore('game', () => {
    */
   const newGame = (level: Difficulty, rand: () => number = Math.random) => {
     const entry = getPuzzle(level, rand);
+    stats.recordStart(level, isInProgress.value);
+    isNewBest.value = false;
     const board = createBoard(entry.puzzle);
     difficulty.value = level;
     puzzle.value = entry.puzzle;
@@ -497,6 +505,7 @@ export const useGameStore = defineStore('game', () => {
     wrongCells,
     mistakes,
     isInProgress,
+    isNewBest,
     remainingCounts,
     canUndo,
     canRedo,
