@@ -18,7 +18,9 @@
         v-for="digit in 9"
         :key="digit"
         class="cell__note"
-        :class="{ 'cell__note--highlighted': digit === store.highlightedDigit }"
+        :class="{
+          'cell__note--highlighted': digit === store.highlightedDigit && hasNote(noteMask, digit)
+        }"
       >
         {{ hasNote(noteMask, digit) ? digit : '' }}
       </span>
@@ -134,9 +136,9 @@ const label = computed(() => {
   grid-template-rows: repeat(3, 1fr);
   width: 100%;
   height: 100%;
-  padding: 0.4cqi;
+  padding: 0.2cqi;
   color: var(--color-cell-note);
-  font-size: 2.6cqi;
+  font-size: 3.2cqi;
 }
 
 .cell__note {
