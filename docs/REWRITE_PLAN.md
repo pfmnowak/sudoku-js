@@ -225,12 +225,12 @@ All work happens on `feature/sudoku-rewrite`. Tick items off as they land.
 - [x] Footer: current year, link to this repo
 
 ### 9.7 Grader and generator
-- [ ] `grader.ts`: human-style solver — naked/hidden singles, pairs/triples, pointing/box-line, X-Wing, …
-- [ ] Level = hardest technique required + number of steps; tests on hand-picked puzzles
-- [ ] Re-grade the 100 bank puzzles and re-assign their levels
-- [ ] `generator.ts`: full grid → symmetric cell removal while the solution stays unique, graded to a target level
-- [ ] Generation in a Web Worker; fallback to a transformed bank puzzle on timeout
-- [ ] Rescale the difficulty levels so each one is measurably harder than the previous
+- [x] `grader.ts`: human-style solver — naked/hidden singles, pairs/triples, pointing/box-line, X-Wing, …
+- [x] Level = hardest technique required + number of steps; tests on hand-picked puzzles
+- [x] Re-grade the 100 bank puzzles and re-assign their levels
+- [x] `generator.ts`: full grid → symmetric cell removal while the solution stays unique, graded to a target level
+- [x] Generation in a Web Worker; fallback to a transformed bank puzzle on timeout
+- [x] Rescale the difficulty levels so each one is measurably harder than the previous
 
 ### 9.8 PWA, i18n, deploy
 - [ ] PWA via `vite-plugin-pwa` (offline play, install prompt, icons)
