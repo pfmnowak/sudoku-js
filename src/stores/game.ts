@@ -3,9 +3,12 @@ import { computed, ref, shallowRef, watch } from 'vue';
 import {
   CELL_COUNT,
   EMPTY,
+  colOf,
   createBoard,
   findConflicts,
+  indexOf,
   parseGrid,
+  rowOf,
   serializeGrid,
   toggleNote as toggleNoteMask,
   type Grid
@@ -112,6 +115,18 @@ export const useGameStore = defineStore('game', () => {
   const isInProgress = computed(() => status.value === 'playing' || status.value === 'paused');
   const canUndo = computed(() => status.value === 'playing' && history.value.length > 0);
   const canRedo = computed(() => status.value === 'playing' && future.value.length > 0);
+
+  /** How many more times each digit can still be placed, indexed by digit (`[0]` is unused). */
+  const remainingCounts = computed(() => {
+    const remaining = Array<number>(10).fill(9);
+    remaining[EMPTY] = 0;
+    for (const value of cells.value) {
+      if (value !== EMPTY) {
+        remaining[value] = Math.max(0, remaining[value] - 1);
+      }
+    }
+    return remaining;
+  });
 
   /** Digit to highlight across the board: the picked numpad digit, else the selected cell's digit. */
   const highlightedDigit = computed<number | null>(() => {
@@ -228,6 +243,24 @@ export const useGameStore = defineStore('game', () => {
     status.value = 'playing';
   };
 
+  /** Clears every entered digit, note and move, and starts the clock of the same puzzle from zero. */
+  const restart = () => {
+    if (!isInProgress.value) {
+      return;
+    }
+    const board = createBoard(puzzle.value);
+    cells.value = board.cells;
+    notes.value = board.notes;
+    selectedCell.value = null;
+    selectedDigit.value = null;
+    notesMode.value = false;
+    history.value = [];
+    future.value = [];
+    elapsedMs.value = 0;
+    startedAt.value = Date.now();
+    status.value = 'playing';
+  };
+
   /** Stops the clock and locks input; used when the game view is left or the tab is hidden. */
   const pause = () => {
     if (status.value !== 'playing') {
@@ -253,6 +286,30 @@ export const useGameStore = defineStore('game', () => {
   /** Picks a numpad digit for digit-first input; picking the same one again clears it. */
   const selectDigit = (digit: number | null) => {
     selectedDigit.value = selectedDigit.value === digit ? null : digit;
+  };
+
+  /** Drops both the selected cell and the picked digit. */
+  const clearSelection = () => {
+    selectedCell.value = null;
+    selectedDigit.value = null;
+  };
+
+  /**
+   * Moves the selection by whole cells, wrapping around the board edges, and drops the picked digit
+   * so the highlight follows the cell. With nothing selected it starts from the top-left cell.
+   */
+  const moveSelection = (rowStep: number, colStep: number) => {
+    if (status.value !== 'playing') {
+      return;
+    }
+    selectedDigit.value = null;
+    if (selectedCell.value === null) {
+      selectedCell.value = 0;
+      return;
+    }
+    const row = (rowOf(selectedCell.value) + rowStep + 9) % 9;
+    const col = (colOf(selectedCell.value) + colStep + 9) % 9;
+    selectedCell.value = indexOf(row, col);
   };
 
   const toggleNotesMode = () => {
@@ -290,6 +347,47 @@ export const useGameStore = defineStore('game', () => {
     } else {
       placeDigit(digit, index);
     }
+  };
+
+  /**
+   * Handles a tap on a board cell. With a numpad digit picked (digit-first input) it selects the cell
+   * and enters that digit, or erases for the eraser; otherwise it toggles the cell's selection.
+   */
+  const pressCell = (index: number) => {
+    if (status.value !== 'playing') {
+      return;
+    }
+    if (selectedDigit.value === null) {
+      selectedCell.value = selectedCell.value === index ? null : index;
+      return;
+    }
+    selectedCell.value = index;
+    if (selectedDigit.value === EMPTY) {
+      erase(index);
+    } else {
+      input(selectedDigit.value, index);
+    }
+  };
+
+  /**
+   * Handles a tap on a numpad digit or the eraser (`EMPTY`). With a cell selected and no digit picked
+   * (cell-first input) it enters the digit into that cell; otherwise it picks or drops the digit
+   * for digit-first input and deselects the cell.
+   */
+  const pressDigit = (digit: number) => {
+    if (status.value !== 'playing') {
+      return;
+    }
+    if (selectedCell.value !== null && selectedDigit.value === null) {
+      if (digit === EMPTY) {
+        erase();
+      } else {
+        input(digit);
+      }
+      return;
+    }
+    selectedCell.value = null;
+    selectDigit(digit);
   };
 
   const toSavedGame = (): SavedGame | null => {
@@ -357,20 +455,26 @@ export const useGameStore = defineStore('game', () => {
     startedAt,
     conflicts,
     isInProgress,
+    remainingCounts,
     canUndo,
     canRedo,
     highlightedDigit,
     elapsedAt,
     newGame,
+    restart,
     pause,
     resume,
     selectCell,
     selectDigit,
+    clearSelection,
+    moveSelection,
     toggleNotesMode,
     placeDigit,
     erase,
     toggleNote,
     input,
+    pressCell,
+    pressDigit,
     undo,
     redo
   };

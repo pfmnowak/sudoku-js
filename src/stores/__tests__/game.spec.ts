@@ -381,3 +381,170 @@ describe('persistence', () => {
     expect(reload().status).toBe('idle');
   });
 });
+
+describe('pressCell and pressDigit', () => {
+  it('enters a digit cell-first: select a cell, then press a digit', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.pressCell(index);
+    store.pressDigit(store.solution[index]);
+    expect(store.cells[index]).toBe(store.solution[index]);
+    expect(store.selectedCell).toBe(index);
+    expect(store.selectedDigit).toBeNull();
+  });
+
+  it('erases cell-first with the eraser', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.pressCell(index);
+    store.pressDigit(5);
+    store.pressDigit(EMPTY);
+    expect(store.cells[index]).toBe(EMPTY);
+  });
+
+  it('toggles the selection when the same cell is pressed twice', () => {
+    const store = startGame();
+    store.pressCell(4);
+    expect(store.selectedCell).toBe(4);
+    store.pressCell(4);
+    expect(store.selectedCell).toBeNull();
+  });
+
+  it('enters digits digit-first: pick a digit, then press cells', () => {
+    const store = startGame();
+    const [first, second] = emptyCells(store);
+    store.pressDigit(7);
+    expect(store.selectedDigit).toBe(7);
+    expect(store.selectedCell).toBeNull();
+    store.pressCell(first);
+    store.pressCell(second);
+    expect(store.cells[first]).toBe(7);
+    expect(store.cells[second]).toBe(7);
+    expect(store.selectedDigit).toBe(7);
+  });
+
+  it('respects notes mode in digit-first input', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.toggleNotesMode();
+    store.pressDigit(3);
+    store.pressCell(index);
+    expect(store.cells[index]).toBe(EMPTY);
+    expect(store.notes[index]).toBe(digitBit(3));
+  });
+
+  it('erases digit-first with the picked eraser', () => {
+    const store = startGame();
+    const [index] = emptyCells(store);
+    store.placeDigit(2, index);
+    store.pressDigit(EMPTY);
+    store.pressCell(index);
+    expect(store.cells[index]).toBe(EMPTY);
+  });
+
+  it('switches the picked digit and drops it when pressed again', () => {
+    const store = startGame();
+    store.pressDigit(2);
+    store.pressDigit(6);
+    expect(store.selectedDigit).toBe(6);
+    store.pressDigit(6);
+    expect(store.selectedDigit).toBeNull();
+  });
+
+  it('does nothing while paused', () => {
+    const store = startGame();
+    store.pause();
+    store.pressCell(0);
+    store.pressDigit(1);
+    expect(store.selectedCell).toBeNull();
+    expect(store.selectedDigit).toBeNull();
+  });
+});
+
+describe('moveSelection', () => {
+  it('starts at the top-left cell and moves by rows and columns', () => {
+    const store = startGame();
+    store.moveSelection(0, 1);
+    expect(store.selectedCell).toBe(0);
+    store.moveSelection(1, 0);
+    expect(store.selectedCell).toBe(9);
+    store.moveSelection(0, 1);
+    expect(store.selectedCell).toBe(10);
+  });
+
+  it('wraps around the board edges', () => {
+    const store = startGame();
+    store.selectCell(0);
+    store.moveSelection(0, -1);
+    expect(store.selectedCell).toBe(8);
+    store.moveSelection(-1, 0);
+    expect(store.selectedCell).toBe(80);
+  });
+
+  it('drops the picked digit so the highlight follows the cell', () => {
+    const store = startGame();
+    store.pressDigit(4);
+    store.moveSelection(0, 1);
+    expect(store.selectedDigit).toBeNull();
+  });
+
+  it('clears both selections at once', () => {
+    const store = startGame();
+    store.selectCell(5);
+    store.selectDigit(5);
+    store.clearSelection();
+    expect(store.selectedCell).toBeNull();
+    expect(store.selectedDigit).toBeNull();
+  });
+});
+
+describe('remainingCounts', () => {
+  it('counts how many of each digit are still missing', () => {
+    const store = startGame();
+    const expected = Array.from({ length: 10 }, (_, digit) =>
+      digit === 0 ? 0 : 9 - store.cells.filter((value) => value === digit).length
+    );
+    expect(store.remainingCounts).toEqual(expected);
+
+    const [index] = emptyCells(store);
+    const digit = store.solution[index];
+    store.placeDigit(digit, index);
+    expect(store.remainingCounts[digit]).toBe(expected[digit] - 1);
+  });
+
+  it('never goes below zero', () => {
+    const store = startGame();
+    for (const index of emptyCells(store)) {
+      store.placeDigit(1, index);
+    }
+    expect(store.remainingCounts[1]).toBe(0);
+  });
+});
+
+describe('restart', () => {
+  it('clears the entries, history and time of the same puzzle', () => {
+    vi.useFakeTimers();
+    const store = startGame();
+    const puzzle = store.puzzle;
+    const [index, other] = emptyCells(store);
+    store.placeDigit(3, index);
+    store.toggleNote(4, other);
+    store.toggleNotesMode();
+    vi.advanceTimersByTime(5000);
+
+    store.restart();
+    expect(store.puzzle).toBe(puzzle);
+    expect(store.cells[index]).toBe(EMPTY);
+    expect(store.notes[other]).toBe(0);
+    expect(store.canUndo).toBe(false);
+    expect(store.notesMode).toBe(false);
+    expect(store.status).toBe('playing');
+    expect(store.elapsedAt()).toBe(0);
+  });
+
+  it('does nothing without a game in progress', () => {
+    const store = useGameStore();
+    store.restart();
+    expect(store.status).toBe('idle');
+  });
+});
