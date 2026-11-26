@@ -14,7 +14,7 @@
   </section>
   <section id="game" class="game-section">
     <GameBoard />
-    <NumberContainer />
+    <NumberPad />
   </section>
   <EndGameDialog />
 </template>
@@ -24,7 +24,7 @@ import IconButton from '@/components/base/IconButton.vue';
 import { mdiChevronLeft, mdiRestore } from '@mdi/js';
 import GameBoard from '@/components/Board/GameBoard.vue';
 import EndGameDialog from '@/components/EndGameDialog/EndGameDialog.vue';
-import NumberContainer from '@/components/NumberContainer/NumberContainer.vue';
+import NumberPad from '@/components/NumberPad/NumberPad.vue';
 import { useGameClock } from '@/composables/useGameClock';
 import { useGameStore } from '@/stores/game';
 import { computed } from 'vue';
